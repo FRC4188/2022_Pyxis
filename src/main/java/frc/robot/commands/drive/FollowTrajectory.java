@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.drive.Odometry;
 import frc.robot.subsystems.drive.Swerve;
 
 public class FollowTrajectory extends CommandBase {
@@ -20,7 +21,7 @@ public class FollowTrajectory extends CommandBase {
   Rotation2d rotation;
 
   Swerve swerve = Swerve.getInstance();
-  //Odometry odometry = Odometry.getInstance();
+  Odometry odometry = Odometry.getInstance();
 
   private static HolonomicDriveController controller;
   private static Timer timer = new Timer();
@@ -35,7 +36,9 @@ public class FollowTrajectory extends CommandBase {
     ProfiledPIDController thetaController = Constants.drive.thetaPID.thetaPID;
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    controller = new HolonomicDriveController(Constants.drive.xPID.xPID, Constants.drive.yPID.yPID, thetaController);
+    controller =
+        new HolonomicDriveController(
+            Constants.drive.xPID.xPID, Constants.drive.yPID.yPID, thetaController);
   }
 
   // Called when the command is initially scheduled.
@@ -48,13 +51,17 @@ public class FollowTrajectory extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    swerve.setChassisSpeeds(controller.calculate(swerve.getPose(), trajectory.sample(timer.get()), rotation));
+    ChassisSpeeds speeds =
+        controller.calculate(odometry.getPose(), trajectory.sample(timer.get()), new Rotation2d());
+    swerve.setChassisSpeeds(speeds);
+    System.out.println("driving running");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    swerve.setChassisSpeeds(new ChassisSpeeds());
+    swerve.stop();
+    System.out.println("driving done");
   }
 
   // Returns true when the command should end.

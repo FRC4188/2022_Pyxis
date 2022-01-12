@@ -56,7 +56,7 @@ public class Flywheel extends SubsystemBase {
   }
 
   private void updateShuffleboard() {
-    SmartDashboard.putNumber("Flywheel Velocity", getVelocity());
+    SmartDashboard.putNumber("Flywheel Velocity (RPM)", getVelocity());
   }
 
   public void set(double percentage) {

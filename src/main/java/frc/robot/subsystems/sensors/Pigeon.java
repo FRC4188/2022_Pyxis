@@ -2,7 +2,7 @@ package frc.robot.subsystems.sensors;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.math.Derivative;
 
 public class Pigeon extends PigeonIMU{

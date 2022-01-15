@@ -5,12 +5,12 @@
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -113,7 +113,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public void setModuleStates(SwerveModuleState[] states) {
-    SwerveDriveKinematics.normalizeWheelSpeeds(states, 4.75);
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, 4.75);
     
     SmartDashboard.putNumber("Left Front Set", states[0].angle.getDegrees());
     leftFront.setModuleState(new SwerveModuleState(states[0].speedMetersPerSecond, states[0].angle));

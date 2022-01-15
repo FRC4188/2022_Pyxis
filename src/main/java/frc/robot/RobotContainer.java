@@ -2,8 +2,7 @@ package frc.robot;
 
 import java.io.File;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,8 +17,8 @@ import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.planning.Trajectories;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
-import frc.robot.utils.CspController;
-import frc.robot.utils.CspController.Scaling;
+import frc.robot.utils.CSPController;
+import frc.robot.utils.CSPController.Scaling;
 
 /**
  * Controls the robot, holding commands, button bindings, and auto routines.
@@ -31,7 +30,7 @@ public class RobotContainer {
 
   private Swerve swerve = Swerve.getInstance();
 
-  private CspController pilot = new CspController(0);
+  private CSPController pilot = new CSPController(0);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -54,10 +53,10 @@ public class RobotContainer {
    */
   private void setDefaultCommands() {
     swerve.setDefaultCommand(new RunCommand(() -> swerve.drive(
-      pilot.getY(Hand.kLeft, Scaling.SQUARED),
-      pilot.getX(Hand.kLeft, Scaling.SQUARED),
-      pilot.getX(Hand.kRight, Scaling.SQUARED),
-      pilot.getBumper(Hand.kRight)),
+      pilot.getLeftY(Scaling.SQUARED),
+      pilot.getLeftX(Scaling.SQUARED),
+      pilot.getRightX(Scaling.SQUARED),
+      pilot.getRightBumper()),
       swerve)
     );
   }

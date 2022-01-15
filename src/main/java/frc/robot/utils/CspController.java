@@ -8,15 +8,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 /**
  * Subclass of XboxController to handle joystick scaling, deadbands, and button initialization.
  */
-public class CspController extends XboxController {
+public class CSPController extends XboxController {
 
     private static final double DEADBAND = 0.15;
     private static final double TRIGGER_THRESHOLD = 0.6;
 
     /**
-     * Class containing button mappings for Logitech F310.
+     * Class containing button mappings for buttons.
      */
-    private final class F310 {
+    private final class Buttons {
         static final int A = 1;
         static final int B = 2;
         static final int X = 3;
@@ -45,7 +45,7 @@ public class CspController extends XboxController {
     /**
      * Constructs an instance of CspController on the specified port.
      */
-    public CspController(int port) {
+    public CSPController(int port) {
         super(port);
     }
 
@@ -62,159 +62,166 @@ public class CspController extends XboxController {
         }
     }
 
-    /**
-     * Returns the Y value of the joystick for a given hand.
-     */
-    @Override
-    public double getY(Hand hand) {
-        return -getOutput(super.getY(hand), Scaling.SQUARED);
+    public double getRightX(Scaling scale) {
+        return getOutput(getRightX(), scale);
     }
 
-    /**
-     * Returns the Y value of the joystick for a given hand and scaling.
-     */
-    public double getY(Hand hand, Scaling scale) {
-        return -getOutput(super.getY(hand), scale);
+    
+    public double getRightY(Scaling scale) {
+        return -getOutput(getRightY(), scale);
     }
 
-    /**
-     * Returns the X value of the joystick for a given hand.
-     */
-    @Override
-    public double getX(Hand hand) {
-        return getOutput(super.getX(hand), Scaling.SQUARED);
+    public double getLeftX(Scaling scale) {
+        return getOutput(getLeftX(), scale);
     }
 
-    /**
-     * Returns the X value of the joystick for a given hand and scaling.
-     */
-    public double getX(Hand hand, Scaling scale) {
-        return getOutput(super.getX(hand), scale);
+    public double getLeftY(Scaling scale) {
+        return -getOutput(getLeftY(), scale);
     }
 
-    public double getAngle(Hand hand) {
-        double x = getX(hand, Scaling.LINEAR);
-        double y = getY(hand, Scaling.LINEAR);
+    public double getRightAngle() {
+        double x = getRightX(Scaling.LINEAR);
+        double y = getRightY(Scaling.LINEAR);
 
         double radAngle = (Math.atan2(y, x) - 270) % 360 + 180;
         
         return Math.toDegrees(radAngle);
     }
 
-    public boolean atZero(Hand hand) {
-        return (getX(hand, Scaling.LINEAR) == 0.0) && (getY(hand, Scaling.LINEAR) == 0.0);
+    public double getLeftAngle() {
+        double x = getLeftX(Scaling.LINEAR);
+        double y = getLeftY(Scaling.LINEAR);
+
+        double radAngle = (Math.atan2(y, x) - 270) % 360 + 180;
+        
+        return Math.toDegrees(radAngle);
+    }
+
+    public boolean getRightAtZero() {
+        return (getRightX(Scaling.LINEAR) == 0.0) && (getRightY(Scaling.LINEAR) == 0.0);
+    }
+
+    public boolean getLeftAtZero() {
+        return (getLeftX(Scaling.LINEAR) == 0.0) && (getLeftY(Scaling.LINEAR) == 0.0);
+
     }
 
     /**
      * Returns the JoystickButton object for the A button.
      */
     public JoystickButton getAButtonObj() {
-        return new JoystickButton(this, F310.A);
+        return new JoystickButton(this, Buttons.A);
     }
 
     /**
      * Returns the JoystickButton object for the B button.
      */
     public JoystickButton getBButtonObj() {
-        return new JoystickButton(this, F310.B);
+        return new JoystickButton(this, Buttons.B);
     }
 
     /**
      * Returns the JoystickButton object for the X button.
      */
     public JoystickButton getXButtonObj() {
-        return new JoystickButton(this, F310.X);
+        return new JoystickButton(this, Buttons.X);
     }
 
     /**
      * Returns the JoystickButton object for the Y button.
      */
     public JoystickButton getYButtonObj() {
-        return new JoystickButton(this, F310.Y);
+        return new JoystickButton(this, Buttons.Y);
     }
 
     /**
      * Returns the JoystickButton object for the left bumper button.
      */
     public JoystickButton getLbButtonObj() {
-        return new JoystickButton(this, F310.LB);
+        return new JoystickButton(this, Buttons.LB);
     }
 
     /**
      * Returns the JoystickButton object for the right bumper button.
      */
     public JoystickButton getRbButtonObj() {
-        return new JoystickButton(this, F310.RB);
+        return new JoystickButton(this, Buttons.RB);
     }
 
     /**
      * Returns the JoystickButton object for the back button.
      */
     public JoystickButton getBackButtonObj() {
-        return new JoystickButton(this, F310.BACK);
+        return new JoystickButton(this, Buttons.BACK);
     }
 
     /**
      * Returns the JoystickButton object for the start button.
      */
     public JoystickButton getStartButtonObj() {
-        return new JoystickButton(this, F310.START);
+        return new JoystickButton(this, Buttons.START);
     }
 
     /**
      * Returns the JoystickButton object for the left stick button.
      */
     public JoystickButton getLsButtonObj() {
-        return new JoystickButton(this, F310.LS);
+        return new JoystickButton(this, Buttons.LS);
     }
 
     /**
      * Returns the JoystickButton object for the right stick button.
      */
     public JoystickButton getRsButtonObj() {
-        return new JoystickButton(this, F310.RS);
+        return new JoystickButton(this, Buttons.RS);
     }
 
     /**
      * Returns the POVButton object for the D-pad up button.
      */
     public POVButton getDpadUpButtonObj() {
-        return new POVButton(this, F310.DPAD_UP);
+        return new POVButton(this, Buttons.DPAD_UP);
     }
 
     /**
      * Returns the POVButton object for the D-pad right button.
      */
     public POVButton getDpadRightButtonObj() {
-        return new POVButton(this, F310.DPAD_RIGHT);
+        return new POVButton(this, Buttons.DPAD_RIGHT);
     }
 
     /**
      * Returns the POVButton object for the D-pad down button.
      */
     public POVButton getDpadDownButtonObj() {
-        return new POVButton(this, F310.DPAD_DOWN);
+        return new POVButton(this, Buttons.DPAD_DOWN);
     }
 
     /**
      * Returns the POVButton object for the D-pad left button.
      */
     public POVButton getDpadLeftButtonObj() {
-        return new POVButton(this, F310.DPAD_LEFT);
+        return new POVButton(this, Buttons.DPAD_LEFT);
     }
 
     /**
      * Returns the Trigger object for the left trigger.
      */
     public Trigger getLtButtonObj() {
-        return new Trigger(() -> super.getTriggerAxis(Hand.kLeft) > TRIGGER_THRESHOLD);
+        return new Trigger(() -> super.getLeftTriggerAxis() > TRIGGER_THRESHOLD);
     }
 
     /**
      * Returns the Trigger object for the right trigger.
      */
     public Trigger getRtButtonObj() {
-        return new Trigger(() -> super.getTriggerAxis(Hand.kRight) > TRIGGER_THRESHOLD);
+        return new Trigger(() -> super.getRightTriggerAxis() > TRIGGER_THRESHOLD);
+    }
+
+    public void setRumble(double intensity) {
+        setRumble(RumbleType.kLeftRumble, intensity);
+        setRumble(RumbleType.kLeftRumble, intensity);
+
     }
 
 }

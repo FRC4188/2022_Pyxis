@@ -1,4 +1,4 @@
-package frc.robot.math;
+package frc.robot.utils.math;
 
 public class Derivative {
     private double lastTime = System.currentTimeMillis();

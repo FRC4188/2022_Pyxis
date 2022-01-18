@@ -5,9 +5,8 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.constraint.TrajectoryConstraint;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.drive.FollowTrajectory;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.planning.Trajectories;
@@ -18,17 +17,15 @@ import frc.robot.planning.Trajectories;
 public class TestAuto extends SequentialCommandGroup {
   /** Creates a new TestAuto. */
   public TestAuto() {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ResetPose(),
-      new RunCommand(() -> {}).withTimeout(5.0),
-      //new FollowTrajectory(Trajectories.Auto1.line, new Rotation2d(Math.PI))
-      new FollowTrajectory(Trajectories.middle.down, Trajectories.middle.headings[0]),
-      new FollowTrajectory(Trajectories.middle.ball1, Trajectories.middle.headings[1]),
-      new FollowTrajectory(Trajectories.middle.ball2, Trajectories.middle.headings[2]),
-      new FollowTrajectory(Trajectories.middle.shoot1, Trajectories.middle.headings[3]),
-      new FollowTrajectory(Trajectories.middle.mid1, Trajectories.middle.headings[4]),
-      new FollowTrajectory(Trajectories.middle.mid2, Trajectories.middle.headings[4]),
-      new FollowTrajectory(Trajectories.middle.shoot2, Trajectories.middle.headings[5])
+      new FollowTrajectory(Trajectories.Total.toFirst, new Rotation2d()),
+      new WaitCommand(1),
+      new FollowTrajectory(Trajectories.Total.toSecond, new Rotation2d()),
+      new WaitCommand(1),
+      new FollowTrajectory(Trajectories.Total.toThird, new Rotation2d())
     );
   }
 }

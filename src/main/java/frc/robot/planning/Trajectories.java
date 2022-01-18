@@ -68,7 +68,7 @@ public class Trajectories {
                 new Pose2d(), //end of toSecond
                 new Pose2d() //third ball
             ), new TrajectoryConfig(3.0, 1.0)
-            );
+        );
     }
 /*
     public static class steal {

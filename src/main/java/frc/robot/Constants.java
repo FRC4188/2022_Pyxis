@@ -63,10 +63,10 @@ public class Constants {
             public static final Kinematics KINEMATICS = new Kinematics(FrontLeftLocation, FrontRightLocation, BackLeftLocation, BackRightLocation);
 
             public static final class modules {
-                public static final double M1_ZERO = 46.054688;
-                public static final double M2_ZERO = 112.148438;
-                public static final double M3_ZERO = -156.533203;
-                public static final double M4_ZERO = -49.833984;
+                public static final double M1_ZERO = 0;
+                public static final double M2_ZERO = 0;
+                public static final double M3_ZERO = 0;
+                public static final double M4_ZERO = 0;
             }
 
             public static final class anglemotor {

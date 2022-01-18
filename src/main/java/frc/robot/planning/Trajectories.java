@@ -48,141 +48,27 @@ public class Trajectories {
         new TrajectoryConfig(2.0, 2.5).addConstraint(new CentripetalAccelerationConstraint(2.5)));
     }
 
-    public static class trench {
-        
-        public static Rotation2d[] headings = {
-            new Rotation2d(),
-            new Rotation2d(Math.PI / 8.0),
-            new Rotation2d(-Math.PI)
-        };
-
-        private static double adjustment = -0.15;
-
-        public static Trajectory down = TrajectoryGenerator.generateTrajectory(
+    public static class Total {
+        public static Trajectory toFirst = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(),
-                new Pose2d(1.78, 1.63 + adjustment, new Rotation2d()),
-                new Pose2d(5.5, 1.63 + adjustment, new Rotation2d())
-            ),
-            new TrajectoryConfig(4.0, 3.0)
-                .addConstraint(new CentripetalAccelerationConstraint(3.0))
-                .setEndVelocity(0.5)
+                new Pose2d(), //start
+                new Pose2d() //first ball
+            ), new TrajectoryConfig(3.0, 1.0)
         );
 
-        public static Trajectory ball1 = TrajectoryGenerator.generateTrajectory(
+        public static Trajectory toSecond = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(5.5, 1.63 + adjustment, new Rotation2d()),
-                new Pose2d(7.0, 1.53 + adjustment, new Rotation2d())
-            ),
-            new TrajectoryConfig(4.0, 3.0)
-                .addConstraint(new CentripetalAccelerationConstraint(3.0))
+                new Pose2d(), //end of toFirst
+                new Pose2d() //second ball
+            ), new TrajectoryConfig(3.0, 1.0)
         );
 
-        public static Trajectory ball2 = TrajectoryGenerator.generateTrajectory(
+        public static Trajectory toThird = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(7.0, 1.53 + adjustment, new Rotation2d(-Math.PI / 2.0)),
-                new Pose2d(7.0, 1.7 + adjustment, new Rotation2d(-Math.PI / 2.0))
-            ),
-            new TrajectoryConfig(4.0, 3.0)
-                .addConstraint(new CentripetalAccelerationConstraint(3.0))
-        );
-
-        public static Trajectory back = TrajectoryGenerator.generateTrajectory(
-            List.of(
-                new Pose2d(5.0, 1.7 + adjustment, new Rotation2d(-Math.PI)),
-                new Pose2d(5.0, 1.63 + adjustment, new Rotation2d(-Math.PI)),
-                new Pose2d(0.0, 0.0, new Rotation2d(-Math.PI))
-            ),
-        new TrajectoryConfig(4.0, 3.0).addConstraint(new CentripetalAccelerationConstraint(3.0)));
-    }
-
-    public static class middle {
-
-        public static Rotation2d[] headings = {
-            new Rotation2d(),
-            new Rotation2d(Math.PI / 8.0),
-            new Rotation2d(-Math.PI / 8.0),
-            Rotation2d.fromDegrees(-95.0),
-            Rotation2d.fromDegrees(-155.0),
-            new Rotation2d(Math.PI)
-        };
-
-        private static double adjustment = 0.1;
-
-        public static Trajectory down = TrajectoryGenerator.generateTrajectory(
-            List.of(
-                new Pose2d(),
-                new Pose2d(1.78, 1.63 + adjustment, new Rotation2d()),
-                new Pose2d(5.5, 1.63 + adjustment, new Rotation2d())
-            ),
-            new TrajectoryConfig(4.0, 3.3)
-                .addConstraint(new CentripetalAccelerationConstraint(3.3))
-                .addConstraint(new SwerveDriveKinematicsConstraint(Swerve.getInstance().getKinematics(), 4.0))
-        );
-
-        public static Trajectory ball1 = TrajectoryGenerator.generateTrajectory(
-            List.of(
-                new Pose2d(5.5, 1.63 + adjustment, new Rotation2d()),
-                new Pose2d(6.25, 1.53 + adjustment, new Rotation2d())
-            ),
-            new TrajectoryConfig(4.0, 3.3)
-                .addConstraint(new CentripetalAccelerationConstraint(3.3))
-                .addConstraint(new SwerveDriveKinematicsConstraint(Swerve.getInstance().getKinematics(), 4.0))
-        );
-
-        public static Trajectory ball2 = TrajectoryGenerator.generateTrajectory(
-            List.of(
-                new Pose2d(6.25, 1.53 + adjustment, new Rotation2d(Math.PI / 2.0)),
-                new Pose2d(6.25, 1.7 + adjustment, new Rotation2d(Math.PI / 2.0))
-            ),
-            new TrajectoryConfig(4.0, 3.3)
-                .addConstraint(new CentripetalAccelerationConstraint(3.3))
-                .addConstraint(new SwerveDriveKinematicsConstraint(Swerve.getInstance().getKinematics(), 4.0))
-        );
-
-        public static Trajectory shoot1 = TrajectoryGenerator.generateTrajectory(
-            List.of(
-                new Pose2d(6.25, 1.7 + adjustment, new Rotation2d(-Math.PI)),
-                new Pose2d(4.5, 1.63, new Rotation2d(-Math.PI)),
-                new Pose2d(3.77, 0.1, new Rotation2d(-Math.PI))
-            ), 
-            new TrajectoryConfig(4.0, 3.3)
-                .addConstraint(new CentripetalAccelerationConstraint(3.3))
-                .addConstraint(new SwerveDriveKinematicsConstraint(Swerve.getInstance().getKinematics(), 4.0))
-        );
-
-        public static Trajectory mid1 = TrajectoryGenerator.generateTrajectory(
-            List.of(
-                new Pose2d(3.77, 0.1, new Rotation2d()),
-                new Pose2d(3.46, -1.9, Rotation2d.fromDegrees(-155.0)),
-                new Pose2d(2.8, -1.95, Rotation2d.fromDegrees(-155.0))
-            ), 
-            new TrajectoryConfig(4.0, 3.3)
-                .addConstraint(new CentripetalAccelerationConstraint(3.3))
-                .addConstraint(new SwerveDriveKinematicsConstraint(Swerve.getInstance().getKinematics(), 4.0))
-        );
-
-        public static Trajectory mid2 = TrajectoryGenerator.generateTrajectory(
-            List.of(
-                new Pose2d(2.8, -1.95, Rotation2d.fromDegrees(25.0)),
-                new Pose2d(3.81, -1.62, Rotation2d.fromDegrees(35.0)),
-                new Pose2d(3.71, -0.82, Rotation2d.fromDegrees(-149.0)),
-                new Pose2d(2.7, -1.2, Rotation2d.fromDegrees(-149.0))
-            ),
-            new TrajectoryConfig(4.0, 3.3)
-                .addConstraint(new CentripetalAccelerationConstraint(3.3))
-                .addConstraint(new SwerveDriveKinematicsConstraint(Swerve.getInstance().getKinematics(), 4.0))
-        );
-
-        public static Trajectory shoot2 = TrajectoryGenerator.generateTrajectory(
-            List.of(
-                new Pose2d(2.7, -1.2, new Rotation2d(-Math.PI / 2.0)),
-                new Pose2d(3.2, 0.0, new Rotation2d(-Math.PI / 2.0))
-            ),
-            new TrajectoryConfig(4.0, 3.3)
-                .addConstraint(new CentripetalAccelerationConstraint(3.3))
-                .addConstraint(new SwerveDriveKinematicsConstraint(Swerve.getInstance().getKinematics(), 4.0))
-        );
+                new Pose2d(), //end of toSecond
+                new Pose2d() //third ball
+            ), new TrajectoryConfig(3.0, 1.0)
+            );
     }
 /*
     public static class steal {

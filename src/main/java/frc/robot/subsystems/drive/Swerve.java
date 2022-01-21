@@ -27,13 +27,12 @@ public class Swerve extends SubsystemBase {
     return instance;
   }
 
-  private Module leftFront = new Module(1, 2, 21, Constants.drive.modules.M1_ZERO);
-  private Module rightFront = new Module(3, 4, 22, Constants.drive.modules.M2_ZERO);
-  private Module leftRear = new Module(5, 6, 23, Constants.drive.modules.M3_ZERO);
-  private Module rightRear = new Module(7, 8, 24, Constants.drive.modules.M4_ZERO);
+  private Module leftFront = new Module(0);
+  private Module rightFront = new Module(1);
+  private Module leftRear = new Module(2);
+  private Module rightRear = new Module(3);
 
   private Sensors sensors = Sensors.getInstance();
-
 
   //private Kinematics kinematics = Constants.drive.KINEMATICS;
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(Constants.drive.FrontLeftLocation, Constants.drive.FrontRightLocation, Constants.drive.BackLeftLocation, Constants.drive.BackRightLocation);

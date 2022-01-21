@@ -32,10 +32,10 @@ public class FollowTrajectory extends CommandBase {
     this.trajectory = trajectory;
     this.rotation = rotation;
 
-    ProfiledPIDController thetaController = Constants.drive.thetaPID.thetaPID;
+    ProfiledPIDController thetaController = Constants.drive.thetaPID;
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    controller = new HolonomicDriveController(Constants.drive.xPID.xPID, Constants.drive.yPID.yPID, thetaController);
+    controller = new HolonomicDriveController(Constants.drive.xPID, Constants.drive.yPID, thetaController);
   }
 
   // Called when the command is initially scheduled.

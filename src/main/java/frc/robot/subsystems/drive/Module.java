@@ -8,10 +8,16 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import frc.robot.Constants;
+import frc.robot.Constants.drive.ModuleConstants;
+import frc.robot.utils.controllers.ContinuousTrapezoid;
+import frc.robot.utils.controllers.SSMPosition;
+import frc.robot.utils.controllers.SSMVelocity;
 
 /**
  * Class to define Swerve Module Control code.
@@ -19,10 +25,12 @@ import frc.robot.Constants;
 public class Module {
 
     private WPI_TalonFX speedMotor = null;
+    private SSMVelocity speedController = null;
+    private ContinuousTrapezoid speedProfile = null;
     private WPI_TalonFX angleMotor = null;
+    private SSMPosition angleController = null;
+    private ContinuousTrapezoid angleProfile = null;
     private CANCoder encoder = null;
-
-    private PIDController anglePID = new PIDController(Constants.drive.anglemotor.kP, Constants.drive.anglemotor.kI, Constants.drive.anglemotor.kD);
 
     /**
      * Constructs a new Module object.
@@ -32,24 +40,22 @@ public class Module {
      * @param encoderID CAN ID of the CANCoder.
      * @param encoderZero Magnet offset angle of the CANCoder.
      */
-    public Module(int angleID, int speedID, int encoderID, double encoderZero) {
-        speedMotor = new WPI_TalonFX(speedID);
-        angleMotor = new WPI_TalonFX(angleID);
-        encoder = new CANCoder(encoderID);
+    public Module(int module) {
+        ModuleConstants constants = Constants.getModules()[module];
+
+        speedMotor = new WPI_TalonFX(constants.SPEED_ID);
+        angleMotor = new WPI_TalonFX(constants.ANGLE_ID);
+        encoder = new CANCoder(constants.ENC_ID);
 
         speedMotor.configFactoryDefault();
         speedMotor.setNeutralMode(NeutralMode.Brake);
         speedMotor.configClosedloopRamp(0.5);
-        speedMotor.config_kP(0, Constants.drive.speedmotor.kP, 10);
-        speedMotor.config_kI(0, Constants.drive.speedmotor.kI, 10);
-        speedMotor.config_kD(0, Constants.drive.speedmotor.kD, 10);
         speedMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         speedMotor.setSelectedSensorPosition(0);
         speedMotor.setInverted(true);
 
         angleMotor.configFactoryDefault();
         angleMotor.setNeutralMode(NeutralMode.Brake);
-        anglePID.enableContinuousInput(-180.0, 180.0);
         angleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         angleMotor.setSelectedSensorPosition(0);
 
@@ -57,7 +63,12 @@ public class Module {
         encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
         encoder.setPosition(0.0);
         encoder.configSensorDirection(false);
-        encoder.configMagnetOffset(encoderZero);
+        encoder.configMagnetOffset(constants.ZERO);
+
+        speedController = new SSMVelocity(constants.SPEED_kV, constants.SPEED_kA, constants.SPEED_QELMS, constants.SPEED_RELMS, constants.SPEED_STATE_STDEV, constants.SPEED_ENC_STDEV);
+        speedProfile = new ContinuousTrapezoid(new Constraints(constants.SPEED_MAX_ACCEL, constants.SPEED_MAX_JERK));
+        angleController = new SSMPosition(constants.ANGLE_kV, constants.ANGLE_kA, constants.ANGLE_QELMS, constants.ANGLE_RELMS, constants.ANGLE_STATE_STDEV, constants.ANGLE_ENC_STDEV);
+        angleProfile = new ContinuousTrapezoid(new Constraints(constants.ANGLE_MAX_VEL, constants.ANGLE_MAX_ACCEL));
     }
 
     /**
@@ -73,7 +84,7 @@ public class Module {
      * @return Measured meters per second.
      */
     public double getVelocity() {
-    return ((double) speedMotor.getSelectedSensorVelocity() * 10.0) / Constants.drive.DRIVE_COUNTS_PER_METER;
+        return ((double) speedMotor.getSelectedSensorVelocity() * 10.0) / Constants.drive.DRIVE_COUNTS_PER_METER;
     }
 
     double lastAngle = 0.0;
@@ -82,16 +93,19 @@ public class Module {
      * @param state State object containing desired module bahaviour.
      */
     public void setModuleState(SwerveModuleState state) {
-        double velMultiplier = 1.0;
+        double setVelocity = state.speedMetersPerSecond;
         double setAngle = state.angle.getDegrees();
         
-        if (Math.abs(lastAngle - state.angle.getDegrees()) > 90) {
-            setAngle = (state.angle.getDegrees() + 360) % 360 - 180;
-            velMultiplier *= -1.0;
+        if (Math.abs(lastAngle - setAngle) > 90) {
+            setAngle = (setAngle + 360) % 360 - 180;
+            setVelocity *= -1.0;
         }
+
+        setVelocity = speedProfile.calculate(getVelocity(), setVelocity).position;
+        State pSetAngle = angleProfile.calculate(getAbsoluteAngle(), setAngle);
         
-        speedMotor.set(ControlMode.Velocity, velMultiplier * (state.speedMetersPerSecond * (Constants.drive.DRIVE_COUNTS_PER_METER / 10.0)));
-        angleMotor.set(anglePID.calculate(getAbsoluteAngle(), setAngle));
+        speedMotor.set(ControlMode.PercentOutput, speedController.calculate(getVelocity(), setVelocity) / RobotController.getBatteryVoltage());
+        angleMotor.set(ControlMode.PercentOutput, angleController.calculate(getAbsoluteAngle(), VecBuilder.fill(pSetAngle.position, pSetAngle.velocity)) / RobotController.getBatteryVoltage());
 
         lastAngle = getAbsoluteAngle();
     }

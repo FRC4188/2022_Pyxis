@@ -111,14 +111,14 @@ public class Constants {
                 public final double ANGLE_kA = 0;
 
                 /** Standard deviation in state predictions for the module angle. */
-                public final Vector<N2> ANGLE_STATE_STDEV = VecBuilder.fill(0, 0);
+                public final Vector<N2> ANGLE_STATE_STDEV = VecBuilder.fill(3.6e7, 3.6e6);
                 /** Standard deviaiton in the encoder measurements for the module angle. */
-                public final Vector<N1> ANGLE_ENC_STDEV = VecBuilder.fill(0);
+                public final Vector<N1> ANGLE_ENC_STDEV = VecBuilder.fill(1e-4);
 
                 /** Qelm constant; measurement error tolerance. */
-                public final Vector<N2> ANGLE_QELMS = VecBuilder.fill(0, 0);
+                public final Vector<N2> ANGLE_QELMS = VecBuilder.fill(65.0, 135.0);
                 /** Relm constant; control effort tolerance. */
-                public final Vector<N1> ANGLE_RELMS = VecBuilder.fill(0);
+                public final Vector<N1> ANGLE_RELMS = VecBuilder.fill(0.125);
 
                 /** kV Feed Forward constant for the speed */
                 public final double SPEED_kV = 0;
@@ -126,14 +126,14 @@ public class Constants {
                 public final double SPEED_kA = 0;
 
                 /** Standard deviation in state predictions for the module speed. */
-                public final double SPEED_STATE_STDEV = 0;
+                public final double SPEED_STATE_STDEV = 5e4;
                 /** Standard deviaiton in the encoder measurements for the module speed. */
-                public final double SPEED_ENC_STDEV = 0;
+                public final double SPEED_ENC_STDEV = 1e-4;
 
                 /** Qelm constant; measurement error tolerance. */
-                public final double SPEED_QELMS = 0;
+                public final double SPEED_QELMS = 1.5;
                 /** Relm constant; control effort tolerance. */
-                public final double SPEED_RELMS = 0;
+                public final double SPEED_RELMS = 0.25;
             }
             public final class module2 extends ModuleConstants {
                 /** Raw encoder reading when the module is at 0 degrees. */
@@ -148,14 +148,14 @@ public class Constants {
                 public final double ANGLE_kA = 0;
 
                 /** Standard deviation in state predictions for the module angle. */
-                public final Vector<N2> ANGLE_STATE_STDEV = VecBuilder.fill(0, 0);
+                public final Vector<N2> ANGLE_STATE_STDEV = VecBuilder.fill(3.6e7, 3.6e6);
                 /** Standard deviaiton in the encoder measurements for the module angle. */
-                public final Vector<N1> ANGLE_ENC_STDEV = VecBuilder.fill(0);
+                public final Vector<N1> ANGLE_ENC_STDEV = VecBuilder.fill(1e-4);
 
                 /** Qelm constant; measurement error tolerance. */
-                public final Vector<N2> ANGLE_QELMS = VecBuilder.fill(0, 0);
+                public final Vector<N2> ANGLE_QELMS = VecBuilder.fill(65.0, 135.0);
                 /** Relm constant; control effort tolerance. */
-                public final Vector<N1> ANGLE_RELMS = VecBuilder.fill(0);
+                public final Vector<N1> ANGLE_RELMS = VecBuilder.fill(0.125);
 
                 /** kV Feed Forward constant for the speed */
                 public final double SPEED_kV = 0;
@@ -163,14 +163,14 @@ public class Constants {
                 public final double SPEED_kA = 0;
 
                 /** Standard deviation in state predictions for the module speed. */
-                public final double SPEED_STATE_STDEV = 0;
+                public final double SPEED_STATE_STDEV = 5e4;
                 /** Standard deviaiton in the encoder measurements for the module speed. */
-                public final double SPEED_ENC_STDEV = 0;
+                public final double SPEED_ENC_STDEV = 1e-4;
 
                 /** Qelm constant; measurement error tolerance. */
-                public final double SPEED_QELMS = 0;
+                public final double SPEED_QELMS = 1.5;
                 /** Relm constant; control effort tolerance. */
-                public final double SPEED_RELMS = 0;
+                public final double SPEED_RELMS = 0.25;
             }
             public final class module3 extends ModuleConstants {
                 /** Raw encoder reading when the module is at 0 degrees. */
@@ -185,14 +185,14 @@ public class Constants {
                 public final double ANGLE_kA = 0;
 
                 /** Standard deviation in state predictions for the module angle. */
-                public final Vector<N2> ANGLE_STATE_STDEV = VecBuilder.fill(0, 0);
+                public final Vector<N2> ANGLE_STATE_STDEV = VecBuilder.fill(3.6e7, 3.6e6);
                 /** Standard deviaiton in the encoder measurements for the module angle. */
-                public final Vector<N1> ANGLE_ENC_STDEV = VecBuilder.fill(0);
+                public final Vector<N1> ANGLE_ENC_STDEV = VecBuilder.fill(1e-4);
 
                 /** Qelm constant; measurement error tolerance. */
-                public final Vector<N2> ANGLE_QELMS = VecBuilder.fill(0, 0);
+                public final Vector<N2> ANGLE_QELMS = VecBuilder.fill(65.0, 135.0);
                 /** Relm constant; control effort tolerance. */
-                public final Vector<N1> ANGLE_RELMS = VecBuilder.fill(0);
+                public final Vector<N1> ANGLE_RELMS = VecBuilder.fill(0.125);
 
                 /** kV Feed Forward constant for the speed */
                 public final double SPEED_kV = 0;
@@ -200,14 +200,14 @@ public class Constants {
                 public final double SPEED_kA = 0;
 
                 /** Standard deviation in state predictions for the module speed. */
-                public final double SPEED_STATE_STDEV = 0;
+                public final double SPEED_STATE_STDEV = 5e4;
                 /** Standard deviaiton in the encoder measurements for the module speed. */
-                public final double SPEED_ENC_STDEV = 0;
+                public final double SPEED_ENC_STDEV = 1e-4;
 
                 /** Qelm constant; measurement error tolerance. */
-                public final double SPEED_QELMS = 0;
+                public final double SPEED_QELMS = 1.5;
                 /** Relm constant; control effort tolerance. */
-                public final double SPEED_RELMS = 0;
+                public final double SPEED_RELMS = 0.25;
             }
             public final class module4 extends ModuleConstants {
                 /** Raw encoder reading when the module is at 0 degrees. */
@@ -222,14 +222,14 @@ public class Constants {
                 public final double ANGLE_kA = 0;
 
                 /** Standard deviation in state predictions for the module angle. */
-                public final Vector<N2> ANGLE_STATE_STDEV = VecBuilder.fill(0, 0);
+                public final Vector<N2> ANGLE_STATE_STDEV = VecBuilder.fill(3.6e7, 3.6e6);
                 /** Standard deviaiton in the encoder measurements for the module angle. */
-                public final Vector<N1> ANGLE_ENC_STDEV = VecBuilder.fill(0);
+                public final Vector<N1> ANGLE_ENC_STDEV = VecBuilder.fill(1e-4);
 
                 /** Qelm constant; measurement error tolerance. */
-                public final Vector<N2> ANGLE_QELMS = VecBuilder.fill(0, 0);
+                public final Vector<N2> ANGLE_QELMS = VecBuilder.fill(65.0, 135.0);
                 /** Relm constant; control effort tolerance. */
-                public final Vector<N1> ANGLE_RELMS = VecBuilder.fill(0);
+                public final Vector<N1> ANGLE_RELMS = VecBuilder.fill(0.125);
 
                 /** kV Feed Forward constant for the speed */
                 public final double SPEED_kV = 0;
@@ -237,14 +237,14 @@ public class Constants {
                 public final double SPEED_kA = 0;
 
                 /** Standard deviation in state predictions for the module speed. */
-                public final double SPEED_STATE_STDEV = 0;
+                public final double SPEED_STATE_STDEV = 5e4;
                 /** Standard deviaiton in the encoder measurements for the module speed. */
-                public final double SPEED_ENC_STDEV = 0;
+                public final double SPEED_ENC_STDEV = 1e-4;
 
                 /** Qelm constant; measurement error tolerance. */
-                public final double SPEED_QELMS = 0;
+                public final double SPEED_QELMS = 1.5;
                 /** Relm constant; control effort tolerance. */
-                public final double SPEED_RELMS = 0;
+                public final double SPEED_RELMS = 0.25;
             }
 
             public final double XkP = 5.2;

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.sensors;
 
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,6 +19,8 @@ public class Sensors extends SubsystemBase {
     return instance;
   }
 
+  private Pigeon pigeon = new Pigeon(31);
+
   /** Creates a new Sensors. */
   private Sensors() {
     CommandScheduler.getInstance().registerSubsystem(this);
@@ -27,9 +31,14 @@ public class Sensors extends SubsystemBase {
   }
 
   public Rotation2d getRotation() {
-    return new Rotation2d();
+    return pigeon.get();
+  }
+
+  public double getOmegaRad() {
+    return pigeon.getOmegaRadians();
   }
 
   public void setRotation(Rotation2d rotation) {
+    pigeon.setFusedHeading(rotation.getDegrees());
   }
 }

@@ -23,6 +23,7 @@ public class Module {
     private CANCoder encoder = null;
 
     private PIDController anglePID = new PIDController(Constants.drive.anglemotor.kP, Constants.drive.anglemotor.kI, Constants.drive.anglemotor.kD);
+    
 
     /**
      * Constructs a new Module object.

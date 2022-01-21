@@ -1,3 +1,10 @@
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
+
 package frc.robot;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -6,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.drive.Kinematics;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -18,6 +26,7 @@ import edu.wpi.first.math.util.Units;
 public class Constants {
 
     public final class robot {
+
             public static final double A_LENGTH = 0.59055; // Axel length (Meters).
             public static final double A_WIDTH = 0.48895; // Axel width (Meters).
             public final double A_CROSSLENGTH = Math.hypot(A_LENGTH, A_WIDTH);
@@ -52,6 +61,7 @@ public class Constants {
             public static final Translation2d FrontRightLocation = new Translation2d(-(Constants.robot.A_WIDTH / 2), (Constants.robot.A_LENGTH / 2));
             public static final Translation2d BackLeftLocation = new Translation2d((Constants.robot.A_WIDTH / 2), -(Constants.robot.A_LENGTH / 2));
             public static final Translation2d BackRightLocation = new Translation2d((Constants.robot.A_WIDTH / 2), (Constants.robot.A_LENGTH / 2));
+            public static final Kinematics KINEMATICS = new Kinematics(FrontLeftLocation, FrontRightLocation, BackLeftLocation, BackRightLocation);
 
             public static final class modules {
                 public static final double M1_ZERO = 45.263672;
@@ -100,18 +110,5 @@ public class Constants {
 
                 public static final TrajectoryConfig CONFIG = new TrajectoryConfig(MAX_VELOCITY, MAX_ACCEL); 
             }
-        }
-
-        public static class catcher {
-
-        }
-        public static class intake {
-            
-        }
-        public static class climber {
-            
-        }
-        public static class shooter {
-            
         }
 }

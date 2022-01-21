@@ -84,13 +84,22 @@ public class Turret extends SubsystemBase {
      * Sets turret motor to given percentage [-1.0, 1.0].
      */
     public void set(double percent) {
-        if (getPosition() < MIN_ANG){
-            if (percent > 0.0) turretMotor.set(percent);
-            else turretMotor.set(0.0);
-        } else if (getPosition() > MAX_ANG) {
-            if (percent < 0.0) turretMotor.set(percent);
-            else turretMotor.set(0.0);
-        } else {
+        if (getPosition() <= MIN_ANG)
+        {
+            if (getPosition() == MAX_ANG)
+                set(0.0);
+            else
+                set(-percent);
+        }
+        else if (getPosition() >= MAX_ANG)
+        {
+            if (getPosition() == MIN_ANG)
+                set(0.0);
+            else
+                set(percent);
+        }
+        else
+        {
             turretMotor.set(percent * reduction);
         }
     }

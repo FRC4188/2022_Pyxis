@@ -1,0 +1,38 @@
+{
+  "NetworkTables": {
+    "SmartDashboard": {
+      "open": true
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Flywheel": "Subsystem",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[7]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[8]": "PIDController",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/InstantCommand": "Command",
+      "/SmartDashboard/Reset Position": "Command",
+      "/SmartDashboard/Reset Rotation": "Command",
+      "/SmartDashboard/ResetPose": "Command",
+      "/SmartDashboard/ResetRotation": "Command",
+      "/SmartDashboard/Run To Velocity": "Command"
+    },
+    "windows": {
+      "/SmartDashboard/Run To Velocity": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client",
+    "serverTeam": "4188"
+  }
+}

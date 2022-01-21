@@ -118,6 +118,12 @@ public class Swerve extends SubsystemBase {
     return kinematics.toChassisSpeeds(getModuleStates());
   }
 
+  public double getVelocity() {
+    ChassisSpeeds chassisSpeeds = getChassisSpeeds();
+    
+    return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
+  }
+
   public SwerveModuleState[] getModuleStates() {
     return new SwerveModuleState[] {
       leftFront.getModuleState(),

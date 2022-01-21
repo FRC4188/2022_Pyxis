@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 
@@ -53,10 +54,10 @@ public class Constants {
             public static final Translation2d BackRightLocation = new Translation2d((Constants.robot.A_WIDTH / 2), (Constants.robot.A_LENGTH / 2));
 
             public static final class modules {
-                public static final double M1_ZERO = 46.054688;
-                public static final double M2_ZERO = 112.148438;
-                public static final double M3_ZERO = -156.533203;
-                public static final double M4_ZERO = -49.833984;
+                public static final double M1_ZERO = 45.263672;
+                public static final double M2_ZERO = -122.958984;
+                public static final double M3_ZERO = -160.927734;
+                public static final double M4_ZERO = -48.164062;
             }
 
             public static final class anglemotor {
@@ -85,17 +86,19 @@ public class Constants {
                 public static final PIDController yPID = new PIDController(kP, kI, kD);
             }
 
-            public static class thetaPID {
+            public static final class thetaPID {
                 public static final double kP = -17.25;
                 public static final double kI = 0.0;
                 public static final double kD = -0.05;  
                 public static final ProfiledPIDController thetaPID = new ProfiledPIDController(kP, kI, kD, new Constraints(Math.PI * 2.0, Math.PI / 2.0));
             }
 
-            public final class auto {
+            public static final class auto {
                 public static final double MAX_VELOCITY = 1.0; // Maximum velocity allowed in the drivetrain (Meters per Second).
                 public static final double MAX_ACCEL = 3.0; // Maximum acceleration of the drivetrain in (Meters per Second Squared).
                 public static final double MAX_CACCEL = 5.0; // Maximum centripital acceleration of the robot (Meters per Second Squared).
+
+                public static final TrajectoryConfig CONFIG = new TrajectoryConfig(MAX_VELOCITY, MAX_ACCEL); 
             }
         }
 

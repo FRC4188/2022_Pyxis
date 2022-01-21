@@ -5,11 +5,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.drive.auto;
+import frc.robot.commands.auto.Simple;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.subsystems.drive.Swerve;
-import frc.robot.utils.CspController;
-import frc.robot.utils.CspController.Scaling;
+import frc.robot.utils.controllers.CSPController;
+import frc.robot.utils.controllers.CSPController.Scaling;
+import frc.robot.utils.math.Derivative;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -21,7 +24,7 @@ public class RobotContainer {
 
   private Swerve swerve = Swerve.getInstance();
 
-  private CspController pilot = new CspController(0);
+  private CSPController pilot = new CSPController(0);
 
   private SendableChooser<SequentialCommandGroup> autoChooser = new SendableChooser<SequentialCommandGroup>();
 
@@ -42,7 +45,8 @@ public class RobotContainer {
       pilot.getRightX(Scaling.CUBED),
       pilot.getRightBumper()),
       swerve)
-    );  }
+    );  
+  }
 
   /**
    * Use this method to define your button->command mappings.
@@ -50,10 +54,15 @@ public class RobotContainer {
   private void configureButtonBindings() {
     SmartDashboard.putData("Reset Position", new ResetPose());
     SmartDashboard.putData("Reset Rotation", new ResetRotation());
+
+    pilot.setRumble(Derivative.getRate(Derivative.getRate(swerve.getVelocity())));
   }
 
   private void addChooser() {
     autoChooser.setDefaultOption("Do nothing", new SequentialCommandGroup());
+    autoChooser.addOption("Simple", new Simple());
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**

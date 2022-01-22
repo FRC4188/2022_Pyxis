@@ -128,7 +128,7 @@ public class RobotContainer {
                 drivetrain));
         turret.setDefaultCommand(new RunCommand(() -> turret.set(0.0), turret));;
     
-        shooter.setDefaultCommand(new SpinShooter(shooter, 2500.0));
+        //shooter.setDefaultCommand(new SpinShooter(shooter, 2500.0));
     }
 
     /**
@@ -136,8 +136,8 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         
-        //newBindings();
-        oldBindings();
+        newBindings();
+        //oldBindings();
         pilot.getBackButtonObj()
                 .whenPressed(new EmergencyPower(drivetrain, shooter, turret, magazine, intake, wheelSpinner, true))
                 .whenReleased(new EmergencyPower(drivetrain, shooter, turret, magazine, intake, wheelSpinner, false));
@@ -158,7 +158,8 @@ public class RobotContainer {
         copilot.getAButtonObj().whenPressed(new InstantCommand(() -> climber.engagePneuBrake(true), climber));
         copilot.getAButtonObj().whenReleased(new InstantCommand(() -> climber.engagePneuBrake(false), climber));
 
-        copilot.getBButtonObj().toggleWhenPressed(new ToggleHood(hood));
+        copilot.getBButtonObj().whileHeld(new AutoAim(turret, limelight, true))
+        .whenReleased(new AutoAim(turret, limelight, false));
 
         copilot.getXButtonObj().whileHeld(new RunMagazine(magazine, 1.0));
         copilot.getXButtonObj().whenReleased(new RunMagazine(magazine, 0.0));
@@ -203,7 +204,8 @@ public class RobotContainer {
         pilot.getXButtonObj().whileHeld(new RunMagazine(magazine, -0.9));
         pilot.getXButtonObj().whenReleased(new RunMagazine(magazine, 0));
 
-        pilot.getBButtonObj().whileHeld(new RaiseHood(hood)).whenReleased(new LowerHood(hood));
+        pilot.getBButtonObj().whileHeld(new AutoAim(turret, limelight, true))
+        .whenReleased(new AutoAim(turret, limelight, false));
     }
 
     private void oldBindings() {

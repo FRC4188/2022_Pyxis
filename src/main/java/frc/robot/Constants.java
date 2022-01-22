@@ -106,12 +106,15 @@ public class Constants {
             
         }
         public static class climber {
-            public static final int LEADER_MOTOR_ID = 0;
-            public static final int FOLLOWER_MOTOR_ID = 0;
+            public static final int MOTOR_A_ID = 0;
+            public static final int MOTOR_B_ID = 0;
             public static final int ENCODER_A_ID = 0;
             public static final int ENCODER_B_ID = 0;
             public static final int SOLENOID_A_ID = 0;
             public static final int SOLENOID_B_ID = 0;
+            public static final int LIMIT_A_ID = 0;
+            public static final int LIMIT_B_ID = 0;
+            public static final int BRAKE_ID = 0;
 
             public static final double GEARING = 0.0;
             public static final double OUTPUT_CIRCUMFERENCE = 0.0;
@@ -125,6 +128,10 @@ public class Constants {
             public static final double kI = 0.0;
             public static final double kD = 0.0;
             public static final double kF = 0.0;
+
+            public static final double PULL_POSITION = 0.0;
+            public static final double PUSH_POSITION = 0.0;
+            public static final double ACTIVE_TOLERANCE = 0.0;
         }
         public static class shooter {
             

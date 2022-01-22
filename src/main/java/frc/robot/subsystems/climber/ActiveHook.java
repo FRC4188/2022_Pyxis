@@ -11,8 +11,8 @@ import frc.robot.Constants;
 
 public class ActiveHook {
 
-    private TalonFX motorA = new TalonFX(Constants.climber.LEADER_MOTOR_ID);
-    private TalonFX motorB = new TalonFX(Constants.climber.FOLLOWER_MOTOR_ID);
+    private TalonFX motorA = new TalonFX(Constants.climber.MOTOR_A_ID);
+    private TalonFX motorB = new TalonFX(Constants.climber.MOTOR_B_ID);
 
     private CANCoder encoderA = new CANCoder(Constants.climber.ENCODER_A_ID);
     private CANCoder encoderB = new CANCoder(Constants.climber.ENCODER_B_ID);

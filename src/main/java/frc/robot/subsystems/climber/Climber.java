@@ -4,11 +4,18 @@
 
 package frc.robot.subsystems.climber;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
+import frc.robot.commands.climber.ResetActiveA;
+import frc.robot.commands.climber.ResetActiveB;
 
 public class Climber extends SubsystemBase {
 
@@ -21,13 +28,21 @@ public class Climber extends SubsystemBase {
   private ActiveHook active = new ActiveHook();
   private PassiveHook passive = new PassiveHook();
 
-  private DigitalInput limitA = new DigitalInput(channel)
+  private DigitalInput limitA = new DigitalInput(Constants.climber.LIMIT_A_ID);
+  private DigitalInput limitB = new DigitalInput(Constants.climber.LIMIT_B_ID);
+
+  private Solenoid brake = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.climber.BRAKE_ID);
 
   private Notifier dashboardLoop = new Notifier(() -> updateDashboard());
 
   /** Creates a new Climber. */
   private Climber() {
+    CommandScheduler.getInstance().registerSubsystem(this);
+
     dashboardLoop.startPeriodic(0.1);
+
+    new Trigger(() -> limitA.get()).whileActiveOnce(new ResetActiveA(), false);
+    new Trigger(() -> limitB.get()).whileActiveOnce(new ResetActiveB(), false);
   }
 
   @Override
@@ -48,6 +63,14 @@ public class Climber extends SubsystemBase {
     return (active.getPositionA()  + active.getPositionB()) / 2;
   }
 
+  public double getActivePositionA() {
+    return active.getPositionA();
+  }
+
+  public double getActivePositionB() {
+    return active.getPositionB();
+  }
+
   public boolean getPassivePosition() {
     return passive.getPosition();
   }
@@ -58,5 +81,22 @@ public class Climber extends SubsystemBase {
 
   public void setPassivePosition(boolean output) {
     passive.setPosition(output);
+  }
+
+  public void setBrake(boolean state) {
+    brake.set(state);
+  }
+
+  public void setActiveVolts(double volts) {
+    active.setA(volts);
+    active.setB(volts);
+  }
+
+  public void resetActiveA(double position) {
+    active.resetPositionA(position);
+  }
+
+  public void resetActiveB(double position) {
+    active.resetPositionB(position);
   }
 }

@@ -106,7 +106,22 @@ public class Constants {
             
         }
         public static class climber {
-            
+            public static final int ACTIVE_MOTOR_ID = 0;
+            public static final int SOLENOID_A_ID = 0;
+            public static final int SOLENOID_B_ID = 0;
+
+            public static final double GEARING = 0.0;
+            public static final double OUTPUT_CIRCUMFERENCE = 0.0;
+            public static final double METERS_PER_COUNT = OUTPUT_CIRCUMFERENCE / (GEARING * robot.FALCON_ENCODER_TICKS);
+
+            public static final double MAX_HEIGHT = 0.0;
+            public static final double MAX_VELOCITY = 0.0;
+            public static final double MAX_ACCEL = 0.0;
+
+            public static final double kP = 0.0;
+            public static final double kI = 0.0;
+            public static final double kD = 0.0;
+            public static final double kF = 0.0;
         }
         public static class shooter {
             

@@ -14,7 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import frc.robot.Constants;
-import frc.robot.Constants.drive.ModuleConstants;
+import frc.robot.ModuleConstants;
 import frc.robot.utils.controllers.ContinuousTrapezoid;
 import frc.robot.utils.controllers.SSMPosition;
 import frc.robot.utils.controllers.SSMVelocity;
@@ -41,7 +41,7 @@ public class Module {
      * @param encoderZero Magnet offset angle of the CANCoder.
      */
     public Module(int module) {
-        ModuleConstants constants = Constants.getModules()[module];
+        ModuleConstants constants = ModuleConstants.modules[module];
 
         speedMotor = new WPI_TalonFX(constants.SPEED_ID);
         angleMotor = new WPI_TalonFX(constants.ANGLE_ID);

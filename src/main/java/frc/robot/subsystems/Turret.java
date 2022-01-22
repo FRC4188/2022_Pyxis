@@ -42,6 +42,7 @@ public class Turret extends SubsystemBase {
     private double reduction = 1.0;
 
     private boolean MANUAL = false;
+    private boolean changing = false;
 
     /**
      * Constructs new Turret object and configures devices.
@@ -103,19 +104,37 @@ public class Turret extends SubsystemBase {
     }
 
     public void trackTarget(double measure) {
+
+        
         // set(aimingPID.calculate(measure, 0));
 
         
         if (getPosition() >= MAX_ANG)
         {
+            changing = true;
             setAngle(-30);
+            System.out.println("max " + changing);
+            if (getPosition() == -10) {
+                System.out.println("reached -30");
+                changing = false;
+
+            }
         }
         else if (getPosition() <= MIN_ANG)
         {
+            changing = true;
             setAngle(250);
+            System.out.println("min " + changing);
+            if (getPosition() == 200) {
+                System.out.println("reached 250");
+                changing = false;
+
+            }
         }
-        else
+        if (!changing)
         {
+            System.out.println("turning" + changing);
+            System.out.println("nomrmal turning");
             setAngle(getPosition() - measure);
         }
     }

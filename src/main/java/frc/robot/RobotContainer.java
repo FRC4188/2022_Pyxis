@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.commands.EmergencyPower;
 import frc.robot.commands.climb.FireBrake;
 import frc.robot.commands.climb.ManualClimb;
 import frc.robot.commands.drive.CenterBall;
@@ -49,7 +48,6 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.WheelSpinner;
 import frc.robot.utils.ButtonBox;
 import frc.robot.utils.CspController;
 import frc.robot.utils.CspSequentialCommandGroup;
@@ -75,7 +73,6 @@ public class RobotContainer {
     private final Intake intake = new Intake();
     private final Hood hood = new Hood();
     private final Limelight limelight = new Limelight();
-    private final WheelSpinner wheelSpinner = new WheelSpinner();
     private final TempManager tempManager = new TempManager(climber, drivetrain, intake, magazine, shooter, turret);
     private final BrownoutProtection bop = new BrownoutProtection(drivetrain, intake, magazine, shooter, turret);
 
@@ -138,10 +135,7 @@ public class RobotContainer {
         
         newBindings();
         //oldBindings();
-        pilot.getBackButtonObj()
-                .whenPressed(new EmergencyPower(drivetrain, shooter, turret, magazine, intake, wheelSpinner, true))
-                .whenReleased(new EmergencyPower(drivetrain, shooter, turret, magazine, intake, wheelSpinner, false));
-
+        
         pilot.getStartButtonObj().whenPressed(new KillAll());
 
 
@@ -201,8 +195,10 @@ public class RobotContainer {
         pilot.getYButtonObj().whileHeld(new AutoFire(drivetrain, shooter, magazine, intake, limelight, turret, hood, true));
         pilot.getYButtonObj().whenReleased(new AutoFire(drivetrain, shooter, magazine, intake, limelight, turret, hood, false));
 
-        pilot.getXButtonObj().whileHeld(new RunMagazine(magazine, -0.9));
-        pilot.getXButtonObj().whenReleased(new RunMagazine(magazine, 0));
+        // pilot.getXButtonObj().whileHeld(new RunMagazine(magazine, -0.9));
+        // pilot.getXButtonObj().whenReleased(new RunMagazine(magazine, 0));
+
+        pilot.getXButtonObj().whenPressed(new TurretToAngle(turret, 30));
 
         pilot.getBButtonObj().whileHeld(new AutoAim(turret, limelight, true))
         .whenReleased(new AutoAim(turret, limelight, false));
@@ -243,7 +239,7 @@ public class RobotContainer {
             SmartDashboard.getNumber("Set S D", 0.0)), shooter));
         SmartDashboard.putData("Set Shooter Velocity", new RunCommand(() -> shooter.setVelocity(SmartDashboard.getNumber("Set S Velocity", 0.0)), shooter));
 
-        SmartDashboard.putData("Set Turret Angle PIDs", new RunCommand(() -> turret.setPIDs(
+        SmartDashboard.putData("Set Turret Angle PIDs", new InstantCommand(() -> turret.setPIDs(
             SmartDashboard.getNumber("Set T Angle P", 0.0),
             SmartDashboard.getNumber("Set T Angle I", 0.0),
             SmartDashboard.getNumber("Set T Angle D", 0.0)), turret));

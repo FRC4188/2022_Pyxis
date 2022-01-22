@@ -19,4 +19,20 @@ public final class Trajectories {
                 new Pose2d(5.0, 0, new Rotation2d())
             ), autoConfig);
     }
+
+    public static class twoball {
+        public static final Trajectory first = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(),
+                new Pose2d(2.2, 0.17, Rotation2d.fromDegrees(24.13))
+            ), autoConfig
+        );
+
+        public static final Trajectory second = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(2.2, 0.17, Rotation2d.fromDegrees(-81.96)),
+                new Pose2d(2.74, -0.95, Rotation2d.fromDegrees(-81.96)),
+                new Pose2d(2.32, -2.56, Rotation2d.fromDegrees(-203.03))
+            ), autoConfig);
+    }
 }

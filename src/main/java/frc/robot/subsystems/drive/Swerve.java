@@ -43,7 +43,7 @@ public class Swerve extends SubsystemBase {
   private PIDController rotationPID = new PIDController(0.2, 0.0, 0.01);
 
   //private Odometry odometry = Odometry.getInstance();
-  private SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, sensors.getRotation());
+  private Odometry odometry = new Odometry(new Pose2d());
 
   private Notifier dashboard = new Notifier(() -> smartDashboard());
 
@@ -63,7 +63,7 @@ public class Swerve extends SubsystemBase {
   @Override
   public void periodic() {
     //odometry.update(sensors.getRotation(), getChassisSpeeds());
-    odometry.update(sensors.getRotation(), getModuleStates());
+    odometry.update(getChassisSpeeds(), sensors.getRotation());
   }
 
   private void smartDashboard() {
@@ -72,7 +72,7 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("M3 (LR) Angle", leftRear.getAbsoluteAngle());
     SmartDashboard.putNumber("M4 (RR) Angle", rightRear.getAbsoluteAngle());
     SmartDashboard.putString("Chassis Speeds", getChassisSpeeds().toString());
-    SmartDashboard.putString("Odometry", odometry.getPoseMeters().toString());
+    SmartDashboard.putString("Odometry", odometry.getPose().toString());
 
     SmartDashboard.putNumber("Falcon 1 Temp", leftFront.getAngleTemp());
     SmartDashboard.putNumber("Falcon 2 Temp", leftFront.getSpeedTemp());
@@ -142,11 +142,11 @@ public class Swerve extends SubsystemBase {
   }
 
   public void setPose(Pose2d pose) {
-    odometry.resetPosition(pose, pose.getRotation());
+    odometry.setPose(pose);
   }
 
   public Pose2d getPose() {
-    return odometry.getPoseMeters();
+    return odometry.getPose();
   }
 
   public SwerveDriveKinematics getKinematics() {
@@ -155,9 +155,9 @@ public class Swerve extends SubsystemBase {
 
   private Data[] odometryData() {
     return new Data[] {
-      new Data("XPos", String.valueOf(odometry.getPoseMeters().getX())),
-      new Data("YPos", String.valueOf(odometry.getPoseMeters().getY())),
-      new Data("Rotation", String.valueOf(odometry.getPoseMeters().getRotation().getDegrees()))
+      new Data("XPos", String.valueOf(odometry.getPose().getX())),
+      new Data("YPos", String.valueOf(odometry.getPose().getY())),
+      new Data("Rotation", String.valueOf(odometry.getPose().getRotation().getDegrees()))
     };
   }
 }

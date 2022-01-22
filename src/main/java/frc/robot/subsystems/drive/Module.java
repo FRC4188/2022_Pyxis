@@ -43,9 +43,9 @@ public class Module {
     public Module(int module) {
         //ModuleConstants constants = ModuleConstants.modules[module];
 
-        speedMotor = new WPI_TalonFX(module*2 + 1);
-        angleMotor = new WPI_TalonFX(module*2);
-        encoder = new CANCoder(20+module);
+        speedMotor = new WPI_TalonFX(ModuleConstants.SPEED_ID[module]);
+        angleMotor = new WPI_TalonFX(ModuleConstants.ANGLE_ID[module]);
+        encoder = new CANCoder(ModuleConstants.ENC_ID[module]);
 
         speedMotor.configFactoryDefault();
         speedMotor.setNeutralMode(NeutralMode.Brake);
@@ -63,12 +63,12 @@ public class Module {
         encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
         encoder.setPosition(0.0);
         encoder.configSensorDirection(false);
-        encoder.configMagnetOffset(0.0);
+        encoder.configMagnetOffset(ModuleConstants.ZERO[module]);
 
-        speedController = new SSMVelocity(0.01, 0.01, 5.0, 0.15, 5e3, 1e-5);
-        speedProfile = new ContinuousTrapezoid(new Constraints(4.0, 12.0));
-        angleController = new SSMPosition(1.1059E-49, 5.1324E-51,  VecBuilder.fill(270.0, 360.0), VecBuilder.fill(0.125), VecBuilder.fill(3.6e4, 3.6e3), VecBuilder.fill(3.6e-5));
-        angleProfile = new ContinuousTrapezoid(new Constraints(720.0, 1440.0));
+        speedController = new SSMVelocity(ModuleConstants.SPEED_kV, ModuleConstants.SPEED_kA, ModuleConstants.SPEED_QELMS, ModuleConstants.SPEED_RELMS, ModuleConstants.SPEED_STATE_STDEV, ModuleConstants.SPEED_ENC_STDEV);
+        speedProfile = new ContinuousTrapezoid(new Constraints(ModuleConstants.SPEED_MAX_ACCEL, ModuleConstants.SPEED_MAX_JERK));
+        angleController = new SSMPosition(ModuleConstants.ANGLE_kV, ModuleConstants.ANGLE_kA,  ModuleConstants.ANGLE_QELMS, ModuleConstants.ANGLE_RELMS, ModuleConstants.ANGLE_STATE_STDEV, ModuleConstants.ANGLE_ENC_STDEV);
+        angleProfile = new ContinuousTrapezoid(new Constraints(ModuleConstants.ANGLE_MAX_VEL, ModuleConstants.ANGLE_MAX_ACCEL));
     }
 
     /**

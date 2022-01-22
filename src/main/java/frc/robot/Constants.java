@@ -51,11 +51,7 @@ public class Constants {
             public static final Translation2d FrontRightLocation = new Translation2d(-(Constants.robot.A_WIDTH / 2), (Constants.robot.A_LENGTH / 2));
             public static final Translation2d BackLeftLocation = new Translation2d((Constants.robot.A_WIDTH / 2), -(Constants.robot.A_LENGTH / 2));
             public static final Translation2d BackRightLocation = new Translation2d((Constants.robot.A_WIDTH / 2), (Constants.robot.A_LENGTH / 2));
-
-<<<<<<< HEAD
-=======
-
->>>>>>> ebaf4ef77babfdbacd2d0472837bc920803ecc2b
+            
             public static final double XkP = 5.2;
             public static final double XkI = 0.0;
             public static final double XkD = 0.0;

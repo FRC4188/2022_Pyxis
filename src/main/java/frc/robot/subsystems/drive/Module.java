@@ -41,11 +41,11 @@ public class Module {
      * @param encoderZero Magnet offset angle of the CANCoder.
      */
     public Module(int module) {
-        ModuleConstants constants = ModuleConstants.modules[module];
+        //ModuleConstants constants = ModuleConstants.modules[module];
 
-        speedMotor = new WPI_TalonFX(constants.SPEED_ID);
-        angleMotor = new WPI_TalonFX(constants.ANGLE_ID);
-        encoder = new CANCoder(constants.ENC_ID);
+        speedMotor = new WPI_TalonFX(module*2 + 1);
+        angleMotor = new WPI_TalonFX(module*2);
+        encoder = new CANCoder(20+module);
 
         speedMotor.configFactoryDefault();
         speedMotor.setNeutralMode(NeutralMode.Brake);
@@ -63,12 +63,12 @@ public class Module {
         encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
         encoder.setPosition(0.0);
         encoder.configSensorDirection(false);
-        encoder.configMagnetOffset(constants.ZERO);
+        encoder.configMagnetOffset(0.0);
 
-        speedController = new SSMVelocity(constants.SPEED_kV, constants.SPEED_kA, constants.SPEED_QELMS, constants.SPEED_RELMS, constants.SPEED_STATE_STDEV, constants.SPEED_ENC_STDEV);
-        speedProfile = new ContinuousTrapezoid(new Constraints(constants.SPEED_MAX_ACCEL, constants.SPEED_MAX_JERK));
-        angleController = new SSMPosition(constants.ANGLE_kV, constants.ANGLE_kA, constants.ANGLE_QELMS, constants.ANGLE_RELMS, constants.ANGLE_STATE_STDEV, constants.ANGLE_ENC_STDEV);
-        angleProfile = new ContinuousTrapezoid(new Constraints(constants.ANGLE_MAX_VEL, constants.ANGLE_MAX_ACCEL));
+        speedController = new SSMVelocity(0.01, 0.01, 5.0, 0.15, 5e3, 1e-5);
+        speedProfile = new ContinuousTrapezoid(new Constraints(4.0, 12.0));
+        angleController = new SSMPosition(1.1059E-49, 5.1324E-51,  VecBuilder.fill(270.0, 360.0), VecBuilder.fill(0.125), VecBuilder.fill(3.6e4, 3.6e3), VecBuilder.fill(3.6e-5));
+        angleProfile = new ContinuousTrapezoid(new Constraints(720.0, 1440.0));
     }
 
     /**

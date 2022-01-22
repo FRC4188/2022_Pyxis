@@ -106,7 +106,10 @@ public class Constants {
             
         }
         public static class climber {
-            public static final int ACTIVE_MOTOR_ID = 0;
+            public static final int LEADER_MOTOR_ID = 0;
+            public static final int FOLLOWER_MOTOR_ID = 0;
+            public static final int ENCODER_A_ID = 0;
+            public static final int ENCODER_B_ID = 0;
             public static final int SOLENOID_A_ID = 0;
             public static final int SOLENOID_B_ID = 0;
 

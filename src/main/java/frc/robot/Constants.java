@@ -1,12 +1,8 @@
 package frc.robot;
 
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 
@@ -30,7 +26,7 @@ public class Constants {
             public static final double FALCON_MAX_VEL = 6380.0;
         }
 
-        public static class drive {
+        public static final class drive {
             public static final double DRIVE_GEARING = 6.92; // Gear ratio of the drive motor.
             public static final double WHEEL_DIAMETER = Units.inchesToMeters(4); //Diameter of the drive wheels (Meters).
             public static final double WHEEL_CIRCUMFRENCE = Math.PI * WHEEL_DIAMETER; // Circumfrence of the drive wheels (Meters).
@@ -56,6 +52,10 @@ public class Constants {
             public static final Translation2d BackLeftLocation = new Translation2d((Constants.robot.A_WIDTH / 2), -(Constants.robot.A_LENGTH / 2));
             public static final Translation2d BackRightLocation = new Translation2d((Constants.robot.A_WIDTH / 2), (Constants.robot.A_LENGTH / 2));
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ebaf4ef77babfdbacd2d0472837bc920803ecc2b
             public static final double XkP = 5.2;
             public static final double XkI = 0.0;
             public static final double XkD = 0.0;

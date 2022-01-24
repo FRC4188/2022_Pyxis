@@ -108,33 +108,33 @@ public class Turret extends SubsystemBase {
         
         // set(aimingPID.calculate(measure, 0));
 
-        
-        if (getPosition() >= MAX_ANG)
+        if (getPosition() >= MAX_ANG && !changing)
         {
             changing = true;
-            setAngle(-30);
-            System.out.println("max " + changing);
-            if (getPosition() == -10) {
-                System.out.println("reached -30");
+            setAngle(-5);
+            System.out.println(getPosition());
+            if (getPosition() == -5) {
+                System.out.println("reached -5");
+                set(0.0);
                 changing = false;
 
             }
         }
-        else if (getPosition() <= MIN_ANG)
+        else if (getPosition() <= MIN_ANG && !changing)
         {
             changing = true;
-            setAngle(250);
-            System.out.println("min " + changing);
-            if (getPosition() == 200) {
-                System.out.println("reached 250");
+            setAngle(180);
+            System.out.println(getPosition() == 10);
+            if (getPosition() == 180) {
+                System.out.println("reached 180");
+                set(0.0);
                 changing = false;
 
             }
         }
-        if (!changing)
+        else if (!changing)
         {
-            System.out.println("turning" + changing);
-            System.out.println("nomrmal turning");
+
             setAngle(getPosition() - measure);
         }
     }

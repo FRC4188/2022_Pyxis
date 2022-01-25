@@ -1,0 +1,11 @@
+{
+  "SysId": {
+    "Analysis Type": "General Mechanism",
+    "AnalyzerJSONLocation": "C:\\Users\\vyang\\OneDrive\\Desktop\\sysid_data20220121-180433.json",
+    "NetworkTables Settings": {
+      "serverTeam": "4188"
+    },
+    "mode": "Client",
+    "serverTeam": "4188"
+  }
+}

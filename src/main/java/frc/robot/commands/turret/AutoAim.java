@@ -12,7 +12,6 @@ public class AutoAim extends CommandBase {
 
     private final Turret turret;
     private final Limelight limelight;
-    private boolean cont;
 
     /**
      * Constructs new AutoAim command to turn turret to keep vision target centered.
@@ -20,11 +19,10 @@ public class AutoAim extends CommandBase {
      * @param turret - Turret subsystem to use.
      * @param limelight - Limelight subsystem to use.
      */
-    public AutoAim(Turret turret, Limelight limelight, boolean cont) {
+    public AutoAim(Turret turret, Limelight limelight) {
         addRequirements(turret);
         this.turret = turret;
         this.limelight = limelight;
-        this.cont = cont;
     }
 
     @Override
@@ -39,7 +37,7 @@ public class AutoAim extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (!cont);
+        return Math.abs(limelight.getHorizontalAngle()) < 0.5;
     }
 
     @Override

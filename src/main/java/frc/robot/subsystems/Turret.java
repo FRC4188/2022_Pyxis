@@ -114,24 +114,24 @@ public class Turret extends SubsystemBase {
             changing = true;
             setAngle(-30);
             System.out.println("max " + changing);
-            if (getPosition() == -10) {
+            if (getPosition() <= -10) {
                 System.out.println("reached -30");
                 changing = false;
 
             }
         }
-        else if (getPosition() <= MIN_ANG)
+        else if (getPosition() <= MIN_ANG || changing) 
         {
             changing = true;
             setAngle(250);
             System.out.println("min " + changing);
-            if (getPosition() == 200) {
+            if (getPosition() >= 200) {
                 System.out.println("reached 250");
                 changing = false;
 
             }
         }
-        if (!changing)
+        else if (!changing)
         {
             System.out.println("turning" + changing);
             System.out.println("nomrmal turning");

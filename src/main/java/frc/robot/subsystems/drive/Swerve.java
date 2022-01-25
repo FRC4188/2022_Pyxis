@@ -103,6 +103,13 @@ public class Swerve extends SubsystemBase {
     new ChassisSpeeds(yInput, xInput, rotInput));
   }
 
+  public void zeroPower() {
+    leftFront.zeroPower();
+    rightFront.zeroPower();
+    leftRear.zeroPower();
+    rightRear.zeroPower();
+  }
+
   public void setRotSetpoint(double setpoint) {
     rotationPID.setSetpoint(setpoint);
   }

@@ -69,6 +69,11 @@ public class Module {
         return encoder.getAbsolutePosition();
     }
 
+    public void zeroPower() {
+        speedMotor.set(0.0);
+        angleMotor.set(0.0);
+    }
+
     /**
      * Returns the measured meters per second velocity of the speed motor.
      * @return Measured meters per second.

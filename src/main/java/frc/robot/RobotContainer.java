@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.drive.auto;
+import frc.robot.commands.auto.FiveBall;
 import frc.robot.commands.auto.Simple;
+import frc.robot.commands.auto.ThreeBall;
 import frc.robot.commands.auto.TwoBall;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
@@ -75,6 +77,8 @@ public class RobotContainer {
     autoChooser.setDefaultOption("Do nothing", new SequentialCommandGroup());
     autoChooser.addOption("Simple", new Simple());
     autoChooser.addOption("Two Ball Auto", new TwoBall());
+    autoChooser.addOption("Three Ball Auto", new ThreeBall());
+    autoChooser.addOption("Five Ball Auto", new FiveBall());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }

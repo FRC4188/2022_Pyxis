@@ -4,28 +4,31 @@
 
 package frc.robot.commands.sensors;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ResetRotation extends InstantCommand {
 
-  Rotation2d newRot;
+  private Rotation2d rotation;
 
   public ResetRotation() {
-    newRot = new Rotation2d();
+    this(new Rotation2d());
   }
 
-  public ResetRotation(Rotation2d newRot) {
-    this.newRot = newRot;
+  public ResetRotation(Rotation2d rotation) {
+    this.rotation = rotation;
+
+    addRequirements(Swerve.getInstance());
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Sensors.getInstance().setRotation(newRot);
+    Pose2d pose = Swerve.getInstance().getPose();
+    Swerve.getInstance().setPose(new Pose2d(pose.getTranslation(), rotation));
+    Sensors.getInstance().setRotation(rotation);
+    Swerve.getInstance().setRotSetpoint(0.0);
   }
 }

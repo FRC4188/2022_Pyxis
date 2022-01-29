@@ -4,16 +4,18 @@
 
 package frc.robot.subsystems.drive;
 
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.logging.Data;
+import frc.robot.subsystems.logging.USBLogger;
 import frc.robot.Constants;
 import frc.robot.subsystems.sensors.Sensors;
 
@@ -27,12 +29,13 @@ public class Swerve extends SubsystemBase {
     return instance;
   }
 
-  private Module leftFront = new Module(0);
-  private Module rightFront = new Module(1);
-  private Module leftRear = new Module(2);
-  private Module rightRear = new Module(3);
+  private Module leftFront = new Module(1, 2, 21, Constants.drive.modules.M1_ZERO);
+  private Module rightFront = new Module(3, 4, 22, Constants.drive.modules.M2_ZERO);
+  private Module leftRear = new Module(5, 6, 23, Constants.drive.modules.M3_ZERO);
+  private Module rightRear = new Module(7, 8, 24, Constants.drive.modules.M4_ZERO);
 
   private Sensors sensors = Sensors.getInstance();
+
 
   //private Kinematics kinematics = Constants.drive.KINEMATICS;
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(Constants.drive.FrontLeftLocation, Constants.drive.FrontRightLocation, Constants.drive.BackLeftLocation, Constants.drive.BackRightLocation);
@@ -51,10 +54,15 @@ public class Swerve extends SubsystemBase {
     rotationPID.setTolerance(1.0);
 
     dashboard.startPeriodic(0.1);
+
+    //USBLogger.getInstance().addSupplier(() -> odometryData()[0]);
+    //USBLogger.getInstance().addSupplier(() -> odometryData()[1]);
+    //USBLogger.getInstance().addSupplier(() -> odometryData()[2]);
   }
 
   @Override
   public void periodic() {
+    //odometry.update(sensors.getRotation(), getChassisSpeeds());
     odometry.update(getChassisSpeeds(), sensors.getRotation());
   }
 
@@ -95,6 +103,13 @@ public class Swerve extends SubsystemBase {
     new ChassisSpeeds(yInput, xInput, rotInput));
   }
 
+  public void zeroPower() {
+    leftFront.zeroPower();
+    rightFront.zeroPower();
+    leftRear.zeroPower();
+    rightRear.zeroPower();
+  }
+
   public void setRotSetpoint(double setpoint) {
     rotationPID.setSetpoint(setpoint);
   }
@@ -107,6 +122,7 @@ public class Swerve extends SubsystemBase {
   public void setModuleStates(SwerveModuleState[] states) {
     SwerveDriveKinematics.desaturateWheelSpeeds(states, 4.75);
     
+    SmartDashboard.putNumber("Left Front Set", states[0].angle.getDegrees());
     leftFront.setModuleState(new SwerveModuleState(states[0].speedMetersPerSecond, states[0].angle));
     rightFront.setModuleState(new SwerveModuleState(states[1].speedMetersPerSecond, states[1].angle));
     leftRear.setModuleState(new SwerveModuleState(states[2].speedMetersPerSecond, states[2].angle));
@@ -115,6 +131,12 @@ public class Swerve extends SubsystemBase {
 
   public ChassisSpeeds getChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
+  }
+
+  public double getVelocity() {
+    ChassisSpeeds chassisSpeeds = getChassisSpeeds();
+    
+    return Math.sqrt(Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + Math.pow(chassisSpeeds.vyMetersPerSecond, 2));
   }
 
   public SwerveModuleState[] getModuleStates() {
@@ -136,5 +158,13 @@ public class Swerve extends SubsystemBase {
 
   public SwerveDriveKinematics getKinematics() {
     return kinematics;
+  }
+
+  private Data[] odometryData() {
+    return new Data[] {
+      new Data("XPos", String.valueOf(odometry.getPose().getX())),
+      new Data("YPos", String.valueOf(odometry.getPose().getY())),
+      new Data("Rotation", String.valueOf(odometry.getPose().getRotation().getDegrees()))
+    };
   }
 }

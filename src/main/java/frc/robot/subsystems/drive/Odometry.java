@@ -6,24 +6,23 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.utils.math.Integral;
 
 public class Odometry {
-    
+
     private Integral xPos = null;
     private Integral yPos = null;
-    private Rotation2d heading = null;
-
-    public Odometry(Pose2d start) {
-        xPos = new Integral(start.getX());
-        yPos = new Integral(start.getY());
-        heading = start.getRotation();
+    private Rotation2d heading;
+    
+    public Odometry(Pose2d pose) {
+        xPos = new Integral(pose.getX());
+        yPos = new Integral(pose.getY());
     }
 
     public void update(ChassisSpeeds speeds, Rotation2d gyro) {
-        double heading = Math.atan2(speeds.vyMetersPerSecond, speeds.vxMetersPerSecond) + gyro.getRadians();
-        double speed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        double direction = Math.atan2(speeds.vyMetersPerSecond, speeds.vxMetersPerSecond) + gyro.getRadians();
+        double speed = Math.hypot(speeds.vyMetersPerSecond, speeds.vxMetersPerSecond);
 
-        xPos.sample(speed * Math.cos(heading));
-        yPos.sample(speed * Math.sin(heading));
-        this.heading = gyro;
+        xPos.sample(speed * Math.cos(direction));
+        yPos.sample(speed * Math.sin(direction));
+        heading = gyro;
     }
 
     public Pose2d getPose() {

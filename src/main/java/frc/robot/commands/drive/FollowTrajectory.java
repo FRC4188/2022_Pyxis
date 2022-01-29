@@ -32,10 +32,10 @@ public class FollowTrajectory extends CommandBase {
     this.trajectory = trajectory;
     this.rotation = rotation;
 
-    ProfiledPIDController thetaController = Constants.drive.thetaPID;
+    ProfiledPIDController thetaController = Constants.drive.thetaPID.thetaPID;
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    controller = new HolonomicDriveController(Constants.drive.xPID, Constants.drive.yPID, thetaController);
+    controller = new HolonomicDriveController(Constants.drive.xPID.xPID, Constants.drive.yPID.yPID, thetaController);
   }
 
   // Called when the command is initially scheduled.
@@ -54,7 +54,7 @@ public class FollowTrajectory extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    swerve.setChassisSpeeds(new ChassisSpeeds());
+    swerve.zeroPower();
   }
 
   // Returns true when the command should end.

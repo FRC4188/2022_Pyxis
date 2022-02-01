@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.subsystems.drive.Swerve;
+import frc.robot.subsystems.turret.Turret;
 import frc.robot.utils.CspController;
 import frc.robot.utils.CspController.Scaling;
 
@@ -20,6 +21,7 @@ import frc.robot.utils.CspController.Scaling;
 public class RobotContainer {
 
   private Swerve swerve = Swerve.getInstance();
+  private Turret turret = Turret.getInstance();
 
   private CspController pilot = new CspController(0);
 

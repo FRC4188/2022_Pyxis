@@ -6,7 +6,6 @@ package frc.robot.subsystems.turret;
 
 import frc.robot.Constants;
 
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -50,12 +49,18 @@ public class Turret extends SubsystemBase {
     PID.setD(turret.kD);
   }
 
+  
   public void set(double amount)
   {
 
   }
 
   public void setAngle(double angle)
+  {
+    
+  }
+  
+  public void resetTurret()
   {
     
   }
@@ -68,6 +73,9 @@ public class Turret extends SubsystemBase {
     SmartDashboard.putNumber("Temperature: ", motor.getMotorTemperature());
   }
 
+  /* 
+  * Outputs the current position of the turret
+  */
   public void getPosition()
   {
 

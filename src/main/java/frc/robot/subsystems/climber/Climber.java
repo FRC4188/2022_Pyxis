@@ -91,6 +91,15 @@ public class Climber extends SubsystemBase {
     active.setA(volts);
     active.setB(volts);
   }
+  public boolean getLimitA(){
+    return limitA.get();
+  }
+  public boolean getLimitB(){
+    return limitB.get();
+  }
+  public boolean getLimitAB(){
+    return limitA.get() && limitB.get();
+  }
 
   public void resetActiveA(double position) {
     active.resetPositionA(position);

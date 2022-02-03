@@ -112,9 +112,22 @@ public class Constants {
             
         }
         public static class turret {
+
+            // Unknown for now
             public static final double kP = 0.0;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
+
+            public static final double gearRatio = 0.0; // Unknown for now
+            public static final double encoderToDegrees = 360 * gearRatio;
+
+            // Unknown for now
+            public static final double MAX_VELOCITY = 0.0;
+            public static final double MAX_ACCEL = 0.0;
+
+            // Unknown for now
+            public static final double MAX_ANGLE = 280.0;
+            public static final double MIN_ANGLE = -32.0;
             
         }
 }

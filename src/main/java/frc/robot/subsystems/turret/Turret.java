@@ -90,9 +90,9 @@ public class Turret extends SubsystemBase {
   // Reloads the information on the Shuffleboard
   private void updateShuffleboard()
   {
-    SmartDashboard.putNumber("Position: ", getPosition());
-    SmartDashboard.putNumber("Temperature: ", getTemp());
-    SmartDashboard.putNumber("Velocity: ", getVelocity());
+    SmartDashboard.putNumber("Position", getPosition());
+    SmartDashboard.putNumber("Temperature", getTemp());
+    SmartDashboard.putNumber("Velocity", getVelocity());
   }
 
   /*
@@ -122,6 +122,6 @@ public class Turret extends SubsystemBase {
   */
   public double getVelocity()
   {
-    return encoder.getVelocity() * Constants.turret.encoderToDegrees / 60;
+    return encoder.getVelocity() * Constants.turret.encoderToDegrees / 60.0;
   }
 }

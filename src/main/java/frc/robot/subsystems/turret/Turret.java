@@ -44,8 +44,13 @@ public class Turret extends SubsystemBase {
     motorInit();
     resetEncoder();
 
-    shuffleboard.startPeriodic(1);
 
+    
+    SmartDashboard.putNumber("set P", Constants.turret.kP);
+    SmartDashboard.putNumber("set I", Constants.turret.kI);
+    SmartDashboard.putNumber("set D", Constants.turret.kD);
+
+    shuffleboard.startPeriodic(0.4);
   }
 
   @Override
@@ -63,7 +68,11 @@ public class Turret extends SubsystemBase {
     motor.setIdleMode(IdleMode.kBrake);
   }
 
-  
+  public void setPID(double kP, double kI, double kD){
+    pid.setP(kP);
+    pid.setI(kI);
+    pid.setD(kD);
+  }
   /*
   * Sets the turret motor to the amount you want (has to be between -1.0 and 1.0).
   * Stops the turret from moving when it reaches its min or max angle.
@@ -94,6 +103,8 @@ public class Turret extends SubsystemBase {
   // Reloads the information on the Shuffleboard
   private void updateShuffleboard()
   {
+
+
     SmartDashboard.putNumber("Position", getPosition());
     SmartDashboard.putNumber("Temperature", getTemp());
     SmartDashboard.putNumber("Velocity", getVelocity());

@@ -3,12 +3,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.commands.turret.SetToAngle;
 import frc.robot.commands.turret.TurretPower;
+import frc.robot.commands.turret.ZeroTurret;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.turret.Turret;
 import frc.robot.utils.CspController;
@@ -60,8 +62,15 @@ public class RobotContainer {
     
 
     pilot.getAButtonObj().whenPressed(new SetToAngle(30));
-    pilot.getBButtonObj().whenPressed(new SetToAngle(30));
+    pilot.getBButtonObj().whenPressed(new SetToAngle(-30));
+    pilot.getXButtonObj().whenPressed(new SetToAngle(0));
 
+    SmartDashboard.putData("Set PIDs", new InstantCommand(() -> turret.setPID(
+      SmartDashboard.getNumber("set P", Constants.turret.kP), 
+      SmartDashboard.getNumber("set I", Constants.turret.kI), 
+      SmartDashboard.getNumber("set D", Constants.turret.kD)), turret));
+
+      SmartDashboard.putData("Rezero Turret", new ZeroTurret(turret));
 
 
 

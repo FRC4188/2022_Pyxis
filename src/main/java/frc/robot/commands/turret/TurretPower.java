@@ -6,17 +6,11 @@ import frc.robot.subsystems.turret.Turret;
 public class TurretPower extends CommandBase {
   Turret turret = Turret.getInstance();
   double power;
-  private boolean cont;
   
-  public TurretPower(double power, boolean cont) {
+  public TurretPower(double power) {
     addRequirements(turret);
 
     this.power = power;
-    this.cont = cont;
-  }
-
-  public TurretPower(double power) {
-    this(power, true);
   }
 
   // Called when the command is initially scheduled.
@@ -32,12 +26,11 @@ public class TurretPower extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret.set(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !cont;
+    return false;
   }
 }

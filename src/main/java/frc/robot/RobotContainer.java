@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
+import frc.robot.commands.turret.SetToAngle;
+import frc.robot.commands.turret.TurretPower;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.turret.Turret;
 import frc.robot.utils.CspController;
@@ -52,6 +54,17 @@ public class RobotContainer {
   private void configureButtonBindings() {
     SmartDashboard.putData("Reset Position", new ResetPose());
     SmartDashboard.putData("Reset Rotation", new ResetRotation());
+    
+    pilot.getDpadLeftButtonObj().whileHeld(new RunCommand(() -> turret.set(0.5))).whenReleased(new RunCommand(() -> turret.set(0.0)));
+    pilot.getDpadRightButtonObj().whileHeld(new RunCommand(() -> turret.set(-0.5))).whenReleased(new RunCommand(() -> turret.set(0.0)));
+    
+
+    pilot.getAButtonObj().whenPressed(new SetToAngle(30));
+    pilot.getBButtonObj().whenPressed(new SetToAngle(30));
+
+
+
+
   }
 
   private void addChooser() {

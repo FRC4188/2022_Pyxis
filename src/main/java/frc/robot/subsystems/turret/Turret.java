@@ -8,6 +8,7 @@ import frc.robot.Constants;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -30,8 +31,8 @@ public class Turret extends SubsystemBase {
     return instance;
   }
 
-  CANSparkMax motor = new CANSparkMax(0, MotorType.kBrushless);
-  CANCoder encoder = new CANCoder(0);
+  CANSparkMax motor = new CANSparkMax(11, MotorType.kBrushless);
+  RelativeEncoder encoder = motor.getEncoder();
   ProfiledPIDController pid = new ProfiledPIDController(Constants.turret.kD, Constants.turret.kI, Constants.turret.kP, new Constraints(Constants.turret.MAX_VELOCITY, Constants.turret.MAX_ACCEL));
 
   private Notifier shuffleboard = new Notifier(() -> updateShuffleboard());
@@ -72,14 +73,15 @@ public class Turret extends SubsystemBase {
   public void set(double amount)
   {
     motor.set(amount);
-    if (getPosition() >= Constants.turret.MAX_ANGLE)
-    motor.set(0.0);
-    else if (getPosition() <= Constants.turret.MIN_ANGLE)
-    motor.set(0.0);
+    // if (getPosition() >= Constants.turret.MAX_ANGLE)
+    // motor.set(0.0);
+    // else if (getPosition() <= Constants.turret.MIN_ANGLE)
+    // motor.set(0.0);
   }
 
   public void setAngle(double angle)
   {
+   set(pid.calculate(getPosition(), angle));
 
   }
   

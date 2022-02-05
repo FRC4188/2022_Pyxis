@@ -118,7 +118,7 @@ public class Constants {
             public static final double kI = 0.0;
             public static final double kD = 0.0;
 
-            public static final double gearRatio = 0.0; // Unknown for now
+            public static final double gearRatio = 20.0; // Unknown for now
             public static final double encoderToDegrees = 360 * gearRatio;
 
             // Unknown for now

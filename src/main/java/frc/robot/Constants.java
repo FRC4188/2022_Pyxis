@@ -16,6 +16,10 @@ import edu.wpi.first.math.util.Units;
  */
 public class Constants {
 
+    public final class field {
+        public static final double GOAL_HEIGHT = 2.64;
+    }
+
     public final class robot {
             public static final double A_LENGTH = 0.59055; // Axel length (Meters).
             public static final double A_WIDTH = 0.48895; // Axel width (Meters).
@@ -113,13 +117,16 @@ public class Constants {
         }
         public static class turret {
 
+            public static final double LIMELIGHT_HEIGHT = 0.63;
+            public static final double MOUNTING_ANGLE = 19.7;
+
             // To be tuned later
             public static final double kP = 0.0;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
 
-            public static final double gearRatio = 20.0; // Unknown for now
-            public static final double encoderToDegrees = 360 * gearRatio;
+            public static final double gearRatio = 20.0 * 14;
+            public static final double encoderToDegrees = 360 / gearRatio;
 
             // Unknown for now
             public static final double MAX_VELOCITY = 0.0;
@@ -128,6 +135,8 @@ public class Constants {
             // Unknown for now
             public static final double MAX_ANGLE = 280.0;
             public static final double MIN_ANGLE = -32.0;
+
+            public static final double POS_TOLERANCE = 2.0;
             
         }
 }

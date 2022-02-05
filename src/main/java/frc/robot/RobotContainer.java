@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.commands.turret.SetToAngle;
+import frc.robot.commands.turret.TrackTarget;
 import frc.robot.commands.turret.TurretPower;
 import frc.robot.commands.turret.ZeroTurret;
+import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.turret.Turret;
 import frc.robot.utils.CspController;
@@ -64,11 +66,12 @@ public class RobotContainer {
     pilot.getAButtonObj().whenPressed(new SetToAngle(30));
     pilot.getBButtonObj().whenPressed(new SetToAngle(-30));
     pilot.getXButtonObj().whenPressed(new SetToAngle(0));
+    pilot.getYButtonObj().whenPressed(new TrackTarget(true)).whenReleased(new TrackTarget(false));
 
     SmartDashboard.putData("Set PIDs", new InstantCommand(() -> turret.setPID(
-      SmartDashboard.getNumber("set P", Constants.turret.kP), 
-      SmartDashboard.getNumber("set I", Constants.turret.kI), 
-      SmartDashboard.getNumber("set D", Constants.turret.kD)), turret));
+      SmartDashboard.getNumber("set P", 0), 
+      SmartDashboard.getNumber("set I", 0), 
+      SmartDashboard.getNumber("set D", 0)), turret));
 
       SmartDashboard.putData("Rezero Turret", new ZeroTurret(turret));
 

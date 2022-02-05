@@ -5,6 +5,9 @@
 package frc.robot.subsystems.turret;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.subsystems.drive.Swerve;
+import frc.robot.subsystems.sensors.Sensors;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
@@ -19,7 +22,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.Robot;
 
 public class Turret extends SubsystemBase {
 
@@ -34,6 +36,8 @@ public class Turret extends SubsystemBase {
   CANSparkMax motor = new CANSparkMax(11, MotorType.kBrushless);
   RelativeEncoder encoder = motor.getEncoder();
   ProfiledPIDController pid = new ProfiledPIDController(Constants.turret.kD, Constants.turret.kI, Constants.turret.kP, new Constraints(Constants.turret.MAX_VELOCITY, Constants.turret.MAX_ACCEL));
+
+  private Sensors sensors = Sensors.getInstance();
 
   private Notifier shuffleboard = new Notifier(() -> updateShuffleboard());
 
@@ -91,9 +95,20 @@ public class Turret extends SubsystemBase {
   public void setAngle(double angle)
   {
    set(pid.calculate(getPosition(), angle));
+   
 
   }
   
+
+  public void trackTarget(boolean cont) {
+    double angle = sensors.getTX();
+    double power =
+        Robot.normalizePercentVolts(pid.calculate(angle, 0.0))
+            + Swerve.getInstance().getChassisSpeeds().omegaRadiansPerSecond / 10.0;
+
+    set(cont ? power : 0.0);
+  }
+
   // Resets the encoder's current position to 0
   public void resetEncoder()
   {
@@ -109,6 +124,8 @@ public class Turret extends SubsystemBase {
     SmartDashboard.putNumber("Temperature", getTemp());
     SmartDashboard.putNumber("Velocity", getVelocity());
   }
+
+  
 
   /*
   * Outputs the temperature of the motor
@@ -138,5 +155,11 @@ public class Turret extends SubsystemBase {
   public double getVelocity()
   {
     return encoder.getVelocity() * Constants.turret.encoderToDegrees / 60.0;
+  }
+
+  public boolean isAimed() {
+    double angle = sensors.getTX();
+    boolean aimed = (Math.abs(angle) < Constants.turret.POS_TOLERANCE);
+    return aimed;
   }
 }

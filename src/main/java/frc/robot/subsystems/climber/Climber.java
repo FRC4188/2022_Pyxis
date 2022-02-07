@@ -1,101 +1,238 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants;
-import frc.robot.commands.climber.ResetActiveA;
-import frc.robot.commands.climber.ResetActiveB;
 
+/**
+ * Class encapsulating climber function.
+ */
 public class Climber extends SubsystemBase {
 
-  private static Climber instance = null;
-  public static synchronized Climber getInstance() {
-    if (instance == null) instance = new Climber();
-    return instance;
-  }
+    // motor init
+    private WPI_TalonFX climberLeftMotor = new WPI_TalonFX(32);
+    private WPI_TalonFX climberRightMotor = new WPI_TalonFX(31);
 
-  private ActiveHook active = new ActiveHook();
-  private PassiveHook passive = new PassiveHook();
+    // pneumatics
+    private Solenoid climberSolenoid = new Solenoid(2);// needs to change
+    boolean isBrakeEngaged;
 
-  private DigitalInput limitA = new DigitalInput(Constants.climber.LIMIT_A_ID);
-  private DigitalInput limitB = new DigitalInput(Constants.climber.LIMIT_B_ID);
+    // constants
+    private static final double GEAR_RATIO = (58.0 / 11.0) * (20.0 / 60.0); // needs to be verified.
+    private static final double ENCODER_TICS_PER_REV = 2048.0;
+    private static final double ENCODER_TO_REV = 1.0 / (GEAR_RATIO * ENCODER_TICS_PER_REV);
+    private static final double MAX_VELOCITY = 20000.0;
+    private static final double kP = 0.4; // porportion (will be * error (= at - want))
+    private static final double kD = 0.0; // change in error over time will be negative * kD
+    private static final double kI = 0.0; // integral sums up error (see )
+    private static final double kF = 1023 / MAX_VELOCITY;
+    private static final double RAMP_RATE = .2; // seconds
+    private static final int TIMEOUT = 10; // ms
+    private static final int CRUISE_ACCEL = 15000;
+    private static final int CRUISE_VEL = 15000;
+    private static final double MAX_POSITION = 0;
+    private static final double MIN_POSITION = -200000;
 
-  private Solenoid brake = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.climber.BRAKE_ID);
+    /**
+     * Constructs a new Climber object and configures devices.
+     */
+    public Climber() {
 
-  private Notifier dashboardLoop = new Notifier(() -> updateDashboard());
+        // setup encoders and inversions
+        climberLeftMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
+        climberRightMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
+        climberLeftMotor.setInverted(true);
+        climberLeftMotor.setNeutralMode(NeutralMode.Brake);
+        climberRightMotor.setNeutralMode(NeutralMode.Brake);
 
-  /** Creates a new Climber. */
-  private Climber() {
-    CommandScheduler.getInstance().registerSubsystem(this);
+        // init
+        controllerInit();
+        setRampRate();
 
-    dashboardLoop.startPeriodic(0.1);
+        // reset devices
+        resetEncoders();
 
-    new Trigger(() -> limitA.get()).whileActiveOnce(new ResetActiveA(), false);
-    new Trigger(() -> limitB.get()).whileActiveOnce(new ResetActiveB(), false);
-  }
+        engagePneuBrake(true);
+    }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+    /**
+     * Runs every loop.
+     */
+    @Override
+    public void periodic() {
+        //updateShuffleboard();
+    }
 
-  private void updateDashboard() {
-    SmartDashboard.putNumber("Active Climber A Position", active.getPositionA());
-    SmartDashboard.putNumber("Active Climber B Position", active.getPositionB());
-    SmartDashboard.putNumber("Active Climber Average Position", getActivePosition());
-    SmartDashboard.putBoolean("Passive Climber State", passive.getPosition());
-    SmartDashboard.putNumber("Temperature Motor A", active.getMotorATemp());
-    SmartDashboard.putNumber("Temperature Motor B", active.getMotorBTemp());
-  }
+    /**
+     * Writes values to the Shuffleboard.
+     */
+    public void updateShuffleboard() {
+        SmartDashboard.putNumber("Left climber height", getLeftPosition());
+        SmartDashboard.putNumber("Right climber height", getRightPosition());
+        SmartDashboard.putNumber("Left climber velocity", getLeftVelocity());
+        SmartDashboard.putNumber("Right climber velocity", getRightVelocity());
+        SmartDashboard.putBoolean("Climber brake", !climberSolenoid.get());
+        SmartDashboard.putNumber("diff", Math.abs(getRightPosition() - getMinPosition()));
+    }
 
-  public double getActivePosition() {
-    return (active.getPositionA()  + active.getPositionB()) / 2;
-  }
+    /**
+     * Config Pid loop stuff. Have Locke explain.
+     */
+    public void controllerInit() {
+        climberLeftMotor.config_kI(0, kI, TIMEOUT);
+        climberLeftMotor.config_kD(0, kD, TIMEOUT);
+        climberLeftMotor.config_kP(0, kP, TIMEOUT);
+        climberLeftMotor.config_kF(0, kF, TIMEOUT);
+        climberRightMotor.config_kI(0, kI, TIMEOUT);
+        climberRightMotor.config_kD(0, kD, TIMEOUT);
+        climberRightMotor.config_kP(0, kP, TIMEOUT);
+        climberRightMotor.config_kF(0, kF, TIMEOUT);
+    }
 
-  public double getActivePositionA() {
-    return active.getPositionA();
-  }
+    /**
+     * Sets both climber motors to a given percentage [-1.0, 1.0].
+     */
+    public void set(double percent) {
+        climberLeftMotor.set(percent);
+        climberRightMotor.set(percent);
+    }
 
-  public double getActivePositionB() {
-    return active.getPositionB();
-  }
+    /**
+     * Sets left climber motor to a given percentage [-1.0, 1.0].
+     */
+    public void setLeft(double percent) {
+        climberLeftMotor.set(percent);
+    }
 
-  public boolean getPassivePosition() {
-    return passive.getPosition();
-  }
+    /**
+     * Sets left climber motor to a given percentage [-1.0, 1.0].
+     */
+    public void setRight(double percent) {
+        climberRightMotor.set(percent);
+    }
 
-  public void setActivePosition(double output) {
-    active.setPosition(output);
-  }
+    /**
+     * Sets both motors to run at a given percentage [-1.0, 1.0] of max velocity.
+     */
+    public void setVelocity(double percent) {
+        double velocity = (percent * MAX_VELOCITY) / (ENCODER_TO_REV * 600);
+        climberLeftMotor.set(ControlMode.Velocity, velocity);
+        climberRightMotor.set(ControlMode.Velocity, velocity);
+    }
 
-  public void setPassivePosition(boolean output) {
-    passive.setPosition(output);
-  }
+    /**
+     * Sets left motor to run at a given percentage [-1.0, 1.0] of max velocity.
+     */
+    public void setLeftVelocity(double percent) {
+        double velocity = (percent * MAX_VELOCITY) / (ENCODER_TO_REV * 600);
+        climberLeftMotor.set(ControlMode.Velocity, velocity);
+    }
 
-  public void setBrake(boolean state) {
-    brake.set(state);
-  }
+    /**
+     * Sets right motor to run at a given percentage [-1.0, 1.0] of max velocity.
+     */
+    public void setRightVelocity(double percent) {
+        double velocity = (percent * MAX_VELOCITY) / (ENCODER_TO_REV * 600);
+        climberRightMotor.set(ControlMode.Velocity, velocity);
+    }
 
-  public void setActiveVolts(double volts) {
-    active.setA(volts);
-    active.setB(volts);
-  }
+    /**
+     * Fires the break pistons to stop the climber.
+     */
+    public void engagePneuBrake(boolean output) {
+        climberSolenoid.set(output);
+    }
 
-  public void resetActiveA(double position) {
-    active.resetPositionA(position);
-  }
+    /**
+     * Sets Climber motors to brake mode.
+     */
+    public void setBrake() {
+        climberLeftMotor.setNeutralMode(NeutralMode.Brake);
+        climberRightMotor.setNeutralMode(NeutralMode.Brake);
+    }
 
-  public void resetActiveB(double position) {
-    active.resetPositionB(position);
-  }
+    /**
+     * Sets climber ramp rates.
+     */
+    public void setRampRate() {
+        climberLeftMotor.configOpenloopRamp(RAMP_RATE);
+        climberLeftMotor.configClosedloopRamp(0);
+        climberRightMotor.configOpenloopRamp(RAMP_RATE);
+        climberRightMotor.configClosedloopRamp(0);
+    }
+
+    /**
+     * Resets encoder values to 0 for both sides of Climber.
+     */
+    public void resetEncoders() {
+        climberLeftMotor.setSelectedSensorPosition(0);
+        climberRightMotor.setSelectedSensorPosition(0);
+    }
+
+    /**
+     * Returns left encoder position in feet.
+     */
+    public double getLeftPosition() {
+        return climberLeftMotor.getSelectedSensorPosition();
+    }
+
+    /**
+     * Returns right encoder position in feet.
+     */
+    public double getRightPosition() {
+        return climberRightMotor.getSelectedSensorPosition(); // * ENCODER_TO_REV;
+    }
+
+    /**
+     * Returns the left climber velocity in rpm.
+     */
+    public double getLeftVelocity() {
+        return climberLeftMotor.getSelectedSensorVelocity()
+                * ENCODER_TO_REV * 600;// sensor units for rpm
+    }
+
+    /**
+     * Returns the right climber velocity in rpm.
+     */
+    public double getRightVelocity() {
+        return climberRightMotor.getSelectedSensorVelocity()
+                * ENCODER_TO_REV * 600;// sensor units for rpm
+    }
+
+    /**
+     * Returns the maximum position of the climber in raw encoder ticks.
+     */
+    public double getMaxPosition() {
+        return MAX_POSITION;
+    }
+
+    /**
+     * Returns the minimum position of the climber in raw encoder ticks.
+     */
+    public double getMinPosition() {
+        return MIN_POSITION;
+    }
+
+    /**
+     * Returns left climber motor temperature in Celcius.
+     */
+    public double getLeftTemp() {
+        return climberLeftMotor.getTemperature();
+    }
+
+    /**
+     * Returns right climber motor temperature in Celcius.
+     */
+    public double getRightTemp() {
+        return climberRightMotor.getTemperature();
+    }
+
+    public boolean getClimberBrake() {
+        return !climberSolenoid.get();
+    }
+
 }

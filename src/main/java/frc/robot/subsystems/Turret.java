@@ -84,17 +84,9 @@ public class Turret extends SubsystemBase {
     /**
      * Sets turret motor to given percentage [-1.0, 1.0].
      */
-    public void set(double percent) {
-        if (getPosition() < MIN_ANG){
-            if (percent > 0.0) turretMotor.set(percent);
-            else turretMotor.set(0.0);
-        } else if (getPosition() > MAX_ANG) {
-            if (percent < 0.0) turretMotor.set(percent);
-            else turretMotor.set(0.0);
-        } else {
+    public void set(double percent) {   
             turretMotor.set(percent * reduction);
         }
-    }
 
     /**
      * Turns turret to angle in degrees.
@@ -104,48 +96,27 @@ public class Turret extends SubsystemBase {
     }
 
     public void trackTarget(double measure) {
-
-        
         // set(aimingPID.calculate(measure, 0));
 
         if (getPosition() >= MAX_ANG && !changing)
         {
             changing = true;
-<<<<<<< HEAD
             setAngle(-30);
-            System.out.println("max " + changing);
-            if (getPosition() <= -10) {
-                System.out.println("reached -30");
-=======
-            setAngle(-5);
             System.out.println(getPosition());
-            if (getPosition() == -5) {
+            if (getPosition() <= -30) {
                 System.out.println("reached -5");
                 set(0.0);
->>>>>>> 8ab6c700f6c59b88b58bfda2f015d82f32e9cfdd
                 changing = false;
 
             }
         }
-<<<<<<< HEAD
         else if (getPosition() <= MIN_ANG || changing) 
         {
             changing = true;
-            setAngle(250);
+            setAngle(253);
             System.out.println("min " + changing);
-            if (getPosition() >= 200) {
+            if (getPosition() >= 203) {
                 System.out.println("reached 250");
-=======
-        else if (getPosition() <= MIN_ANG && !changing)
-        {
-            changing = true;
-            setAngle(180);
-            System.out.println(getPosition() == 10);
-            if (getPosition() == 180) {
-                System.out.println("reached 180");
-                set(0.0);
->>>>>>> 8ab6c700f6c59b88b58bfda2f015d82f32e9cfdd
-                changing = false;
 
             }
         }

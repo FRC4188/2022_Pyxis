@@ -1,0 +1,35 @@
+{
+  "MainWindow": {
+    "GLOBAL": {
+      "height": "960",
+      "maximized": "1",
+      "style": "0",
+      "userScale": "2",
+      "width": "1280",
+      "xpos": "0",
+      "ypos": "29"
+    }
+  },
+  "Window": {
+    "###/SmartDashboard/Run To Velocity": {
+      "Collapsed": "0",
+      "Pos": "518,144",
+      "Size": "148,80"
+    },
+    "###NetworkTables": {
+      "Collapsed": "0",
+      "Pos": "311,347",
+      "Size": "1007,392"
+    },
+    "###NetworkTables Settings": {
+      "Collapsed": "0",
+      "Pos": "37,37",
+      "Size": "330,138"
+    },
+    "Debug##Default": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "400,400"
+    }
+  }
+}

@@ -4,104 +4,94 @@
 
 package frc.robot.subsystems.turret;
 
-import frc.robot.Constants;
-import frc.robot.Robot;
-import frc.robot.subsystems.drive.Swerve;
-import frc.robot.subsystems.sensors.Sensors;
-
-import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.subsystems.drive.Swerve;
+import frc.robot.subsystems.sensors.Sensors;
 
 public class Turret extends SubsystemBase {
-
-  private static Turret instance = null;
+  private static Turret instance;
 
   public static synchronized Turret getInstance() {
     if (instance == null) instance = new Turret();
-
     return instance;
   }
 
-  CANSparkMax motor = new CANSparkMax(11, MotorType.kBrushless);
-  RelativeEncoder encoder = motor.getEncoder();
-  ProfiledPIDController pid = new ProfiledPIDController(Constants.turret.kD, Constants.turret.kI, Constants.turret.kP, new Constraints(Constants.turret.MAX_VELOCITY, Constants.turret.MAX_ACCEL));
+  private CANSparkMax motor = new CANSparkMax(11, MotorType.kBrushless);
+  private RelativeEncoder encoder = motor.getEncoder();
 
-  private Sensors sensors = Sensors.getInstance();
+  private ProfiledPIDController pid = new ProfiledPIDController(Constants.turret.kP, Constants.turret.kI, Constants.turret.kD, Constants.turret.CONSTRAINTS);
+  //private PIDController pid = new PIDController(Constants.turret.kP, Constants.turret.kI, Constants.turret.kD);
 
-  private Notifier shuffleboard = new Notifier(() -> updateShuffleboard());
+  Notifier notifier = new Notifier(() -> updateShuffleboard());
 
   /** Creates a new Turret. */
-  private Turret() {
+  public Turret() {
     CommandScheduler.getInstance().registerSubsystem(this);
 
-    motorInit();
-    resetEncoder();
+    initialize();
 
+    startNotifier();
 
-    
-    SmartDashboard.putNumber("set P", Constants.turret.kP);
-    SmartDashboard.putNumber("set I", Constants.turret.kI);
-    SmartDashboard.putNumber("set D", Constants.turret.kD);
-
-    shuffleboard.startPeriodic(0.4);
+    putToShuffleboard();
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  // Configuresh the motors of the turret
-  private void motorInit()
-  {
-    pid.setP(Constants.turret.kP);
-    pid.setI(Constants.turret.kI);
-    pid.setD(Constants.turret.kD);
+  private void initialize() {
+    encoder.setPositionConversionFactor(Constants.turret.ENCODER_TO_DEGREES);
+    encoder.setPosition(0.0);
 
     motor.setIdleMode(IdleMode.kBrake);
+
+    motor.setClosedLoopRampRate(1.0);
+    motor.setOpenLoopRampRate(1.0);
   }
 
-  public void setPID(double kP, double kI, double kD){
-    pid.setP(kP);
-    pid.setI(kI);
-    pid.setD(kD);
-  }
-  /*
-  * Sets the turret motor to the amount you want (has to be between -1.0 and 1.0).
-  * Stops the turret from moving when it reaches its min or max angle.
-  *
-  * @param amount The amount you want the turret to move.
-  */
-  public void set(double amount)
-  {
-    motor.set(amount);
-    // if (getPosition() >= Constants.turret.MAX_ANGLE)
-    // motor.set(0.0);
-    // else if (getPosition() <= Constants.turret.MIN_ANGLE)
-    // motor.set(0.0);
+  private void startNotifier() {
+    notifier.startPeriodic(1.0);
   }
 
-  public void setAngle(double angle)
-  {
-   set(pid.calculate(getPosition(), angle));
-   
+  private void putToShuffleboard() {
+    SmartDashboard.putNumber("Set P", pid.getP());
+    SmartDashboard.putNumber("Set I", pid.getI());
+    SmartDashboard.putNumber("Set D", pid.getD());
 
+    SmartDashboard.putNumber("Set Turret Angle", 0);
   }
-  
+
+  private void updateShuffleboard() {
+    SmartDashboard.putNumber("Turret Motor Temp", getTemperature());
+    SmartDashboard.putNumber("Turret Position", getPosition());
+  }
+
+  public void setPIDs(double kP, double kI, double kD) {
+    pid.setPID(kP, kI, kD);
+  }
+
+  public void set(double percent) {
+    if (getPosition() > Constants.turret.MAX_ANGLE || getPosition() < Constants.turret.MIN_ANGLE) {
+      motor.set(0.0);
+    } else {
+      motor.set(percent);
+    }
+  }
+
+  public void setAngle(double angle) {
+    set(Robot.normalizePercentVolts(pid.calculate(getPosition(), angle)));
+  }
 
   public void trackTarget(boolean cont) {
-    double angle = sensors.getTX();
+    double angle = Sensors.getInstance().getTX();
     double power =
         Robot.normalizePercentVolts(pid.calculate(angle, 0.0))
             + Swerve.getInstance().getChassisSpeeds().omegaRadiansPerSecond / 10.0;
@@ -109,57 +99,17 @@ public class Turret extends SubsystemBase {
     set(cont ? power : 0.0);
   }
 
-  // Resets the encoder's current position to 0
-  public void resetEncoder()
-  {
-    encoder.setPosition(0.0);
+  public double getPosition() {
+    return encoder.getPosition();
   }
 
-  // Reloads the information on the Shuffleboard
-  private void updateShuffleboard()
-  {
-
-
-    SmartDashboard.putNumber("Position", getPosition());
-    SmartDashboard.putNumber("Temperature", getTemp());
-    SmartDashboard.putNumber("Velocity", getVelocity());
-  }
-
-  
-
-  /*
-  * Outputs the temperature of the motor
-  *
-  * @return Temperature of motor in celsius (?)
-  */
-  public double getTemp()
-  {
+  public double getTemperature() {
     return motor.getMotorTemperature();
   }
 
-  /* 
-  * Outputs the current position of the turret
-  *
-  * @return Current position of turret in degrees
-  */
-  public double getPosition()
-  {
-    return encoder.getPosition() * Constants.turret.encoderToDegrees;
-  }
-
-  /* 
-  * Outputs the velocity of the turret
-  *
-  * @return Velocity of turret in degrees/second
-  */
-  public double getVelocity()
-  {
-    return encoder.getVelocity() * Constants.turret.encoderToDegrees / 60.0;
-  }
-
-  public boolean isAimed() {
-    double angle = sensors.getTX();
-    boolean aimed = (Math.abs(angle) < Constants.turret.POS_TOLERANCE);
+  public boolean getIsAimed() {
+    double angle = Sensors.getInstance().getTX();
+    boolean aimed = (Math.abs(angle) < Constants.turret.ANGLE_TOLERANCE);
     return aimed;
   }
 }

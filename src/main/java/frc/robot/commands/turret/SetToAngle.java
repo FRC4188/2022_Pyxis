@@ -5,14 +5,16 @@
 package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.turret.Turret;
 
 public class SetToAngle extends CommandBase {
-  Turret turret = Turret.getInstance();
+  private Turret turret = Turret.getInstance();
+
   private double angle;
 
   /** Creates a new SetToAngle. */
-  public SetToAngle(double angle ) {
+  public SetToAngle(double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turret);
     this.angle = angle;
@@ -31,12 +33,12 @@ public class SetToAngle extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret.set(0);
+    turret.set(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(turret.getPosition() - angle) < 5;
+    return Math.abs(turret.getPosition() - angle) < Constants.turret.ANGLE_TOLERANCE;
   }
 }

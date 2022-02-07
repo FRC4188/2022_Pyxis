@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.sensors.Limelight.CameraMode;
 import frc.robot.subsystems.sensors.Limelight.LedMode;
-import frc.robot.subsystems.sensors.Limelight;
 
 public class Sensors extends SubsystemBase {
 
@@ -25,28 +24,27 @@ public class Sensors extends SubsystemBase {
   }
 
   private Limelight limelight = new Limelight("limelight-swervex");
-  private Pigeon pigeon = new Pigeon(31);
+  private Pigeon pigeon = new Pigeon(0);
+
   private Notifier notifier = new Notifier(() -> updateShuffleboard());
 
   /** Creates a new Sensors. */
   private Sensors() {
     CommandScheduler.getInstance().registerSubsystem(this);
-
-    openNotifier();
     
+    startNotifier();
   }
 
-  @Override
-  public void periodic() {
+  private void updateShuffleboard() {
+    SmartDashboard.putNumber("Limelight Distance", getDistance());
   }
 
-  private void openNotifier()
-  {
-    notifier.startPeriodic(2);
+  private void startNotifier() {
+    notifier.startPeriodic(0.4);
   }
 
-  public boolean hasTarget() {
-    return limelight.targetCount() > 0;
+  public boolean getHasTarget() {
+    return limelight.getTargetCount() > 0;
   }
 
   public double getTX() {
@@ -62,26 +60,21 @@ public class Sensors extends SubsystemBase {
         / Math.tan(Math.toRadians(getTY() + Constants.turret.MOUNTING_ANGLE));
   }
 
-  public double getFormulaRPM() {
-    double dist = getDistance();
+  public double getFormula() {
+    double distance = getDistance();
 
-    return 37.0583 * Math.pow(dist, 2) + -368.372 * dist + 4566.37;
+    return 0.0;
   }
 
-  private void updateShuffleboard()
-  {
-    SmartDashboard.putNumber("TX", getTX());
-    SmartDashboard.putNumber("TY", getTY());
-    SmartDashboard.putBoolean("On Target", hasTarget());
+  public void setPigeonAngle(double angle) {
+    pigeon.resetAngle(angle);
   }
-  
+
   public Rotation2d getRotation() {
     return pigeon.get();
   }
 
-
-  
-  public Pose2d getRobotPose() {
+  public Pose2d getPosition() {
     try {
       return new Pose2d(limelight.getPose2d().getTranslation(), getRotation());
     } catch (Exception e) {
@@ -113,7 +106,4 @@ public class Sensors extends SubsystemBase {
     return limelight.getPipeline();
   }
 
-  public void setRotation(Rotation2d newRot) {
-
-  }
 }

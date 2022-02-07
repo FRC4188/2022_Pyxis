@@ -6,17 +6,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.sensors.ResetPose;
-import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.commands.turret.SetToAngle;
-import frc.robot.commands.turret.TrackTarget;
-import frc.robot.commands.turret.TurretPower;
-import frc.robot.commands.turret.ZeroTurret;
-import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.turret.Turret;
-import frc.robot.utils.CspController;
-import frc.robot.utils.CspController.Scaling;
+import frc.robot.utils.CSPController;
+import frc.robot.utils.CSPController.Scaling;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,7 +23,7 @@ public class RobotContainer {
   private Swerve swerve = Swerve.getInstance();
   private Turret turret = Turret.getInstance();
 
-  private CspController pilot = new CspController(0);
+  private CSPController pilot = new CSPController(0);
 
   private SendableChooser<SequentialCommandGroup> autoChooser = new SendableChooser<SequentialCommandGroup>();
 
@@ -39,6 +33,8 @@ public class RobotContainer {
     setDefaultCommands();
     // Configure the button bindings
     configureButtonBindings();
+
+    smartdashboardButtons();
     // Add options to the auto chooser
     addChooser();
   }
@@ -50,33 +46,27 @@ public class RobotContainer {
       pilot.getRightX(Scaling.CUBED),
       pilot.getRightBumper()),
       swerve)
-    );  }
+    ); 
+  }
 
   /**
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
-    SmartDashboard.putData("Reset Position", new ResetPose());
-    SmartDashboard.putData("Reset Rotation", new ResetRotation());
-    
-    pilot.getDpadLeftButtonObj().whileHeld(new RunCommand(() -> turret.set(0.5))).whenReleased(new RunCommand(() -> turret.set(0.0)));
-    pilot.getDpadRightButtonObj().whileHeld(new RunCommand(() -> turret.set(-0.5))).whenReleased(new RunCommand(() -> turret.set(0.0)));
-    
+    pilot.getDpadLeftButtonObj().whileHeld(new RunCommand(() -> turret.set(0.2), turret)).whenReleased(new RunCommand(() -> turret.set(0.0), turret));
+    pilot.getDpadRightButtonObj().whileHeld(new RunCommand(() -> turret.set(-0.2), turret)).whenReleased(new RunCommand(() -> turret.set(0.0), turret));
+  }
 
-    pilot.getAButtonObj().whenPressed(new SetToAngle(30));
-    pilot.getBButtonObj().whenPressed(new SetToAngle(-30));
-    pilot.getXButtonObj().whenPressed(new SetToAngle(0));
-    pilot.getYButtonObj().whenPressed(new TrackTarget(true)).whenReleased(new TrackTarget(false));
+  private void smartdashboardButtons() {
+    SmartDashboard.putData("Set Turret PIDs", new InstantCommand(() -> turret.setPIDs(
+      SmartDashboard.getNumber("Set Turret P", 0),
+      SmartDashboard.getNumber("Set Turret I", 0),
+      SmartDashboard.getNumber("Set Turret D", 0)
+    ), turret));
 
-    SmartDashboard.putData("Set PIDs", new InstantCommand(() -> turret.setPID(
-      SmartDashboard.getNumber("set P", 0), 
-      SmartDashboard.getNumber("set I", 0), 
-      SmartDashboard.getNumber("set D", 0)), turret));
-
-      SmartDashboard.putData("Rezero Turret", new ZeroTurret(turret));
-
-
-
+    SmartDashboard.putData("Set Turret Angle", new SetToAngle(
+      SmartDashboard.getNumber("Set Turret Angle", 0)
+    ));
   }
 
   private void addChooser() {

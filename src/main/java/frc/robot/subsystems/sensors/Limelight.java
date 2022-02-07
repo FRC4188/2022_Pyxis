@@ -74,7 +74,7 @@ public class Limelight {
     return limeTable.getEntry("ty").getDouble(0.0);
   }
 
-  public int targetCount() {
+  public int getTargetCount() {
     return (int) Math.round(limeTable.getEntry("tv").getDouble(0.0));
   }
 

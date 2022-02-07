@@ -3,7 +3,9 @@ package frc.robot;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -16,14 +18,14 @@ import edu.wpi.first.math.util.Units;
  */
 public class Constants {
 
-    public final class field {
-        public static final double GOAL_HEIGHT = 2.64;
+    public static final class field {
+        public static final double GOAL_HEIGHT = 0.0;
     }
 
-    public final class robot {
+    public static final class robot {
             public static final double A_LENGTH = 0.59055; // Axel length (Meters).
             public static final double A_WIDTH = 0.48895; // Axel width (Meters).
-            public final double A_CROSSLENGTH = Math.hypot(A_LENGTH, A_WIDTH);
+            public static final double A_CROSSLENGTH = Math.hypot(A_LENGTH, A_WIDTH);
 
             public static final double FALCON_ENCODER_TICKS = 2048.0; //Counts per revolution of the Falcon 500 motor.
             public static final double FALCON_MAX_TEMP = 50.0; //Max temperature of Falcon 500 (Celsius).
@@ -89,17 +91,19 @@ public class Constants {
                 public static final PIDController yPID = new PIDController(kP, kI, kD);
             }
 
-            public static class thetaPID {
+            public static final class thetaPID {
                 public static final double kP = -17.25;
                 public static final double kI = 0.0;
                 public static final double kD = -0.05;  
                 public static final ProfiledPIDController thetaPID = new ProfiledPIDController(kP, kI, kD, new Constraints(Math.PI * 2.0, Math.PI / 2.0));
             }
 
-            public final class auto {
-                public static final double MAX_VELOCITY = 1.0; // Maximum velocity allowed in the drivetrain (Meters per Second).
-                public static final double MAX_ACCEL = 3.0; // Maximum acceleration of the drivetrain in (Meters per Second Squared).
-                public static final double MAX_CACCEL = 5.0; // Maximum centripital acceleration of the robot (Meters per Second Squared).
+            public static final class auto {
+                public static final double MAX_VELOCITY = 1.0;
+                public static final double MAX_ACCELERATION = 3.0;
+                public static final double MAX_CACCELERATION = 5.0;
+                public static final TrajectoryConfig CONFIG = new TrajectoryConfig(MAX_VELOCITY, MAX_ACCELERATION)
+                    .addConstraint(new CentripetalAccelerationConstraint(MAX_CACCELERATION));
             }
         }
 
@@ -112,31 +116,60 @@ public class Constants {
         public static class climber {
             
         }
+
         public static class shooter {
+            public static final class upper {
+                public static final double kV = 0.10964;
+                public static final double kA = 0.0148;
+
+                public static final double RAMP_RATE = 2.0;
+
+                public static final double DEVIATION = 99999e8;
+                public static final double E_DEVIATION = 0.001e-4;
+
+                public static final double QELMS = 15.0;
+                public static final double RELMS = 7.0;
+
+                public static final double RADIUS = Units.inchesToMeters(3.0);
+                public static final double CIRCUMFERENCE = RADIUS * 2.0 * Math.PI;
+            }
+
+            public static final class lower {
+                public static final double kV = 0.16214;
+                public static final double kA = 0.0089196;
+
+                public static final double GEAR_RATIO = 1.5;
+                public static final double RAMP_RATE = 2.0;
+
+                public static final double DEVIATION = 99999e8;
+                public static final double E_DEVIATION = 0.001e-4;
+
+                public static final double QELMS = 15.0;
+                public static final double RELMS = 7.0;
+
+                public static final double RADIUS = Units.inchesToMeters(2.0);
+                public static final double CIRCUMFERENCE = RADIUS * 2.0 * Math.PI;
+            }
             
         }
+
         public static class turret {
-
-            public static final double LIMELIGHT_HEIGHT = 0.63;
-            public static final double MOUNTING_ANGLE = 19.7;
-
-            // To be tuned later
             public static final double kP = 0.0;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
+            private static final double MAX_VELOCITY = 0.0;
+            private static final double MAX_ACCEL = 0.0;
+            public static final Constraints CONSTRAINTS = new Constraints(MAX_VELOCITY, MAX_ACCEL);
 
-            public static final double gearRatio = 20.0 * 14;
-            public static final double encoderToDegrees = 360 / gearRatio;
+            public static final double MIN_ANGLE = 0.0;
+            public static final double MAX_ANGLE = 0.0;
 
-            // Unknown for now
-            public static final double MAX_VELOCITY = 0.0;
-            public static final double MAX_ACCEL = 0.0;
+            public static final double GEAR_RATIO = 20 * 14;
+            public static final double ENCODER_TO_DEGREES = 360 / GEAR_RATIO;
 
-            // Unknown for now
-            public static final double MAX_ANGLE = 280.0;
-            public static final double MIN_ANGLE = -32.0;
+            public static final double MOUNTING_ANGLE = 0.0;
+            public static final double LIMELIGHT_HEIGHT = 0.0;
 
-            public static final double POS_TOLERANCE = 2.0;
-            
+            public static final double ANGLE_TOLERANCE = 0.0;
         }
 }

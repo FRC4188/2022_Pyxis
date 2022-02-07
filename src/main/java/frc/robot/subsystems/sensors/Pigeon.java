@@ -28,4 +28,8 @@ public class Pigeon extends PigeonIMU{
     public double getOmegaRadians() {
         return rate.getRate(Math.toRadians(super.getFusedHeading()));
     }
+
+    public void resetAngle(double angle) {
+        setFusedHeading(0.0);
+    }
 }

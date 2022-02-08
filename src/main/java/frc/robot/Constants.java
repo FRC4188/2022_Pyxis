@@ -60,7 +60,7 @@ public class Constants {
 
             public static final class modules {
                 public static final double M1_ZERO = 46.054688;
-                public static final double M2_ZERO = 112.148438;
+                public static final double M2_ZERO = 127.148438;
                 public static final double M3_ZERO = -156.533203;
                 public static final double M4_ZERO = -49.833984;
             }
@@ -154,15 +154,12 @@ public class Constants {
         }
 
         public static class turret {
-            public static final double kP = 0.0;
+            public static final double kP = 0.03;
             public static final double kI = 0.0;
-            public static final double kD = 0.0;
-            private static final double MAX_VELOCITY = 0.0;
-            private static final double MAX_ACCEL = 0.0;
-            public static final Constraints CONSTRAINTS = new Constraints(MAX_VELOCITY, MAX_ACCEL);
+            public static final double kD = 0.00002;
 
-            public static final double MIN_ANGLE = 0.0;
-            public static final double MAX_ANGLE = 0.0;
+            public static final double MIN_ANGLE = -55.0;
+            public static final double MAX_ANGLE = 161.0;
 
             public static final double GEAR_RATIO = 20 * 14;
             public static final double ENCODER_TO_DEGREES = 360 / GEAR_RATIO;

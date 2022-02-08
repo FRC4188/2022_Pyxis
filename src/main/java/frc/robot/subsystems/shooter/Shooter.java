@@ -11,6 +11,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
+  private static Shooter instance;
+
+    public static synchronized Shooter getInstance() {
+        if (instance == null) instance = new Shooter();
+        return instance;
+    }
   private UpperShooter upper = new UpperShooter();
   private LowerShooter lower = new LowerShooter();
 
@@ -21,6 +27,8 @@ public class Shooter extends SubsystemBase {
     CommandScheduler.getInstance().registerSubsystem(this);
 
     startNotifier();
+
+    SmartDashboard.putNumber("Set Velocity", 0);
   }
 
   private void updateShuffleboard() {
@@ -38,7 +46,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setVelocity(double velocity) {
-    upper.setVelocity(velocity);
+    upper.setVelocity(velocity / 2);
     lower.setVelocity(velocity);
   }
 

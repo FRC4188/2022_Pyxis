@@ -68,6 +68,7 @@ public class UpperShooter extends SubsystemBase {
 
     public void set(double percentage) {
         motor.set(percentage);
+        
     }
 
     public void setVoltage(double voltage) {

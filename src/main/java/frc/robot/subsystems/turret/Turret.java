@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.turret;
 
+import javax.imageio.plugins.tiff.GeoTIFFTagSet;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -31,8 +33,8 @@ public class Turret extends SubsystemBase {
   private CANSparkMax motor = new CANSparkMax(11, MotorType.kBrushless);
   private RelativeEncoder encoder = motor.getEncoder();
 
-  private ProfiledPIDController pid = new ProfiledPIDController(Constants.turret.kP, Constants.turret.kI, Constants.turret.kD, Constants.turret.CONSTRAINTS);
-  //private PIDController pid = new PIDController(Constants.turret.kP, Constants.turret.kI, Constants.turret.kD);
+  //private ProfiledPIDController pid = new ProfiledPIDController(Constants.turret.kP, Constants.turret.kI, Constants.turret.kD, Constants.turret.CONSTRAINTS);
+  private PIDController pid = new PIDController(Constants.turret.kP, Constants.turret.kI, Constants.turret.kD);
 
   Notifier notifier = new Notifier(() -> updateShuffleboard());
 
@@ -62,11 +64,11 @@ public class Turret extends SubsystemBase {
   }
 
   private void putToShuffleboard() {
-    SmartDashboard.putNumber("Set P", pid.getP());
-    SmartDashboard.putNumber("Set I", pid.getI());
-    SmartDashboard.putNumber("Set D", pid.getD());
+    SmartDashboard.putNumber("Set P", 0);
+    SmartDashboard.putNumber("Set I", 0);
+    SmartDashboard.putNumber("Set D", 0);
 
-    SmartDashboard.putNumber("Set Turret Angle", 0);
+    SmartDashboard.putNumber("Set Angle", 0);
   }
 
   private void updateShuffleboard() {
@@ -75,11 +77,14 @@ public class Turret extends SubsystemBase {
   }
 
   public void setPIDs(double kP, double kI, double kD) {
-    pid.setPID(kP, kI, kD);
+    pid.setP(kP);
+    pid.setI(kI);
+    pid.setD(kD);
   }
 
   public void set(double percent) {
-    if (getPosition() > Constants.turret.MAX_ANGLE || getPosition() < Constants.turret.MIN_ANGLE) {
+    if (getPosition() < Constants.turret.MIN_ANGLE && percent < 0.0 || 
+      getPosition() > Constants.turret.MAX_ANGLE && percent > 0.0) {
       motor.set(0.0);
     } else {
       motor.set(percent);
@@ -96,7 +101,7 @@ public class Turret extends SubsystemBase {
         Robot.normalizePercentVolts(pid.calculate(angle, 0.0))
             + Swerve.getInstance().getChassisSpeeds().omegaRadiansPerSecond / 10.0;
 
-    set(cont ? power : 0.0);
+    setAngle(getPosition() + angle);
   }
 
   public double getPosition() {

@@ -65,22 +65,6 @@ public class CSPController extends XboxController {
     /**
      * Returns the Y value of the joystick for the right hand.
      */
-    @Override
-    public double getRightY() {
-        return -getOutput(super.getRightY(), Scaling.SQUARED);
-    }
-
-    /**
-     * Returns the Y value of the joystick for the left hand.
-     */
-    @Override
-    public double getLeftY() {
-        return -getOutput(super.getLeftY(), Scaling.SQUARED);
-    }
-
-    /**
-     * Returns the Y value of the joystick for the right hand.
-     */
     public double getRightY(Scaling scaling) {
         return -getOutput(super.getRightY(), scaling);
     }
@@ -92,34 +76,19 @@ public class CSPController extends XboxController {
         return -getOutput(super.getLeftY(), scaling);
     }
 
-    /**
-     * Returns the X value of the joystick for the right hand.
-     */
-    @Override
-    public double getRightX() {
-        return -getOutput(super.getRightY(), Scaling.SQUARED);
-    }
-
-    /**
-     * Returns the X value of the joystick for the left hand.
-     */
-    @Override
-    public double getLeftX() {
-        return -getOutput(super.getLeftY(), Scaling.SQUARED);
-    }
 
     /**
      * Returns the X value of the joystick for the right hand.
      */
     public double getRightX(Scaling scaling) {
-        return -getOutput(super.getRightY(), scaling);
+        return getOutput(super.getRightX(), scaling);
     }
 
     /**
      * Returns the X value of the joystick for the left hand.
      */
     public double getLeftX(Scaling scaling) {
-        return -getOutput(super.getLeftY(), scaling);
+        return getOutput(super.getLeftX(), scaling);
     }
 
     /**

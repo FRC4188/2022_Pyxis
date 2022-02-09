@@ -3,19 +3,20 @@ package frc.robot.commands.shooter;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.shooter;
 import frc.robot.subsystems.shooter.LowerShooter;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.UpperShooter;
 
 public class SpinShooter extends CommandBase {
 
-  UpperShooter upper = UpperShooter.getInstance();
-  LowerShooter lower = LowerShooter.getInstance();
+  Shooter shooter = Shooter.getInstance();
 
   DoubleSupplier velocity;
 
   /** Creates a new ShooterVelocity. */
   public SpinShooter(DoubleSupplier velocity) {
-    addRequirements(upper, lower);
+    addRequirements(shooter);
 
     this.velocity = velocity;
   }
@@ -28,15 +29,13 @@ public class SpinShooter extends CommandBase {
   @Override
   public void execute() {
     double vel = velocity.getAsDouble();
-    lower.setVelocity(vel);
-    upper.setVelocity(vel / 2.0);
+    shooter.setVelocity(vel);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    upper.setVoltage(0.0);
-    lower.setVoltage(0.0);
+    shooter.setVolatge(0);
   }
 
   // Returns true when the command should end.

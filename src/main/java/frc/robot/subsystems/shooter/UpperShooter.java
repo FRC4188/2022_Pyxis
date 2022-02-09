@@ -18,18 +18,10 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class UpperShooter extends SubsystemBase {
-    private static UpperShooter instance;
-
-    public static synchronized UpperShooter getInstance() {
-        if (instance == null) instance = new UpperShooter();
-        return instance;
-    }
-
     private LinearSystem<N1, N1, N1> shooterPlant = LinearSystemId.identifyVelocitySystem(Constants.shooter.upper.kV, Constants.shooter.upper.kA);
     private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, VecBuilder.fill(Constants.shooter.upper.DEVIATION), VecBuilder.fill(Constants.shooter.upper.E_DEVIATION), 0.2);
     private LinearQuadraticRegulator<N1, N1, N1> regulator = new LinearQuadraticRegulator<>(shooterPlant, VecBuilder.fill(Constants.shooter.upper.QELMS), VecBuilder.fill(Constants.shooter.upper.RELMS), 0.020);
@@ -46,6 +38,8 @@ public class UpperShooter extends SubsystemBase {
         init();
 
         openNotifier();
+
+        SmartDashboard.putNumber("Set Velocity", 0.0);
     }
 
     public void openNotifier() {

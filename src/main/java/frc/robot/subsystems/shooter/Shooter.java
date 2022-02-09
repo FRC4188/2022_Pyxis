@@ -6,17 +6,15 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
   private static Shooter instance;
 
-    public static synchronized Shooter getInstance() {
-        if (instance == null) instance = new Shooter();
-        return instance;
-    }
+  public static synchronized Shooter getInstance() {
+    if (instance == null) instance = new Shooter();
+    return instance;
+  }
   private UpperShooter upper = new UpperShooter();
   private LowerShooter lower = new LowerShooter();
 
@@ -24,39 +22,37 @@ public class Shooter extends SubsystemBase {
 
   /** Creates a new Shooter. */
   public Shooter() {
-    CommandScheduler.getInstance().registerSubsystem(this);
+    SmartDashboard.putNumber("Set Velocity", 0.0);
 
-    startNotifier();
-
-    SmartDashboard.putNumber("Set Velocity", 0);
+    notifier.startPeriodic(0.1);
   }
 
-  private void updateShuffleboard() {
-    SmartDashboard.putNumber("Average Velocity", getVelocity());
-    SmartDashboard.putNumberArray("Shooter Temperatures", getTemperatures());
-  }
+  public void updateShuffleboard() {
+    SmartDashboard.putNumber("Upper Velocity", getVelocities()[0]);
+    SmartDashboard.putNumber("Lower Velocity", getVelocities()[1]);
+    SmartDashboard.putNumber("Average Velocity", getVelocities()[2]);
 
-  private void startNotifier() {
-    notifier.startPeriodic(0.3);
-  }
-
-  public void set(double percentage) {
-    upper.set(percentage);
-    lower.set(percentage);
   }
 
   public void setVelocity(double velocity) {
-    upper.setVelocity(velocity / 2);
-    lower.setVelocity(velocity);
+    upper.setVelocity(velocity);
+    lower.setVelocity(velocity + 500);
   }
 
-  public double getVelocity() {
-    return (upper.getVelocity() + lower.getVelocity()) / 2;
+  public void setVolatge(double voltage) {
+    upper.setVoltage(voltage);
+    lower.setVoltage(voltage);
+  }
+
+  public double[] getVelocities() {
+    double average = (upper.getVelocity() + lower.getVelocity()) / 2;
+    double[] velocities = {upper.getVelocity(), lower.getVelocity(), average};
+    return velocities;
   }
 
   public double[] getTemperatures() {
-    double[] temperatures = {upper.getTemperature(), lower.getTemperature()};
-    return temperatures;
+    double[] temps = {upper.getTemperature(), lower.getTemperature()};
+    return temps;
   }
 
   @Override

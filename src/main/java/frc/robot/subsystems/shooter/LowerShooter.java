@@ -18,18 +18,10 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class LowerShooter extends SubsystemBase {
-    private static LowerShooter instance;
-
-    public static synchronized LowerShooter getInstance() {
-        if (instance == null) instance = new LowerShooter();
-        return instance;
-    }
-
     private LinearSystem<N1, N1, N1> shooterPlant = LinearSystemId.identifyVelocitySystem(Constants.shooter.lower.kV, Constants.shooter.lower.kA);
     private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, VecBuilder.fill(Constants.shooter.lower.DEVIATION), VecBuilder.fill(Constants.shooter.lower.E_DEVIATION), 0.2);
     private LinearQuadraticRegulator<N1, N1, N1> regulator = new LinearQuadraticRegulator<>(shooterPlant, VecBuilder.fill(Constants.shooter.lower.QELMS), VecBuilder.fill(Constants.shooter.lower.RELMS), 0.020);
@@ -46,6 +38,7 @@ public class LowerShooter extends SubsystemBase {
         init();
 
         openNotifier();
+
     }
 
     public void openNotifier() {
@@ -53,22 +46,23 @@ public class LowerShooter extends SubsystemBase {
     }
 
     private void updateShuffleboard() {
-        SmartDashboard.putNumber("Lower Volts", motor.get() * RobotController.getBatteryVoltage());
+        SmartDashboard.putNumber("lower Volts", motor.get() * RobotController.getBatteryVoltage());
+        SmartDashboard.putNumber("Vel", getVelocity());
     }
 
     private void init() {
         motor.setInverted(true);
-
+        
         motor.setNeutralMode(NeutralMode.Coast);
         motor.setSelectedSensorPosition(0.0);
         motor.configOpenloopRamp(Constants.shooter.lower.RAMP_RATE);
 
         loop.reset(VecBuilder.fill(getVelocity() / 60.0));
-
     }
 
     public void set(double percentage) {
         motor.set(percentage);
+        
     }
 
     public void setVoltage(double voltage) {
@@ -80,7 +74,7 @@ public class LowerShooter extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return (motor.getSelectedSensorVelocity() * 600.0) / (2048.0 * Constants.shooter.lower.GEAR_RATIO);
+        return (motor.getSelectedSensorVelocity() * 600.0) / (2048.0) / Constants.shooter.lower.GEAR_RATIO;
     }
 
     public double getTemperature() {
@@ -94,6 +88,6 @@ public class LowerShooter extends SubsystemBase {
         loop.correct(VecBuilder.fill(getVelocity() / 60.0));
         loop.predict(0.02);
         
-        setVoltage(loop.getU(0));  
+        setVoltage(loop.getU(0));
     }
 }

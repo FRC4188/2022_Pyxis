@@ -119,8 +119,8 @@ public class Constants {
 
         public static class shooter {
             public static final class upper {
-                public static final double kV = 0.10964;
-                public static final double kA = 0.0148;
+                public static final double kV = 0.11081;
+                public static final double kA = 0.090687;
 
                 public static final double RAMP_RATE = 2.0;
 
@@ -135,17 +135,17 @@ public class Constants {
             }
 
             public static final class lower {
-                public static final double kV = 0.16214;
-                public static final double kA = 0.0089196;
+                public static final double kV = 0.10807;
+                public static final double kA = 0.0063292;
 
                 public static final double GEAR_RATIO = 1.5;
                 public static final double RAMP_RATE = 2.0;
 
-                public static final double DEVIATION = 99999e8;
-                public static final double E_DEVIATION = 0.001e-4;
+                public static final double DEVIATION = 9999;
+                public static final double E_DEVIATION = 0.000001;
 
-                public static final double QELMS = 15.0;
-                public static final double RELMS = 7.0;
+                public static final double QELMS = 1;
+                public static final double RELMS = 1e-10;
 
                 public static final double RADIUS = Units.inchesToMeters(2.0);
                 public static final double CIRCUMFERENCE = RADIUS * 2.0 * Math.PI;

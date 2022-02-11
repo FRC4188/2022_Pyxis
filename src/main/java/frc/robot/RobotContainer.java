@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.drive.auto;
@@ -18,6 +19,8 @@ import frc.robot.commands.auto.TwoBall;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.planning.Trajectories;
+import frc.robot.subsystems.LowerShooter;
+import frc.robot.subsystems.UpperShooter;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.utils.controllers.CSPController;
@@ -73,9 +76,7 @@ public class RobotContainer {
     SmartDashboard.putData("Reset Position", new ResetPose());
     SmartDashboard.putData("Reset Rotation", new ResetRotation());
 
-    pilot.getRbButtonObj().whenPressed(new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0)))
-      .whenReleased(new ShooterVelocity(() -> 0.0));
-
+    pilot.getRbButtonObj().whileHeld(new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0)));
     //pilot.setRumble(Derivative.getRate(Derivative.getRate(swerve.getVelocity())));
   }
 

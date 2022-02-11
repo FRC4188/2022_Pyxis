@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.auto.OneBall;
 import frc.robot.commands.shooter.SpinShooter;
 import frc.robot.commands.turret.SetToAngle;
 import frc.robot.commands.turret.TrackTarget;
@@ -46,7 +47,7 @@ public class RobotContainer {
       pilot.getLeftY(Scaling.CUBED),
       pilot.getLeftX(Scaling.CUBED),
       pilot.getRightX(Scaling.CUBED),
-      pilot.getRightBumper()),
+      pilot.getLeftStickButton()),
       swerve)
     ); 
 
@@ -88,6 +89,9 @@ public class RobotContainer {
 
   private void addChooser() {
     autoChooser.setDefaultOption("Do nothing", new SequentialCommandGroup());
+    autoChooser.addOption("Test", new OneBall());
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**

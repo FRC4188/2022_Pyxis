@@ -17,7 +17,15 @@ public final class Trajectories {
         public static final Trajectory straight = TrajectoryGenerator.generateTrajectory(
             List.of(
                 new Pose2d(),
-                new Pose2d(5.0, 0, new Rotation2d())
+                new Pose2d(3.0, 0, new Rotation2d())
+            ), autoConfig);
+    }
+
+    public static class oneball {
+        public static final Trajectory first = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(0, 0, new Rotation2d()),
+                new Pose2d(2.08, -0.66, Rotation2d.fromDegrees(-37.4))
             ), autoConfig);
     }
 
@@ -25,7 +33,7 @@ public final class Trajectories {
         public static final Trajectory first = TrajectoryGenerator.generateTrajectory(
             List.of(
                 new Pose2d(),
-                new Pose2d(2.2, 0.17, Rotation2d.fromDegrees(24.13))
+                new Pose2d(2.08, -0.66, Rotation2d.fromDegrees(-37.4))
             ), autoConfig
         );
 

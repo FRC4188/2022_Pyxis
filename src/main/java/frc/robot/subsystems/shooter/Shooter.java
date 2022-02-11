@@ -36,7 +36,7 @@ public class Shooter extends SubsystemBase {
 
   public void setVelocity(double velocity) {
     upper.setVelocity(velocity);
-    lower.setVelocity(velocity + 500);
+    //lower.setVelocity(velocity + 500);
   }
 
   public void setVolatge(double voltage) {

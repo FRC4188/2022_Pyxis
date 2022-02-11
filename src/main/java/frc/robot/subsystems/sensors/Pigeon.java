@@ -14,7 +14,6 @@ public class Pigeon extends PigeonIMU{
 
         super.configFactoryDefault();
         super.setFusedHeading(0.0);
-        super.setCompassAngle(0.0);
     }
 
     public Rotation2d get() {

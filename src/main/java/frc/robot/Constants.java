@@ -59,10 +59,10 @@ public class Constants {
             public static final Translation2d BackRightLocation = new Translation2d((Constants.robot.A_WIDTH / 2), (Constants.robot.A_LENGTH / 2));
 
             public static final class modules {
-                public static final double M1_ZERO = 46.054688;
-                public static final double M2_ZERO = 127.148438;
-                public static final double M3_ZERO = -156.533203;
-                public static final double M4_ZERO = -49.833984;
+                public static final double M1_ZERO = 43.2421875;
+                public static final double M2_ZERO = -121.9921875;
+                public static final double M3_ZERO = -153.6328125;
+                public static final double M4_ZERO = -50.09765625;
             }
 
             public static final class anglemotor {
@@ -119,16 +119,16 @@ public class Constants {
 
         public static class shooter {
             public static final class upper {
-                public static final double kV = 0.11081;
-                public static final double kA = 0.090687;
+                public static final double kV = 0.11942;
+                public static final double kA = 0.093783;
 
                 public static final double RAMP_RATE = 2.0;
 
-                public static final double DEVIATION = 99999e8;
-                public static final double E_DEVIATION = 0.001e-4;
+                public static final double DEVIATION = 9999;
+                public static final double E_DEVIATION = 0.0001;
 
-                public static final double QELMS = 15.0;
-                public static final double RELMS = 7.0;
+                public static final double QELMS = 1000;
+                public static final double RELMS = 1e-10;
 
                 public static final double RADIUS = Units.inchesToMeters(3.0);
                 public static final double CIRCUMFERENCE = RADIUS * 2.0 * Math.PI;

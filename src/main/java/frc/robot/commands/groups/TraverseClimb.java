@@ -5,6 +5,10 @@
 package frc.robot.commands.groups;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.climber.ActivePull;
+import frc.robot.commands.climber.ActivePush;
+import frc.robot.commands.climber.PassivePull;
+import frc.robot.commands.climber.PassivePush;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -14,6 +18,19 @@ public class TraverseClimb extends SequentialCommandGroup {
   public TraverseClimb() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands();
+    addCommands(
+      new ActivePush(),
+      new ActivePull(),
+      new PassivePush(),
+      new ActivePush(),
+      new PassivePull(),
+      new ActivePull(),
+      new PassivePush(),
+      new ActivePush(),
+      new PassivePull(),
+      new ActivePull(),
+      new PassivePush()
+
+    );
   }
 }

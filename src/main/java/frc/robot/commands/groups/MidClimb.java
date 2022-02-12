@@ -7,6 +7,7 @@ package frc.robot.commands.groups;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.climber.ActivePull;
 import frc.robot.commands.climber.ActivePush;
+import frc.robot.commands.climber.PassivePull;
 import frc.robot.commands.climber.PassivePush;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more

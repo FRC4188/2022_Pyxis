@@ -22,7 +22,6 @@ public class ResetPose extends InstantCommand {
   @Override
   public void initialize() {
     Swerve.getInstance().setPose(pose);
-    Sensors.getInstance().setRotation(pose.getRotation());
     Swerve.getInstance().setRotSetpoint(0.0);
   }
 }

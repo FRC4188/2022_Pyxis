@@ -125,8 +125,8 @@ public class Constants {
                 public static double SYSTEM_STDEV = 99999e8;
                 public static double ENC_STDEV = 0.001e-4;
 
-                public static final double QELMS = 15.0;
-                public static final double RELMS = 7.0;
+                public static final double QELMS = 80.0;
+                public static final double RELMS = 5.0;
 
                 public static final double RADIUS = Units.inchesToMeters(3.0);
                 public static final double CIRCUMFRENCE = RADIUS * 2.0 * Math.PI;
@@ -141,11 +141,36 @@ public class Constants {
                 public static double SYSTEM_STDEV = 99999e8;
                 public static double ENC_STDEV = 0.001e-4;
 
-                public static final double QELMS = 15.0;
-                public static final double RELMS = 7.0;
+                public static final double QELMS = 80.0;
+                public static final double RELMS = 5.0;
 
                 public static final double RADIUS = Units.inchesToMeters(2.0);
                 public static final double CIRCUMFRENCE = RADIUS * 2.0 * Math.PI;
             }
         }
+    
+    public static final class field {
+
+        public static final double GOAL_HEIGHT = 2.64;
+
+    }
+
+    public static final class turret {
+            public static final double kP = 0.03;
+            public static final double kI = 0.0;
+            public static final double kD = 0.00002;
+
+            public static final double MIN_ANGLE = -55.0;
+            public static final double MAX_ANGLE = 161.0;
+
+            public static final double GEAR_RATIO = 20 * 14;
+            public static final double ENCODER_TO_DEGREES = 360 / GEAR_RATIO;
+
+            public static final double ANGLE_TOLERANCE = 0.0;
+    
+        
+        public static final double LIMELIGHT_HEIGHT = 0.6477;
+        public static final double MOUNTING_ANGLE = 19.7;
+
+    }
 }

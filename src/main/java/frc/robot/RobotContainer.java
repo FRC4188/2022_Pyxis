@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.drive.auto;
 import frc.robot.commands.ShooterVelocity;
+import frc.robot.commands.turret.SetToAngle;
+import frc.robot.commands.turret.TrackTarget;
 import frc.robot.commands.auto.FiveBall;
 import frc.robot.commands.auto.Simple;
 import frc.robot.commands.auto.ThreeBall;
@@ -23,6 +25,7 @@ import frc.robot.subsystems.LowerShooter;
 import frc.robot.subsystems.UpperShooter;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
+import frc.robot.subsystems.turret.Turret;
 import frc.robot.utils.controllers.CSPController;
 import frc.robot.utils.controllers.CSPController.Scaling;
 import frc.robot.utils.math.Derivative;
@@ -38,6 +41,7 @@ public class RobotContainer {
   private CSPController pilot = new CSPController(0);
 
   private Swerve swerve = Swerve.getInstance();
+  private Turret turret = Turret.getInstance();
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -75,6 +79,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
     SmartDashboard.putData("Reset Position", new ResetPose());
     SmartDashboard.putData("Reset Rotation", new ResetRotation());
+
+    pilot.getDpadLeftButtonObj().whileHeld(new RunCommand(() -> turret.set(0.2), turret)).whenReleased(new RunCommand(() -> turret.set(0.0), turret));
+    pilot.getDpadRightButtonObj().whileHeld(new RunCommand(() -> turret.set(-0.2), turret)).whenReleased(new RunCommand(() -> turret.set(0.0), turret));
+
+    pilot.getXButtonObj().whenPressed(new SetToAngle(30));
+    pilot.getYButtonObj().whenPressed(new SetToAngle(0));
+
+    pilot.getBButtonObj().whileHeld(new TrackTarget(true)).whenReleased(new TrackTarget(false));
 
     pilot.getRbButtonObj().whileHeld(new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0)));
     //pilot.setRumble(Derivative.getRate(Derivative.getRate(swerve.getVelocity())));

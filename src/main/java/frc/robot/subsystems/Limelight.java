@@ -108,7 +108,7 @@ public class Limelight extends SubsystemBase {
         SmartDashboard.putNumber("Limelight Formula RPM", formulaRpm());
         SmartDashboard.putNumber("Distance", getDistance());
         //SmartDashboard.putNumber("Vertical Angle", getVerticalAngle());
-        //SmartDashboard.putNumber("Horizontal Angle", getHorizontalAngle());
+        SmartDashboard.putNumber("Horizontal Angle", getHorizontalAngle());
         SmartDashboard.putBoolean("Is Aimed", getIsAimed());
     }
 

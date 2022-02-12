@@ -79,7 +79,7 @@ public class RobotContainer {
     // controller initialization
     private final CspController pilot = new CspController(0);
     private final CspController copilot = new CspController(1);
-    private final ButtonBox buttonBox = new ButtonBox(2);
+    //private final ButtonBox buttonBox = new ButtonBox(2);
 
     // EMERGENCY POWER!!!!!!
 
@@ -152,8 +152,7 @@ public class RobotContainer {
         copilot.getAButtonObj().whenPressed(new InstantCommand(() -> climber.engagePneuBrake(true), climber));
         copilot.getAButtonObj().whenReleased(new InstantCommand(() -> climber.engagePneuBrake(false), climber));
 
-        copilot.getBButtonObj().whileHeld(new AutoAim(turret, limelight, true))
-        .whenReleased(new AutoAim(turret, limelight, false));
+        // \
 
         copilot.getXButtonObj().whileHeld(new RunMagazine(magazine, 1.0));
         copilot.getXButtonObj().whenReleased(new RunMagazine(magazine, 0.0));
@@ -200,8 +199,8 @@ public class RobotContainer {
 
         pilot.getXButtonObj().whenPressed(new TurretToAngle(turret, 30));
 
-        pilot.getBButtonObj().whileHeld(new AutoAim(turret, limelight, true))
-        .whenReleased(new AutoAim(turret, limelight, false));
+        pilot.getBButtonObj().whenPressed(new AutoAim(turret, limelight));
+   
     }
 
     private void oldBindings() {
@@ -251,24 +250,24 @@ public class RobotContainer {
     }
 
     private void buttonboxBindings() {
-        buttonBox.getButton2Obj().whenPressed(new InstantCommand(() -> climber.engagePneuBrake(false), climber));
-        buttonBox.getButton1Obj().whileHeld(new ManualClimb(climber, -0.9))
-            .whenReleased(new ManualClimb(climber, 0.0));
-        buttonBox.getButton3Obj().whileHeld(new ManualClimb(climber, 0.6))
-            .whenReleased(new ManualClimb(climber, 0.0));
-        buttonBox.getButton4Obj().whenPressed(new RunMagazine(magazine, 0.625))
-            .whenReleased(new RunMagazine(magazine, 0.0));
-        buttonBox.getButton5Obj().whenPressed(new SpinShooter(shooter, 3500.0))
-            .whenReleased(new SpinShooter(shooter, 2000.0));
-        buttonBox.getButton6Obj().whenPressed(new TurretToAngle(turret, 0.0));
-        buttonBox.getButton7Obj().whenPressed(new TurretToAngle(turret, 180.0));
-        buttonBox.getButton8Obj().whileHeld(new RunCommand(() -> {
-            intake.spin(0.0, 0.0);
-            magazine.set(0.0);
-            climber.set(0.0);
-            turret.set(0.0);
-            shooter.set(0.0);
-        }, intake, magazine, climber, turret, shooter));
+        // buttonBox.getButton2Obj().whenPressed(new InstantCommand(() -> climber.engagePneuBrake(false), climber));
+        // buttonBox.getButton1Obj().whileHeld(new ManualClimb(climber, -0.9))
+        //     .whenReleased(new ManualClimb(climber, 0.0));
+        // buttonBox.getButton3Obj().whileHeld(new ManualClimb(climber, 0.6))
+        //     .whenReleased(new ManualClimb(climber, 0.0));
+        // buttonBox.getButton4Obj().whenPressed(new RunMagazine(magazine, 0.625))
+        //     .whenReleased(new RunMagazine(magazine, 0.0));
+        // buttonBox.getButton5Obj().whenPressed(new SpinShooter(shooter, 3500.0))
+        //     .whenReleased(new SpinShooter(shooter, 2000.0));
+        // buttonBox.getButton6Obj().whenPressed(new TurretToAngle(turret, 0.0));
+        // buttonBox.getButton7Obj().whenPressed(new TurretToAngle(turret, 180.0));
+        // buttonBox.getButton8Obj().whileHeld(new RunCommand(() -> {
+        //     intake.spin(0.0, 0.0);
+        //     magazine.set(0.0);
+        //     climber.set(0.0);
+        //     turret.set(0.0);
+        //     shooter.set(0.0);
+        // }, intake, magazine, climber, turret, shooter));
     }
 
     /**

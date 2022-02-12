@@ -8,18 +8,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.drive.auto;
-import frc.robot.commands.ShooterVelocity;
+import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.turret.SetToAngle;
 import frc.robot.commands.turret.TrackTarget;
 import frc.robot.commands.auto.FiveBall;
 import frc.robot.commands.auto.Simple;
 import frc.robot.commands.auto.ThreeBall;
 import frc.robot.commands.auto.TwoBall;
+import frc.robot.commands.groups.AutoShoot;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
+import frc.robot.commands.shooter.AutoRPM;
 import frc.robot.planning.Trajectories;
 import frc.robot.subsystems.LowerShooter;
 import frc.robot.subsystems.UpperShooter;
@@ -88,7 +91,7 @@ public class RobotContainer {
 
     pilot.getBButtonObj().whileHeld(new TrackTarget(true)).whenReleased(new TrackTarget(false));
 
-    pilot.getRbButtonObj().whileHeld(new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0)));
+    pilot.getRbButtonObj().whileHeld(new AutoShoot()).whenReleased(new ParallelCommandGroup(new ShooterVelocity(()->0.0), new InstantCommand(() -> turret.set(0.0))));
     //pilot.setRumble(Derivative.getRate(Derivative.getRate(swerve.getVelocity())));
   }
 

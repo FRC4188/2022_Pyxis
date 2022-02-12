@@ -82,6 +82,11 @@ public class Sensors extends SubsystemBase {
     }
   }
 
+  public double getFormulaRPM() {
+    double distance = getDistance();
+    return 125.561*distance*distance - 529.004*distance + 2807.27;
+  }
+
   public void setLEDMode(LedMode mode) {
     limelight.setLEDMode(mode);
   }

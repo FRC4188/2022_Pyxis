@@ -42,7 +42,8 @@ public class Turret extends SubsystemBase {
     private double reduction = 1.0;
 
     private boolean MANUAL = false;
-    private boolean changing = false;
+    private static boolean maxchanging = false;
+    private static boolean minchanging = false;
 
     /**
      * Constructs new Turret object and configures devices.
@@ -94,6 +95,7 @@ public class Turret extends SubsystemBase {
         } else {
             turretMotor.set(percent * reduction);
         }
+        
     }
 
     /**
@@ -109,31 +111,29 @@ public class Turret extends SubsystemBase {
         // set(aimingPID.calculate(measure, 0));
 
         
-        if (getPosition() >= MAX_ANG)
+        if (getPosition() >= MAX_ANG || !maxchanging)
         {
-            changing = true;
+            maxchanging = true;
             setAngle(-30);
-            System.out.println("max " + changing);
-            if (getPosition() == -10) {
+            System.out.println("max " + maxchanging);
+            if (getPosition() <= -30) {
                 System.out.println("reached -30");
-                changing = false;
+                maxchanging = false;
 
             }
         }
-        else if (getPosition() <= MIN_ANG)
+        else if (getPosition() <= MIN_ANG || !minchanging)
         {
-            changing = true;
-            setAngle(250);
-            System.out.println("min " + changing);
-            if (getPosition() == 200) {
-                System.out.println("reached 250");
-                changing = false;
-
+            minchanging = true;
+            setAngle(253);
+            System.out.println("min " + minchanging);
+            if (getPosition() >= 253) {
+                System.out.println("reached 253");
+                minchanging = false;
             }
         }
-        if (!changing)
+        if (!maxchanging && !minchanging)
         {
-            System.out.println("turning" + changing);
             System.out.println("nomrmal turning");
             setAngle(getPosition() - measure);
         }

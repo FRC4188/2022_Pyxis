@@ -7,6 +7,7 @@ package frc.robot.commands.auto;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.drive.FollowTrajectory;
+import frc.robot.commands.groups.AutoShoot;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.subsystems.drive.Swerve;
@@ -27,6 +28,7 @@ public class TwoBall extends SequentialCommandGroup {
       new ResetRotation(),
       new ResetPose(),
       new FollowTrajectory(Trajectories.twoball.first, Rotation2d.fromDegrees(24.13)),
+      new AutoShoot().withTimeout(10.0),
       new FollowTrajectory(Trajectories.twoball.second, Rotation2d.fromDegrees(-203.03))
     );
   }

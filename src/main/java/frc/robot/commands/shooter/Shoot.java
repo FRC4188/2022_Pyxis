@@ -28,7 +28,7 @@ public class Shoot extends CommandBase {
   @Override
   public void execute() {
     if (Math.abs(sensors.getTX()) < 10.0) {
-      upper.setVelocity(sensors.getFormulaRPM());
+      upper.setVelocity(sensors.getFormulaRPM() / 2.0);
       lower.setVelocity(sensors.getFormulaRPM());
     } else {
       upper.setVelocity(0.0);

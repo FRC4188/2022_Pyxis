@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.drive.FollowTrajectory;
+import frc.robot.commands.groups.AutoShoot;
 import frc.robot.utils.paths.Trajectories;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -21,10 +22,11 @@ public class FiveBall extends SequentialCommandGroup {
     addCommands(
       new FollowTrajectory(Trajectories.fiveball.first, Rotation2d.fromDegrees(24.13)),
       new FollowTrajectory(Trajectories.fiveball.second, Rotation2d.fromDegrees(-48.03)),
-      new WaitCommand(3.0),
+      new AutoShoot().withTimeout(10.0),
       new FollowTrajectory(Trajectories.fiveball.terminal, Rotation2d.fromDegrees(-22.98)),
       new WaitCommand(5.0),
-      new FollowTrajectory(Trajectories.fiveball.lastShoot, Rotation2d.fromDegrees(136.45))
+      new FollowTrajectory(Trajectories.fiveball.lastShoot, Rotation2d.fromDegrees(136.45-180)),
+      new AutoShoot().withTimeout(10.0)
     );
   }
 }

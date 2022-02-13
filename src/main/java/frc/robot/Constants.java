@@ -115,6 +115,12 @@ public class Constants {
         }
 
         public static final class shooter {
+            //regression formula for RPM vs Distance
+            public static final class RPM {
+                public static final double a = -15.4733;
+                public static final double b = 345.78;
+                public static final double c = 1554.16;
+            }
             public static final class upper {
                 public static double kV = 0.10964;
                 public static double kA = 0.0148;

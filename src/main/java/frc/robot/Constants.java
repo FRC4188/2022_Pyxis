@@ -173,4 +173,11 @@ public class Constants {
         public static final double MOUNTING_ANGLE = 19.7;
 
     }
+
+    public static final class intake{
+
+        public static final int MOTOR_ID = 9;
+        public static final double RAMP_RATE = 1.5;
+
+    };
 }

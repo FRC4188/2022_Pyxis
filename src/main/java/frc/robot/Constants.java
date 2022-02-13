@@ -65,20 +65,20 @@ public class Constants {
             public static final Kinematics KINEMATICS = new Kinematics(FrontLeftLocation, FrontRightLocation, BackLeftLocation, BackRightLocation);
 
             public static final class modules {
-                public static final double M1_ZERO = 45.263672;
-                public static final double M2_ZERO = -122.958984;
-                public static final double M3_ZERO = -160.927734;
-                public static final double M4_ZERO = -48.164062;
+                public static final double M1_ZERO = 176.1328125;
+                public static final double M2_ZERO = 124.189453125;
+                public static final double M3_ZERO = 75.76171875 - 180.0;
+                public static final double M4_ZERO = 11.513671875 - 180.0;
             }
 
             public static final class anglemotor {
-                public static final double kP = -1e-2;
+                public static final double kP = -8e-3;
                 public static final double kI = 0.0;
                 public static final double kD = 0.0;
             }
 
             public static final class speedmotor {
-                public static final double kP = 19e-2;
+                public static final double kP = 19e-3;
                 public static final double kI = 0.0;
                 public static final double kD = 1e-1;
             }

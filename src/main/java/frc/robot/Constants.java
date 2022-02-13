@@ -176,7 +176,7 @@ public class Constants {
 
     public static final class intake{
 
-        public static final int MOTOR_ID = 9;
+        public static final int MOTOR_ID = 17;
         public static final double RAMP_RATE = 1.5;
 
     };

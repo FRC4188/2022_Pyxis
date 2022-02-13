@@ -37,6 +37,8 @@ public class Sensors extends SubsystemBase {
 
   private void updateShuffleboard() {
     SmartDashboard.putNumber("Limelight Distance", getDistance());
+    SmartDashboard.putNumber("Pigeon Angle", pigeon.get().getDegrees());
+    SmartDashboard.putNumber("Pigeon Compass", pigeon.getCompass().getDegrees());
   }
 
   private void startNotifier() {
@@ -67,7 +69,7 @@ public class Sensors extends SubsystemBase {
   }
 
   public void setPigeonAngle(double angle) {
-    pigeon.setFusedHeading(angle);
+    pigeon.set(angle);
   }
 
   public Rotation2d getRotation() {

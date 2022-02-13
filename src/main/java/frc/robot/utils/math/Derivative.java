@@ -8,7 +8,7 @@ public class Derivative {
         lastVal = start;
     }
 
-    public static double getRate(double value) {
+    public double getRate(double value) {
         double time = System.currentTimeMillis();
         double rate = (value - lastVal) / ((time - lastTime) / 1000.0);
 

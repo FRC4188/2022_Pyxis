@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.wpilibj.Notifier;
@@ -9,13 +5,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.logging.Data;
-import frc.robot.subsystems.logging.USBLogger;
 import frc.robot.Constants;
 import frc.robot.subsystems.sensors.Sensors;
 
@@ -158,13 +151,5 @@ public class Swerve extends SubsystemBase {
 
   public SwerveDriveKinematics getKinematics() {
     return kinematics;
-  }
-
-  private Data[] odometryData() {
-    return new Data[] {
-      new Data("XPos", String.valueOf(odometry.getPose().getX())),
-      new Data("YPos", String.valueOf(odometry.getPose().getY())),
-      new Data("Rotation", String.valueOf(odometry.getPose().getRotation().getDegrees()))
-    };
   }
 }

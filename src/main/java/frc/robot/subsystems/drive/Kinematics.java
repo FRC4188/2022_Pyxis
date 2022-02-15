@@ -51,7 +51,6 @@ public class Kinematics {
             if (speeds.vxMetersPerSecond == 0.0 && speeds.vyMetersPerSecond == 0.0 && speeds.omegaRadiansPerSecond == 0.0) result[i] = new SwerveModuleState(0.0, new Rotation2d(Math.PI));
             else {
                 Vector rot = new Vector(Math.atan2(positions[i].getX(), -positions[i].getY()) + Math.PI, Math.hypot(positions[i].getY(), positions[i].getX()) * speeds.omegaRadiansPerSecond);
-                //System.out.println(rot.toString());
                 Vector trans = new Vector(Math.atan2(speeds.vyMetersPerSecond, speeds.vxMetersPerSecond) - Math.PI / 2.0, Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond));
 
                 rot.addVector(trans);

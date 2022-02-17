@@ -21,6 +21,7 @@ import frc.robot.commands.climber.PassivePush;
 import frc.robot.commands.groups.AutoShoot;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.subsystems.turret.Turret;
@@ -36,9 +37,11 @@ public class RobotContainer {
   private final SendableChooser<SequentialCommandGroup> autoChooser = new SendableChooser<SequentialCommandGroup>();
 
   private CSPController pilot = new CSPController(0);
+  private CSPController copilot = new CSPController(1);
 
   private Swerve swerve = Swerve.getInstance();
-  private Turret turret = Turret.getInstance();
+  private Climber climber = Climber.getInstance();
+  //private Turret turret = Turret.getInstance();
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -61,7 +64,9 @@ public class RobotContainer {
       pilot.getRightX(Scaling.SQUARED),
       pilot.getRightBumper()),
       swerve)
-    );  
+    );
+
+    climber.setDefaultCommand(new ActiveVolts(() -> copilot.getLeftY(Scaling.LINEAR), () -> copilot.getRightY(Scaling.LINEAR)));
   }
 
   /**
@@ -71,19 +76,17 @@ public class RobotContainer {
     SmartDashboard.putData("Reset Position", new ResetPose());
     SmartDashboard.putData("Reset Rotation", new ResetRotation());
 
+    /*
     pilot.getDpadLeftButtonObj().whileHeld(new RunCommand(() -> turret.set(0.2), turret)).whenReleased(new RunCommand(() -> turret.set(0.0), turret));
     pilot.getDpadRightButtonObj().whileHeld(new RunCommand(() -> turret.set(-0.2), turret)).whenReleased(new RunCommand(() -> turret.set(0.0), turret));
 
     pilot.getBButtonObj().whileHeld(new TrackTarget(true)).whenReleased(new TrackTarget(false));
 
-    pilot.getRbButtonObj().whileHeld(new AutoShoot()).whenReleased(new ParallelCommandGroup(new ShooterVelocity(()->0.0), new InstantCommand(() -> turret.set(0.0))));
+    pilot.getRbButtonObj().whileHeld(new AutoShoot()).whenReleased(new ParallelCommandGroup(new ShooterVelocity(()->0.0), new InstantCommand(() -> turret.set(0.0))));*/
     //pilot.getRbButtonObj().whenPressed(new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0))).whenReleased(new ShooterVelocity(() -> 0.0));
 
-    pilot.getAButtonObj().whileHeld(new ActiveVolts(() -> SmartDashboard.getNumber("Climber Set Volts", 0.0)));
-    pilot.getDpadUpButtonObj().whenPressed(new ActivePush());
-    pilot.getDpadDownButtonObj().whenPressed(new ActivePull());
-    pilot.getDpadLeftButtonObj().whenPressed(new PassivePull());
-    pilot.getDpadRightButtonObj().whenPressed(new PassivePush());
+    copilot.getDpadLeftButtonObj().whenPressed(new PassivePull());
+    copilot.getDpadRightButtonObj().whenPressed(new PassivePush());
   }
 
   private void addChooser() {

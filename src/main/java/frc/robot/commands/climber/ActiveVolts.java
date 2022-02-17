@@ -8,12 +8,14 @@ import frc.robot.subsystems.climber.Climber;
 public class ActiveVolts extends CommandBase {
 
   private Climber climber = Climber.getInstance();
-  private DoubleSupplier volts;
+  private DoubleSupplier voltsA;
+  private DoubleSupplier voltsB;
 
   /** Creates a new ActiveVolts. */
-  public ActiveVolts(DoubleSupplier volts) {
+  public ActiveVolts(DoubleSupplier voltsA, DoubleSupplier voltsB) {
     addRequirements(climber);
-    this.volts = volts;
+    this.voltsA = voltsA;
+    this.voltsB = voltsB;
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +27,7 @@ public class ActiveVolts extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setActiveVolts(volts.getAsDouble());
+    climber.setActiveVolts(voltsA.getAsDouble(), voltsB.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

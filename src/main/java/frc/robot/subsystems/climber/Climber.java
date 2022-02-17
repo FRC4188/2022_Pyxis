@@ -97,6 +97,11 @@ public class Climber extends SubsystemBase {
     active.setB(volts);
   }
 
+  public void setActiveVolts(double A, double B) {
+    active.setA(A);
+    active.setB(B);
+  }
+
   public void resetActiveA(double position) {
     active.resetPositionA(position);
   }

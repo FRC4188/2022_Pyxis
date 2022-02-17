@@ -20,7 +20,7 @@ public class Sensors extends SubsystemBase {
   }
 
   private Limelight limelight = new Limelight("limelight-swervex");
-  private Pigeon pigeon = new Pigeon(31);
+  private Pigeon pigeon = new Pigeon(25);
 
   private Notifier notifier = new Notifier(() -> updateShuffleboard());
 

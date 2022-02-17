@@ -78,4 +78,12 @@ public class ActiveHook {
     public double getMotorBTemp(){
         return motorB.getTemperature();
     }
+
+    public double getMotorACurrent(){
+        return motorA.getStatorCurrent();
+    }
+
+    public double getMotorBCurrent(){
+        return motorB.getStatorCurrent();
+    }
 }

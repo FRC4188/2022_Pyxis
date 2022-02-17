@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.climber;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -41,7 +42,7 @@ public class Climber extends SubsystemBase {
   private Climber() {
     CommandScheduler.getInstance().registerSubsystem(this);
 
-    dashboardLoop.startPeriodic(0.1);
+    dashboardLoop.startPeriodic(0.02);
 
     new Trigger(() -> lowLimitA.get()).whileActiveOnce(new ResetActiveA(), false);
     new Trigger(() -> lowLimitB.get()).whileActiveOnce(new ResetActiveB(), false);
@@ -61,6 +62,9 @@ public class Climber extends SubsystemBase {
     SmartDashboard.putBoolean("Passive Climber State", passive.getPosition());
     SmartDashboard.putNumber("Temperature Motor A", active.getMotorATemp());
     SmartDashboard.putNumber("Temperature Motor B", active.getMotorBTemp());
+    SmartDashboard.putNumber("Current A", active.getMotorACurrent());
+    SmartDashboard.putNumber("Current B", active.getMotorBCurrent());
+    NetworkTableInstance.getDefault().flush();
   }
 
   public double getActivePosition() {

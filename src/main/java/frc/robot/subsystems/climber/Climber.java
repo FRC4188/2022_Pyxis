@@ -28,13 +28,15 @@ public class Climber extends SubsystemBase {
   private ActiveHook active = new ActiveHook();
   private PassiveHook passive = new PassiveHook();
 
+  /*
   private DigitalInput lowLimitA = new DigitalInput(Constants.climber.LOW_LIMIT_A_ID);
   private DigitalInput lowLimitB = new DigitalInput(Constants.climber.LOW_LIMIT_B_ID);
 
   private DigitalInput hookLimitA = new DigitalInput(Constants.climber.HOOK_LIMIT_A_ID);
   private DigitalInput hookLimitB = new DigitalInput(Constants.climber.HOOK_LIMIT_B_ID);
+*/
 
-  private Solenoid brake = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.climber.BRAKE_ID);
+  private DoubleSolenoid brake = new DoubleSolenoid(Constants.climber.BRAKE_A_ID,Constants.climber.BRAKE_B_ID);
 
   private Notifier dashboardLoop = new Notifier(() -> updateDashboard());
 
@@ -44,8 +46,8 @@ public class Climber extends SubsystemBase {
 
     dashboardLoop.startPeriodic(0.02);
 
-    new Trigger(() -> lowLimitA.get()).whileActiveOnce(new ResetActiveA(), false);
-    new Trigger(() -> lowLimitB.get()).whileActiveOnce(new ResetActiveB(), false);
+    //new Trigger(() -> lowLimitA.get()).whileActiveOnce(new ResetActiveA(), false);
+    //new Trigger(() -> lowLimitB.get()).whileActiveOnce(new ResetActiveB(), false);
 
     SmartDashboard.putNumber("Climber Set Voltage", 0.0);
   }
@@ -92,7 +94,7 @@ public class Climber extends SubsystemBase {
   }
 
   public void setBrake(boolean state) {
-    brake.set(!state);
+    brake.set(state);
     active.motorBrakes(state);
   }
 
@@ -115,6 +117,6 @@ public class Climber extends SubsystemBase {
   }
 
   public boolean isHooked() {
-    return hookLimitA.get() && hookLimitB.get();
+    return false;//hookLimitA.get() && hookLimitB.get();
   }
 }

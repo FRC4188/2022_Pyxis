@@ -185,17 +185,12 @@ public class Constants {
     };
 
     public static final class climber {
-        public static final int MOTOR_A_ID = 0;
-        public static final int MOTOR_B_ID = 0;
-        public static final int ENCODER_A_ID = 0;
-        public static final int ENCODER_B_ID = 0;
-        public static final int LOW_LIMIT_A_ID = 0;
-        public static final int LOW_LIMIT_B_ID = 0;
-        public static final int HOOK_LIMIT_A_ID = 0;
-        public static final int HOOK_LIMIT_B_ID = 0;
-        public static final int BRAKE_ID = 0;
-        public static final int SOLENOID_A_ID = 0;
-        public static final int SOLENOID_B_ID = 0;
+        public static final int MOTOR_A_ID = 16;
+        public static final int MOTOR_B_ID = 15;
+        public static final int BRAKE_A_ID = 5;
+        public static final int BRAKE_B_ID = 4;
+        public static final int SOLENOID_A_ID = 2;
+        public static final int SOLENOID_B_ID = 3;
 
         /** Meters */
         public static final double PULL_POSITION = 0;

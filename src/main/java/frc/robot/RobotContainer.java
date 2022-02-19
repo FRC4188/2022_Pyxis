@@ -58,7 +58,7 @@ public class RobotContainer {
       swerve)
     );
 
-    climber.setDefaultCommand(new ActiveVolts(() -> copilot.getLeftY(Scaling.LINEAR), () -> copilot.getRightY(Scaling.LINEAR)));
+    climber.setDefaultCommand(new ActiveVolts(() -> copilot.getLeftY(Scaling.LINEAR) * 12.0, () -> copilot.getRightY(Scaling.LINEAR) * 12.0));
   }
 
   /**

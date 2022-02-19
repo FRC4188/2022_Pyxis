@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.sensors;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -60,12 +56,6 @@ public class Sensors extends SubsystemBase {
   public double getDistance() {
     return (Constants.field.GOAL_HEIGHT - Constants.turret.LIMELIGHT_HEIGHT)
         / Math.tan(Math.toRadians(getTY() + Constants.turret.MOUNTING_ANGLE));
-  }
-
-  public double getFormula() {
-    double distance = getDistance();
-
-    return 0.0;
   }
 
   public void setPigeonAngle(double angle) {

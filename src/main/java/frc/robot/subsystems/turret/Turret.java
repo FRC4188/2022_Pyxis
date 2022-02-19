@@ -4,23 +4,18 @@
 
 package frc.robot.subsystems.turret;
 
-import javax.imageio.plugins.tiff.GeoTIFFTagSet;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
-import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
 
 public class Turret extends SubsystemBase {
@@ -34,7 +29,6 @@ public class Turret extends SubsystemBase {
   private CANSparkMax motor = new CANSparkMax(11, MotorType.kBrushless);
   private RelativeEncoder encoder = motor.getEncoder();
 
-  //private ProfiledPIDController pid = new ProfiledPIDController(Constants.turret.kP, Constants.turret.kI, Constants.turret.kD, Constants.turret.CONSTRAINTS);
   private PIDController pid = new PIDController(Constants.turret.kP, Constants.turret.kI, Constants.turret.kD);
 
   Notifier notifier = new Notifier(() -> updateShuffleboard());
@@ -98,9 +92,6 @@ public class Turret extends SubsystemBase {
 
   public void trackTarget(boolean cont) {
     double angle = Sensors.getInstance().getTX();
-    double power = 12* 
-        pid.calculate(angle, 0.0) / RobotController.getBatteryVoltage()
-            + Swerve.getInstance().getChassisSpeeds().omegaRadiansPerSecond / 10.0;
 
     setAngle(getPosition() + angle);
   }

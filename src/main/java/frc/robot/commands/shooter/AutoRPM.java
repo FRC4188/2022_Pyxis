@@ -1,23 +1,16 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.LowerShooter;
-import frc.robot.subsystems.UpperShooter;
-import frc.robot.subsystems.sensors.Limelight;
 import frc.robot.subsystems.sensors.Sensors;
+import frc.robot.subsystems.shooter.Shooter;
 
 public class AutoRPM extends CommandBase {
 
-  UpperShooter upper = UpperShooter.getInstance();
-  LowerShooter lower = LowerShooter.getInstance();
+  Shooter shooter = Shooter.getInstance();
 
   /** Creates a new AutoRPM. */
   public AutoRPM() {
-    addRequirements(upper, lower);
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -28,8 +21,7 @@ public class AutoRPM extends CommandBase {
   @Override
   public void execute() {
     double velocity = Sensors.getInstance().getFormulaRPM();
-    lower.setVelocity(velocity);
-    upper.setVelocity(velocity / 2.0);
+    shooter.setVelocity(velocity);
   }
 
   // Called once the command ends or is interrupted.

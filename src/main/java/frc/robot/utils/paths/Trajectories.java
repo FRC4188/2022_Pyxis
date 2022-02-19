@@ -8,7 +8,6 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import frc.robot.Constants;
-import frc.robot.Constants.drive.auto;
 
 public final class Trajectories {
     private static final TrajectoryConfig autoConfig = Constants.drive.auto.CONFIG;

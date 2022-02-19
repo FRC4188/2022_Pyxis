@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.commands.climber.ResetActiveA;
 import frc.robot.commands.climber.ResetActiveB;
+import frc.robot.utils.DoubleSolenoid;
 
 public class Climber extends SubsystemBase {
 

@@ -193,21 +193,21 @@ public class Constants {
         public static final int SOLENOID_B_ID = 3;
 
         /** Meters */
-        public static final double PULL_POSITION = 0;
+        public static final double PULL_POSITION = 0.0;
         /** Meters */
-        public static final double ACTIVE_TOLERANCE = 0;
+        public static final double ACTIVE_TOLERANCE = 0.03;
         /** Meters */
-        public static final double PUSH_POSITION = 0;
+        public static final double PUSH_POSITION = Units.inchesToMeters(12.0 * 4.0 + 9.0);
         /** Meters */
-        public static final double MAX_HEIGHT = 0;
+        public static final double MAX_HEIGHT = Units.inchesToMeters(12.0 * 4.0 + 11.0);
         /** Meters / Count */
-        public static final double METERS_PER_COUNT = 0;
+        public static final double METERS_PER_COUNT = Units.inchesToMeters(Math.PI);
         /** Meters / Second */
-        public static final double MAX_VELOCITY = 0;
+        public static final double MAX_VELOCITY = 0.25;
         /** Meters / Second^2 */
-        public static final double MAX_ACCEL = 0;
+        public static final double MAX_ACCEL = 1.0;
 
-        public static double kP = 0.0;
+        public static double kP = 2.0;
         public static double kI = 0.0;
         public static double kD = 0.0;
 

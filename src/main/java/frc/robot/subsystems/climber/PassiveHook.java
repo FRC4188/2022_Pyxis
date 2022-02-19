@@ -1,6 +1,7 @@
 package frc.robot.subsystems.climber;
 
 import frc.robot.Constants;
+import frc.robot.utils.DoubleSolenoid;
 
 public class PassiveHook {
 

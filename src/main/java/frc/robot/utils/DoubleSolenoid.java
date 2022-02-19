@@ -1,4 +1,4 @@
-package frc.robot.subsystems.climber;
+package frc.robot.utils;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -8,7 +8,7 @@ public class DoubleSolenoid {
     private Solenoid A;
     private Solenoid B;
 
-    protected DoubleSolenoid(int chnA, int chnB) {
+    public DoubleSolenoid(int chnA, int chnB) {
         A = new Solenoid(PneumaticsModuleType.CTREPCM, chnA);
         B = new Solenoid(PneumaticsModuleType.CTREPCM, chnB);
     }

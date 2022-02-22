@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.intake;
 import frc.robot.utils.DoubleSolenoid;
 
 public class Intake extends SubsystemBase {
@@ -46,14 +47,11 @@ public class Intake extends SubsystemBase {
     resetEncoders();
     intakeMotor.configFactoryDefault();
     SmartDashboard.putNumber("Intake Set Voltage", 0.0);
+    intakeMotor.configOpenloopRamp(0.25);
 
     piston = new DoubleSolenoid(Constants.intake.SOLENOID_A_ID, Constants.intake.SOLENOID_B_ID);
 
-    //SmartDashboard.putNumber("set P", Constants.intake.kP);
-    //SmartDashboard.putNumber("set I", Constants.intake.kI);
-    //SmartDashboard.putNumber("set D", Constants.intake.kD);
-
-    shuffle.startPeriodic(0.4);
+    shuffle.startPeriodic(0.1);
 
     raise(false);
   }

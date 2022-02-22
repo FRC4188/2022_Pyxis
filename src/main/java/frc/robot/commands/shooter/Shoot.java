@@ -21,7 +21,7 @@ public class Shoot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(sensors.getTX()) < 10.0) {
+    if (shooter.isReady()) {
       shooter.setVelocity(sensors.getFormulaRPM());
     } else {
       shooter.setVelocity(0.0);

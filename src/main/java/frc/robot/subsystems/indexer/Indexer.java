@@ -7,10 +7,8 @@ package frc.robot.subsystems.indexer;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
 
 public class Indexer extends SubsystemBase {
   private static Indexer indexer;
@@ -22,7 +20,7 @@ public class Indexer extends SubsystemBase {
  private WPI_TalonFX indexerMotor = new WPI_TalonFX(Constants.indexer.INDEXER_ID);
   /** Creates a new Indexer. */
   private Indexer() {
-    
+    indexerMotor.configOpenloopRamp(0.75);
   }
 
   @Override

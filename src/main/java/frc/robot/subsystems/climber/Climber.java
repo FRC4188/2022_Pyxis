@@ -4,18 +4,11 @@
 
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
-import frc.robot.commands.climber.ResetActiveA;
-import frc.robot.commands.climber.ResetActiveB;
 import frc.robot.utils.DoubleSolenoid;
 
 public class Climber extends SubsystemBase {
@@ -45,7 +38,7 @@ public class Climber extends SubsystemBase {
   private Climber() {
     CommandScheduler.getInstance().registerSubsystem(this);
 
-    dashboardLoop.startPeriodic(0.02);
+    dashboardLoop.startPeriodic(0.1);
 
     //new Trigger(() -> lowLimitA.get()).whileActiveOnce(new ResetActiveA(), false);
     //new Trigger(() -> lowLimitB.get()).whileActiveOnce(new ResetActiveB(), false);
@@ -62,13 +55,13 @@ public class Climber extends SubsystemBase {
   private void updateDashboard() {
     SmartDashboard.putNumber("Active Climber A Position", active.getPositionA());
     SmartDashboard.putNumber("Active Climber B Position", active.getPositionB());
-    SmartDashboard.putNumber("Active Climber Average Position", getActivePosition());
-    SmartDashboard.putBoolean("Passive Climber State", passive.getPosition());
+    SmartDashboard.putBoolean("Passive Climber Set State", passive.getSet());
+    SmartDashboard.putBoolean("Passive Climber Left In", passive.getLeftIn());
+    SmartDashboard.putBoolean("Passive Climber Right In", passive.getRightIn());
+    SmartDashboard.putBoolean("Passive Climber Left Out", passive.getLeftOut());
+    SmartDashboard.putBoolean("Passive Climber Right Out", passive.getRightOut());
     SmartDashboard.putNumber("Temperature Motor A", active.getMotorATemp());
     SmartDashboard.putNumber("Temperature Motor B", active.getMotorBTemp());
-    SmartDashboard.putNumber("Current A", active.getMotorACurrent());
-    SmartDashboard.putNumber("Current B", active.getMotorBCurrent());
-    NetworkTableInstance.getDefault().flush();
   }
 
   public double getActivePosition() {
@@ -83,8 +76,14 @@ public class Climber extends SubsystemBase {
     return active.getPositionB();
   }
 
-  public boolean getPassivePosition() {
-    return passive.getPosition();
+  public int getPassivePosition() {
+    if (passive.getLeftIn() && passive.getRightIn()) return -1;
+    else if (passive.getLeftOut() && passive.getRightOut()) return 1;
+    else return 0;
+  }
+
+  public boolean getPassiveSet() {
+    return passive.getSet();
   }
 
   public boolean getBrake() {

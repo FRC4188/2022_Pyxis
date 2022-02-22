@@ -115,40 +115,33 @@ public class Constants {
     }
 
     public static final class shooter {
-        public static final class upper {
-            public static double kV = 0.10964;
-            public static double kA = 0.0148;
+        public static final int FOLLOWER_ID = 0;
+        public static final int LEADER_ID = 0;
 
-            public static final double GEARING = 1.0;
-            public static final double RAMP = 2.0;
+        public static double kV = 0.10964;
+        public static double kA = 0.0148;
 
-            public static double SYSTEM_STDEV = 99999e8;
-            public static double ENC_STDEV = 0.001e-4;
+        public static final double GEARING = 1.0;
+        public static final double RAMP = 2.0;
 
-            public static final double QELMS = 80.0;
-            public static final double RELMS = 5.0;
+        public static double SYSTEM_STDEV = 99999e8;
+        public static double ENC_STDEV = 0.001e-4;
 
-            public static final double RADIUS = Units.inchesToMeters(3.0);
-            public static final double CIRCUMFRENCE = RADIUS * 2.0 * Math.PI;
-            public static final int MOTOR_ID = 14;
-        }
-        public static final class lower {
-            public static final double GEARING = 1.5;
-            public static final double RAMP = 2.0;
+        public static final double QELMS = 80.0;
+        public static final double RELMS = 5.0;
 
-            public static double kV = 0.16214;
-            public static double kA = 0.0089196;
+        public static final double RADIUS = Units.inchesToMeters(3.0);
+        public static final double CIRCUMFRENCE = RADIUS * 2.0 * Math.PI;
 
-            public static double SYSTEM_STDEV = 99999e8;
-            public static double ENC_STDEV = 0.001e-4;
+        public static final class hood {
+            public static final int MOTOR_ID = 11;
 
-            public static final double QELMS = 80.0;
-            public static final double RELMS = 5.0;
-
-            public static final double RADIUS = Units.inchesToMeters(2.0);
-            public static final double CIRCUMFRENCE = RADIUS * 2.0 * Math.PI;
+            public static final double kP = 0.0;
+            public static final double kI = 0.0;
+            public static final double kD = 0.0;
             
-            public static final int MOTOR_ID = 13;
+            public static final double MAX = 70.0;
+            public static final double MIN = 0.0;
         }
     }
     
@@ -194,7 +187,12 @@ public class Constants {
         public static final int ENCODER_B_ID = 26;
         public static final int BRAKE_A_ID = 4;
         public static final int BRAKE_B_ID = 5;
-        ;
+
+        public static final int LEFT_IN = 4;
+        public static final int LEFT_OUT = 5;
+        public static final int RIGHT_IN = 2;
+        public static final int RIGHT_OUT = 3;
+                ;
         public static final int SOLENOID_A_ID = 3;
         public static final int SOLENOID_B_ID = 2;
 
@@ -209,10 +207,10 @@ public class Constants {
         /** Meters / Count */
         public static final double METERS_PER_COUNT = 0.97 / 2898.105469;
         /** Meters / Second */
-        public static final double MAX_VELOCITY = 0.4;
+        public static final double MAX_VELOCITY = 0.7;
         /** Meters / Second^2 */
-        public static final double MAX_ACCEL = 1.5;
-        public static final double PITCH_TOLERANCE = 0.4;
+        public static final double MAX_ACCEL = 1.8;
+        public static final double PITCH_TOLERANCE = 2.0;
 
         public static double kP = 96.0;
         public static double kI = 20.0;
@@ -223,5 +221,7 @@ public class Constants {
     public static final class indexer {
         public static final int INDEXER_ID = 10;
         public static final int TRIGGER_ID = 11;
+        public static final int TOP_BB = 1;
+        public static final int BOTTOM_BB = 0;
     }
 }

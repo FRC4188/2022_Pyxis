@@ -5,17 +5,17 @@
 package frc.robot.commands.trigger;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.trigger.Trigger;
 
-public class PushTrigger extends CommandBase {
+public class AutoFire extends CommandBase {
 
-  private Trigger trigger = Trigger.getInstance();
-  private double volts;
+  Trigger trigger = Trigger.getInstance();
+  Shooter shooter = Shooter.getInstance();
 
-  /** Creates a new PushTrigger. */
-  public PushTrigger(double volts) {
+  /** Creates a new AutoFire. */
+  public AutoFire() {
     addRequirements(trigger);
-    this.volts = volts;
   }
 
   // Called when the command is initially scheduled.
@@ -25,13 +25,14 @@ public class PushTrigger extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    trigger.setVoltage(volts);
+    if (shooter.isReady()) trigger.set(12.0);
+    else trigger.set(0.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    trigger.setVoltage(0.0);
+    trigger.set(0.0);
   }
 
   // Returns true when the command should end.

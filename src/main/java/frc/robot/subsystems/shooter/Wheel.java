@@ -20,29 +20,32 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
-public class LowerShooter {
+public class Wheel {
 
-  private LinearSystem<N1, N1, N1> shooterPlant = LinearSystemId.identifyVelocitySystem(Constants.shooter.upper.kV, Constants.shooter.upper.kA);
-  private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, VecBuilder.fill(Constants.shooter.lower.SYSTEM_STDEV), VecBuilder.fill(Constants.shooter.lower.ENC_STDEV), 0.2);
-  private LinearQuadraticRegulator<N1, N1, N1> regulator = new LinearQuadraticRegulator<>(shooterPlant, VecBuilder.fill(Constants.shooter.lower.QELMS), VecBuilder.fill(Constants.shooter.lower.RELMS), 0.020);
+  private LinearSystem<N1, N1, N1> shooterPlant = LinearSystemId.identifyVelocitySystem(Constants.shooter.kV, Constants.shooter.kA);
+  private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, VecBuilder.fill(Constants.shooter.SYSTEM_STDEV), VecBuilder.fill(Constants.shooter.ENC_STDEV), 0.2);
+  private LinearQuadraticRegulator<N1, N1, N1> regulator = new LinearQuadraticRegulator<>(shooterPlant, VecBuilder.fill(Constants.shooter.QELMS), VecBuilder.fill(Constants.shooter.RELMS), 0.020);
   private LinearSystemLoop<N1, N1, N1> loop = new LinearSystemLoop<>(shooterPlant, regulator, filter, 12.0, 0.020);
 
-  private WPI_TalonFX motor;
+  private WPI_TalonFX leader;
+  private WPI_TalonFX follower;
   
   private Notifier shuffle = new Notifier(() -> updateShuffleboard());
 
 
   private double velocity = 0.0;
 
-  protected LowerShooter(int motorID) {
-    motor = new WPI_TalonFX(motorID);
+  protected Wheel(int leaderID, int followerID) {
+    leader = new WPI_TalonFX(leaderID);
+    follower = new WPI_TalonFX(followerID);
+    follower.follow(leader);
     loop.reset(VecBuilder.fill(getVelocity()));
 
-    motor.setInverted(true);
+    leader.setInverted(true);
 
-    motor.setNeutralMode(NeutralMode.Coast);
-    motor.setSelectedSensorPosition(0.0);
-    motor.configOpenloopRamp(Constants.shooter.lower.RAMP);
+    leader.setNeutralMode(NeutralMode.Coast);
+    leader.setSelectedSensorPosition(0.0);
+    leader.configOpenloopRamp(Constants.shooter.RAMP);
 
     openNotifier();
   }
@@ -52,17 +55,18 @@ public class LowerShooter {
   }
 
   private void updateShuffleboard() {
-    SmartDashboard.putNumber("Lower Temp", getTemperature());
-    SmartDashboard.putNumber("Lower Vel", getVelocity());
-    SmartDashboard.putNumber("Lower Volts", motor.get() * RobotController.getBatteryVoltage());
+    SmartDashboard.putNumber("Leader Temp", getLeaderTemp());
+    SmartDashboard.putNumber("Leader Temp", getFollowerTemp());
+    SmartDashboard.putNumber("Wheel Vel", getVelocity());
+    SmartDashboard.putNumber("Wheel Volts", leader.get() * RobotController.getBatteryVoltage());
   }
 
   public void set(double percentage) {
-    motor.set(percentage);
+    leader.set(percentage);
   }
 
   public void setVoltage(double voltage) {
-    motor.setVoltage(voltage);
+    leader.setVoltage(voltage);
   }
 
   public void setVelocity(double velocity) {
@@ -70,15 +74,18 @@ public class LowerShooter {
   }
 
   public double getVelocity() {
-    return (motor.getSelectedSensorVelocity() * 600.0) / (2048.0 * Constants.shooter.lower.GEARING);
+    return (leader.getSelectedSensorVelocity() * 600.0) / (2048.0 * Constants.shooter.GEARING);
   }
 
   public double getPosition() {
-    return (motor.getSelectedSensorPosition()) / (2048.0 * Constants.shooter.lower.GEARING);
+    return (leader.getSelectedSensorPosition()) / (2048.0 * Constants.shooter.GEARING);
   }
 
-  public double getTemperature() {
-    return motor.getTemperature();
+  public double getLeaderTemp() {
+    return leader.getTemperature();
+  }
+  public double getFollowerTemp() {
+    return follower.getTemperature();
   }
 
   public void periodic() {

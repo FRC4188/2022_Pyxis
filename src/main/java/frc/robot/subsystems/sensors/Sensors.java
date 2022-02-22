@@ -47,7 +47,7 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getPitch() {
-    return pigeon.getPitch();
+    return pigeon.getRoll();
   }
 
   public double getTX() {

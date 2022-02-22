@@ -1,6 +1,6 @@
 package frc.robot;
 
-import org.opencv.core.Point;
+import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigen_DDRM;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -8,26 +8,28 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.InterruptSubsystem;
 import frc.robot.commands.auto.FiveBall;
 import frc.robot.commands.auto.ThreeBall;
 import frc.robot.commands.auto.TwoBall;
-import frc.robot.commands.climber.ActivePull;
-import frc.robot.commands.climber.ActivePush;
-import frc.robot.commands.climber.ActiveVolts;
-import frc.robot.commands.climber.PassivePull;
-import frc.robot.commands.climber.PassivePush;
+import frc.robot.commands.climber.ActivePosition;
 import frc.robot.commands.climber.TestBrakes;
 import frc.robot.commands.climber.TestPassive;
 import frc.robot.commands.groups.AutoClimb;
-import frc.robot.commands.indexer.TestIndexer;
-import frc.robot.commands.intake.TestIntake;
+import frc.robot.commands.groups.AutoIntake;
+import frc.robot.commands.groups.AutoShoot;
 import frc.robot.commands.intake.TestPistons;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
-import frc.robot.commands.trigger.TestTrigger;
+import frc.robot.commands.trigger.PushTrigger;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Swerve;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.sensors.Sensors;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.trigger.Trigger;
+import frc.robot.subsystems.turret.Turret;
 import frc.robot.utils.controllers.CSPController;
 import frc.robot.utils.controllers.CSPController.Scaling;
 
@@ -44,7 +46,11 @@ public class RobotContainer {
 
   private Swerve swerve = Swerve.getInstance();
   private Climber climber = Climber.getInstance();
-  //private Turret turret = Turret.getInstance();
+  private Intake intake = Intake.getInstance();
+  private Indexer indexer = Indexer.getInstance();
+  private Trigger trigger = Trigger.getInstance();
+  private Turret turret = Turret.getInstance();
+  private Shooter shooter = Shooter.getInstance();
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -81,34 +87,49 @@ public class RobotContainer {
     SmartDashboard.putData("Reset Position", new ResetPose());
     SmartDashboard.putData("Reset Rotation", new ResetRotation());
 
+    /*//Competition Bindings
     pilot.getAButtonObj()
-    .whileHeld(new TestIndexer());
+      .whenPressed(new AutoIntake())
+      .whenReleased(new InterruptSubsystem(intake, indexer));
+    
+    pilot.getBButtonObj()
+      .whenPressed(new AutoShoot())
+      .whenReleased(new InterruptSubsystem(shooter, indexer, intake));
+    
+    pilot.getYButtonObj()
+      .whenPressed(new AutoClimb());
+    
+    pilot.getRbButtonObj()
+      .whenPressed(new ActivePosition(Constants.climber.MAX_HEIGHT));
+    
+    pilot.getLbButtonObj()
+      .whenPressed(new ActivePosition(0.0));
+    */
 
-    pilot.getXButtonObj()
-      .whileHeld(new TestIntake());
+    //Testing Bindings
+    pilot.getAButtonObj()
+      .whileHeld(new AutoIntake())
+      .whenReleased(new InterruptSubsystem(indexer, intake));
 
-    pilot.getBButtonObj().whileHeld(new TestTrigger());
+    pilot.getBButtonObj()
+      .whileHeld(new PushTrigger(8.0))
+      .whenReleased(new InterruptSubsystem(trigger));
 
-    //pilot.getYButtonObj().whenPressed(new TestPassive());
-    pilot.getRbButtonObj().whenPressed(new ActivePush());
-    pilot.getLbButtonObj().whenPressed(new ActivePull());
+    pilot.getRbButtonObj()
+      .whenPressed(new ActivePosition(Constants.climber.MAX_HEIGHT));
 
-    pilot.getYButtonObj().whenPressed(new AutoClimb());
+    pilot.getLbButtonObj()
+      .whenPressed(new ActivePosition(0.0));
 
-    pilot.getDpadUpButtonObj().whenPressed(new TestPassive());
-    pilot.getDpadLeftButtonObj().whenPressed(new TestBrakes());
-    pilot.getDpadRightButtonObj().whenPressed(new TestPistons());
-    /*
-    pilot.getDpadLeftButtonObj().whileHeld(new RunCommand(() -> turret.set(0.2), turret)).whenReleased(new RunCommand(() -> turret.set(0.0), turret));
-    pilot.getDpadRightButtonObj().whileHeld(new RunCommand(() -> turret.set(-0.2), turret)).whenReleased(new RunCommand(() -> turret.set(0.0), turret));
+    pilot.getYButtonObj()
+      .whenPressed(new AutoClimb());
 
-    pilot.getBButtonObj().whileHeld(new TrackTarget(true)).whenReleased(new TrackTarget(false));
-
-    pilot.getRbButtonObj().whileHeld(new AutoShoot()).whenReleased(new ParallelCommandGroup(new ShooterVelocity(()->0.0), new InstantCommand(() -> turret.set(0.0))));*/
-    //pilot.getRbButtonObj().whenPressed(new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0))).whenReleased(new ShooterVelocity(() -> 0.0));
-
-    copilot.getDpadLeftButtonObj().whenPressed(new PassivePull());
-    copilot.getDpadRightButtonObj().whenPressed(new PassivePush());
+    pilot.getDpadUpButtonObj()
+      .whenPressed(new TestPassive());
+    pilot.getDpadLeftButtonObj()
+      .whenPressed(new TestBrakes());
+    pilot.getDpadRightButtonObj()
+      .whenPressed(new TestPistons());
   }
 
   private void addChooser() {

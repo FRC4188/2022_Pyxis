@@ -4,14 +4,12 @@
 
 package frc.robot.commands.groups;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.climber.ActivePull;
-import frc.robot.commands.climber.ActivePush;
-import frc.robot.commands.climber.PassivePull;
-import frc.robot.commands.climber.PassivePush;
-import frc.robot.commands.climber.PitchWaitCommand;
+import frc.robot.Constants;
+import frc.robot.commands.climber.ActivePosition;
+import frc.robot.commands.climber.ImpatientPassive;
+import frc.robot.commands.climber.PatientPassive;
+import frc.robot.commands.sensors.PitchWaitCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -20,14 +18,17 @@ public class AutoClimb extends SequentialCommandGroup {
   /** Creates a new AutoClimb. */
   public AutoClimb() {
     addCommands(
-      new PassivePush(),
-      new ActivePush(),
-      //new PitchWaitCommand(3.427734375),
-      new PassivePull(),
-      //new PitchWaitCommand(2.9443359375),
-      new WaitCommand(1.0),
-      new ActivePull(),
-      new PassivePush()
+      new ImpatientPassive(true),
+      new ActivePosition(0.7),
+      new PitchWaitCommand(3.427734375),
+      new ActivePosition(Constants.climber.PUSH_POSITION),
+      new ImpatientPassive(false),
+      new PitchWaitCommand(2.9443359375),
+      new ActivePosition(0.8),
+      new ImpatientPassive(true),
+      new ActivePosition(0.2),
+      new PatientPassive(false),
+      new ActivePosition(0.0)
     );
   }
 }

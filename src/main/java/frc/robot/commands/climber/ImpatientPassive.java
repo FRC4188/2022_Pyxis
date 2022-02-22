@@ -10,17 +10,19 @@ import frc.robot.subsystems.climber.Climber;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TestPassive extends InstantCommand {
+public class ImpatientPassive extends InstantCommand {
 
-  Climber climber = Climber.getInstance();
+  private Climber climber = Climber.getInstance();
+  private boolean pushing;
 
-  public TestPassive() {
+  public ImpatientPassive(boolean pushing) {
     addRequirements(climber);
+    this.pushing = pushing;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climber.setPassivePosition(!climber.getPassiveSet());
+    climber.setPassivePosition(pushing);
   }
 }

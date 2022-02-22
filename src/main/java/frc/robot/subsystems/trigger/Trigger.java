@@ -1,15 +1,8 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems.trigger;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -23,9 +16,14 @@ public class Trigger extends SubsystemBase {
 
   private WPI_TalonFX motor;
 
+  private DigitalInput top = new DigitalInput(Constants.indexer.TOP_BB);
+  private DigitalInput bot = new DigitalInput(Constants.indexer.BOTTOM_BB);
+
   /** Creates a new Trigger. */
   private Trigger() {
     motor = new WPI_TalonFX(Constants.indexer.TRIGGER_ID);
+    motor.configFactoryDefault();
+    motor.configOpenloopRamp(0.25);
   }
 
   @Override
@@ -39,5 +37,13 @@ public class Trigger extends SubsystemBase {
 
   public void setVoltage(double volts) {
     set(volts / RobotController.getBatteryVoltage());
+  }
+
+  public boolean getTop() {
+    return top.get();
+  }
+
+  public boolean getBottom() {
+    return bot.get();
   }
 }

@@ -5,22 +5,23 @@
 package frc.robot.commands.climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.subsystems.sensors.Sensors;
+import frc.robot.subsystems.climber.Climber;
 
-public class PitchWaitCommand extends CommandBase {
+public class PatientPassive extends CommandBase {
+  
+  private Climber climber = Climber.getInstance();
+  private boolean pushing;
 
-  Sensors sensors = Sensors.getInstance();
-  double target;
-
-  /** Creates a new PitchWaitCommand. */
-  public PitchWaitCommand(double target) {
-    this.target = target;
+  public PatientPassive(boolean pushing) {
+    addRequirements(climber);
+    this.pushing = pushing;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    climber.setPassivePosition(pushing);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -28,11 +29,12 @@ public class PitchWaitCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(sensors.getPitch() - target) < Constants.climber.PITCH_TOLERANCE;
+    return pushing ? climber.getPassivePosition() == 1 : climber.getPassivePosition() == -1;
   }
 }

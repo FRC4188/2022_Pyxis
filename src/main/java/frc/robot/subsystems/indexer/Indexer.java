@@ -5,7 +5,12 @@
 package frc.robot.subsystems.indexer;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class Indexer extends SubsystemBase {
   private static Indexer indexer;
@@ -14,9 +19,11 @@ public class Indexer extends SubsystemBase {
     if (indexer == null) indexer= new Indexer();
     return indexer;
   }
- private WPI_TalonFX indexerMotor = new WPI_TalonFX(14);
+ private WPI_TalonFX indexerMotor = new WPI_TalonFX(Constants.indexer.INDEXER_ID);
   /** Creates a new Indexer. */
-  public Indexer() {}
+  private Indexer() {
+    
+  }
 
   @Override
   public void periodic() {
@@ -25,6 +32,10 @@ public class Indexer extends SubsystemBase {
   
   public void set(double power){
     indexerMotor.set(power);
+  }
+
+  public void setVoltage(double number) {
+    set(number / RobotController.getBatteryVoltage());
   }
 
 

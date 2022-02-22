@@ -6,6 +6,8 @@ package frc.robot.subsystems.intake;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 //import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -30,9 +32,9 @@ public class Intake extends SubsystemBase {
     return intake;
   }
 
-  private CANSparkMax intakeMotor = new CANSparkMax(41, MotorType.kBrushless);
-  private RelativeEncoder encoder = intakeMotor.getEncoder();
+  private WPI_TalonFX intakeMotor = new WPI_TalonFX(Constants.intake.MOTOR_ID);
   private ProfiledPIDController pid = new ProfiledPIDController(1.0, 0.0, 0.0, new Constraints(3, 1));
+  private DoubleSolenoid piston;
 
   private double set;
 
@@ -42,13 +44,18 @@ public class Intake extends SubsystemBase {
     CommandScheduler.getInstance().registerSubsystem(this);
     initIntake();
     resetEncoders();
-    intakeMotor.restoreFactoryDefaults();
+    intakeMotor.configFactoryDefault();
+    SmartDashboard.putNumber("Intake Set Voltage", 0.0);
+
+    piston = new DoubleSolenoid(Constants.intake.SOLENOID_A_ID, Constants.intake.SOLENOID_B_ID);
 
     //SmartDashboard.putNumber("set P", Constants.intake.kP);
     //SmartDashboard.putNumber("set I", Constants.intake.kI);
     //SmartDashboard.putNumber("set D", Constants.intake.kD);
 
     shuffle.startPeriodic(0.4);
+
+    raise(false);
   }
 
   @Override
@@ -65,13 +72,13 @@ public class Intake extends SubsystemBase {
     }
 
  public void initIntake(){
-   intakeMotor.setClosedLoopRampRate(1.0);
-   intakeMotor.setOpenLoopRampRate(1.0);
-   intakeMotor.setIdleMode(IdleMode.kBrake);
+   intakeMotor.configClosedloopRamp(1.0);
+   intakeMotor.configOpenloopRamp(1.0);
+   intakeMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public void resetEncoders() {
-    encoder.setPosition(0);
+    intakeMotor.setSelectedSensorPosition(0);
   }
 
   public void setPID(double kP, double kI, double kD) {
@@ -94,15 +101,19 @@ public class Intake extends SubsystemBase {
   }
 
   private double getTemperature() {
-  return intakeMotor.getMotorTemperature();
+  return intakeMotor.getTemperature();
 }
 
 public double getVelocity() {
-  return encoder.getVelocity() / 3;
+  return intakeMotor.getSelectedSensorVelocity() / 3;
 }
 
 public void raise(boolean engaged) {
+  piston.set(engaged);
+}
 
+public boolean isRaised() {
+  return piston.get();
 }
 
   // shows intake motor temp on smart dashboard

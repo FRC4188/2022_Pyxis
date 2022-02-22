@@ -1,5 +1,7 @@
 package frc.robot;
 
+import org.opencv.core.Point;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -9,11 +11,20 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.auto.FiveBall;
 import frc.robot.commands.auto.ThreeBall;
 import frc.robot.commands.auto.TwoBall;
+import frc.robot.commands.climber.ActivePull;
+import frc.robot.commands.climber.ActivePush;
 import frc.robot.commands.climber.ActiveVolts;
 import frc.robot.commands.climber.PassivePull;
 import frc.robot.commands.climber.PassivePush;
+import frc.robot.commands.climber.TestBrakes;
+import frc.robot.commands.climber.TestPassive;
+import frc.robot.commands.groups.AutoClimb;
+import frc.robot.commands.indexer.TestIndexer;
+import frc.robot.commands.intake.TestIntake;
+import frc.robot.commands.intake.TestPistons;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
+import frc.robot.commands.trigger.TestTrigger;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
@@ -38,8 +49,10 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    CommandScheduler.getInstance().registerSubsystem(swerve, Sensors.getInstance());
 
+    CommandScheduler.getInstance().registerSubsystem(swerve, Sensors.getInstance());
+    SmartDashboard.putNumber("trigger voltage", 0.0);
+    SmartDashboard.putNumber("indexer voltage", 0.0);
     setDefaultCommands();
     configureButtonBindings();
     addChooser();
@@ -51,14 +64,14 @@ public class RobotContainer {
    */
   private void setDefaultCommands() {
     swerve.setDefaultCommand(new RunCommand(() -> swerve.drive(
-      pilot.getLeftY(Scaling.SQUARED),
-      pilot.getLeftX(Scaling.SQUARED),
-      pilot.getRightX(Scaling.SQUARED),
+      pilot.getLeftY(Scaling.CUBED),
+      pilot.getLeftX(Scaling.CUBED),
+      pilot.getRightX(Scaling.CUBED),
       pilot.getRightBumper()),
       swerve)
     );
+    //climber.setDefaultCommand(new ActiveVolts(() -> pilot.getLeftY(Scaling.LINEAR) * 12.0, () -> pilot.getRightY(Scaling.LINEAR) * 12.0));
 
-    climber.setDefaultCommand(new ActiveVolts(() -> copilot.getLeftY(Scaling.LINEAR) * 12.0, () -> copilot.getRightY(Scaling.LINEAR) * 12.0));
   }
 
   /**
@@ -68,6 +81,23 @@ public class RobotContainer {
     SmartDashboard.putData("Reset Position", new ResetPose());
     SmartDashboard.putData("Reset Rotation", new ResetRotation());
 
+    pilot.getAButtonObj()
+    .whileHeld(new TestIndexer());
+
+    pilot.getXButtonObj()
+      .whileHeld(new TestIntake());
+
+    pilot.getBButtonObj().whileHeld(new TestTrigger());
+
+    //pilot.getYButtonObj().whenPressed(new TestPassive());
+    pilot.getRbButtonObj().whenPressed(new ActivePush());
+    pilot.getLbButtonObj().whenPressed(new ActivePull());
+
+    pilot.getYButtonObj().whenPressed(new AutoClimb());
+
+    pilot.getDpadUpButtonObj().whenPressed(new TestPassive());
+    pilot.getDpadLeftButtonObj().whenPressed(new TestBrakes());
+    pilot.getDpadRightButtonObj().whenPressed(new TestPistons());
     /*
     pilot.getDpadLeftButtonObj().whileHeld(new RunCommand(() -> turret.set(0.2), turret)).whenReleased(new RunCommand(() -> turret.set(0.0), turret));
     pilot.getDpadRightButtonObj().whileHeld(new RunCommand(() -> turret.set(-0.2), turret)).whenReleased(new RunCommand(() -> turret.set(0.0), turret));

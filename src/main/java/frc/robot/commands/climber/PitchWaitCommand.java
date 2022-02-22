@@ -2,19 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.indexer;
+package frc.robot.commands.climber;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.indexer.Indexer;
-import frc.robot.subsystems.intake.Intake;
+import frc.robot.Constants;
+import frc.robot.subsystems.sensors.Sensors;
 
-public class TestIndexer extends CommandBase {
+public class PitchWaitCommand extends CommandBase {
 
-  private Indexer indexer = Indexer.getInstance();
-  /** Creates a new TestIndexer. */
-  public TestIndexer() {
-    addRequirements(indexer);
+  Sensors sensors = Sensors.getInstance();
+  double target;
+
+  /** Creates a new PitchWaitCommand. */
+  public PitchWaitCommand(double target) {
+    this.target = target;
   }
 
   // Called when the command is initially scheduled.
@@ -23,19 +24,15 @@ public class TestIndexer extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    indexer.setVoltage(SmartDashboard.getNumber("indexer voltage", 0.0));
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    indexer.setVoltage(0.0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(sensors.getPitch() - target) < Constants.climber.PITCH_TOLERANCE;
   }
 }

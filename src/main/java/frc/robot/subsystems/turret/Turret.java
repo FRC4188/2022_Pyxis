@@ -26,7 +26,7 @@ public class Turret extends SubsystemBase {
     return instance;
   }
 
-  private CANSparkMax motor = new CANSparkMax(11, MotorType.kBrushless);
+  private CANSparkMax motor = new CANSparkMax(Constants.turret.MOTOR_ID, MotorType.kBrushless);
   private RelativeEncoder encoder = motor.getEncoder();
 
   private PIDController pid = new PIDController(Constants.turret.kP, Constants.turret.kI, Constants.turret.kD);

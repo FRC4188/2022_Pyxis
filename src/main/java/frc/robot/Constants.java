@@ -46,13 +46,13 @@ public class Constants {
         /** Volts */
         public static final double MAX_VOLTS = 12.0; // Maximum voltage allowed in the drivetrain.
         /** Meters / Second */
-        public static final double MAX_VELOCITY = 10.0; // Maximum velocity allowed in the drivetrain.
+        public static final double MAX_VELOCITY = 4.0; // Maximum velocity allowed in the drivetrain.
         /** Meters / Second^2 */
         public static final double MAX_ACCEL = 20.0; // Maximum acceleration of the drivetrain.
         /** Meters / Second^2 */
-        public static final double MAX_CACCEL = 8.0; // Maximum centripital acceleration of the robot.
+        public static final double MAX_CACCEL = 16.0; // Maximum centripital acceleration of the robot.
         /** Radians / Second */
-        public static final double MAX_RADIANS = 3.0 * Math.PI; // Maximum rotational velocity.
+        public static final double MAX_RADIANS = 4.0 * Math.PI; // Maximum rotational velocity.
 
         // Put together swerve module positions relative to the center of the robot.
         public static final Translation2d FrontLeftLocation = new Translation2d(-(Constants.robot.A_WIDTH / 2), -(Constants.robot.A_LENGTH / 2));
@@ -62,20 +62,20 @@ public class Constants {
         public static final Kinematics KINEMATICS = new Kinematics(FrontLeftLocation, FrontRightLocation, BackLeftLocation, BackRightLocation);
 
         public static final class modules {
-            public static final double M1_ZERO = 45.263672;
-            public static final double M2_ZERO = -122.958984;
-            public static final double M3_ZERO = -160.927734;
-            public static final double M4_ZERO = -48.164062;
+            public static final double M1_ZERO = 175.95703125;
+            public static final double M2_ZERO = 120.498046875;
+            public static final double M3_ZERO = -97.03125;
+            public static final double M4_ZERO = -164.794921875;
         }
 
         public static final class anglemotor {
-            public static final double kP = -1e-2;
+            public static final double kP = -9e-3;
             public static final double kI = 0.0;
             public static final double kD = 0.0;
         }
 
         public static final class speedmotor {
-            public static final double kP = 19e-2;
+            public static final double kP = 25e-2;
             public static final double kI = 0.0;
             public static final double kD = 1e-1;
         }
@@ -130,7 +130,7 @@ public class Constants {
 
             public static final double RADIUS = Units.inchesToMeters(3.0);
             public static final double CIRCUMFRENCE = RADIUS * 2.0 * Math.PI;
-            public static final int MOTOR_ID = 10;
+            public static final int MOTOR_ID = 14;
         }
         public static final class lower {
             public static final double GEARING = 1.5;
@@ -148,7 +148,7 @@ public class Constants {
             public static final double RADIUS = Units.inchesToMeters(2.0);
             public static final double CIRCUMFRENCE = RADIUS * 2.0 * Math.PI;
             
-            public static final int MOTOR_ID = 9;
+            public static final int MOTOR_ID = 13;
         }
     }
     
@@ -171,6 +171,7 @@ public class Constants {
 
             public static final double ANGLE_TOLERANCE = 0.0;
     
+            public static final int MOTOR_ID = 9;
         
         public static final double LIMELIGHT_HEIGHT = 0.6477;
         public static final double MOUNTING_ANGLE = 19.7;
@@ -181,35 +182,46 @@ public class Constants {
 
         public static final int MOTOR_ID = 17;
         public static final double RAMP_RATE = 1.5;
+        public static final int SOLENOID_A_ID = 0;
+        public static final int SOLENOID_B_ID = 1;
 
     };
 
     public static final class climber {
         public static final int MOTOR_A_ID = 16;
         public static final int MOTOR_B_ID = 15;
-        public static final int BRAKE_A_ID = 5;
-        public static final int BRAKE_B_ID = 4;
-        public static final int SOLENOID_A_ID = 2;
-        public static final int SOLENOID_B_ID = 3;
+        public static final int ENCODER_A_ID = 25;
+        public static final int ENCODER_B_ID = 26;
+        public static final int BRAKE_A_ID = 4;
+        public static final int BRAKE_B_ID = 5;
+        ;
+        public static final int SOLENOID_A_ID = 3;
+        public static final int SOLENOID_B_ID = 2;
 
         /** Meters */
         public static final double PULL_POSITION = 0.0;
         /** Meters */
-        public static final double ACTIVE_TOLERANCE = 0.03;
+        public static final double ACTIVE_TOLERANCE = 0.0075;
         /** Meters */
-        public static final double PUSH_POSITION = Units.inchesToMeters(12.0 * 4.0 + 9.0);
+        public static final double PUSH_POSITION = 0.97;
         /** Meters */
         public static final double MAX_HEIGHT = Units.inchesToMeters(12.0 * 4.0 + 11.0);
         /** Meters / Count */
-        public static final double METERS_PER_COUNT = Units.inchesToMeters(Math.PI);
+        public static final double METERS_PER_COUNT = 0.97 / 2898.105469;
         /** Meters / Second */
-        public static final double MAX_VELOCITY = 0.25;
+        public static final double MAX_VELOCITY = 0.4;
         /** Meters / Second^2 */
-        public static final double MAX_ACCEL = 1.0;
+        public static final double MAX_ACCEL = 1.5;
+        public static final double PITCH_TOLERANCE = 0.4;
 
-        public static double kP = 2.0;
-        public static double kI = 0.0;
-        public static double kD = 0.0;
+        public static double kP = 96.0;
+        public static double kI = 20.0;
+        public static double kD = 7.2;
 
+    }
+
+    public static final class indexer {
+        public static final int INDEXER_ID = 10;
+        public static final int TRIGGER_ID = 11;
     }
 }

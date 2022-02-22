@@ -16,6 +16,7 @@ public class ActivePush extends CommandBase {
   @Override
   public void initialize() {
     climber.setBrake(false);
+    System.out.println("Climber Pushing");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -29,13 +30,14 @@ public class ActivePush extends CommandBase {
   public void end(boolean interrupted) {
     climber.setActiveVolts(0.0);
     climber.setBrake(true);
+
+    System.out.println("Pushing Done.");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.max(climber.getActivePositionA() - Constants.climber.PUSH_POSITION,
-                   climber.getActivePositionB() - Constants.climber.PUSH_POSITION)
-                    <= Constants.climber.ACTIVE_TOLERANCE;
+    return Math.abs(climber.getActivePositionA() - Constants.climber.PUSH_POSITION) < Constants.climber.ACTIVE_TOLERANCE &&
+      Math.abs(climber.getActivePositionA() - Constants.climber.PUSH_POSITION) < Constants.climber.ACTIVE_TOLERANCE;
   }
 }

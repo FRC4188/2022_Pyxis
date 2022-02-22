@@ -33,7 +33,7 @@ public class Swerve extends SubsystemBase {
   //private Kinematics kinematics = Constants.drive.KINEMATICS;
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(Constants.drive.FrontLeftLocation, Constants.drive.FrontRightLocation, Constants.drive.BackLeftLocation, Constants.drive.BackRightLocation);
 
-  private PIDController rotationPID = new PIDController(0.2, 0.0, 0.01);
+  private PIDController rotationPID = new PIDController(0.2, 0.0, 0.03);
 
   //private Odometry odometry = Odometry.getInstance();
   private Odometry odometry = new Odometry(new Pose2d());

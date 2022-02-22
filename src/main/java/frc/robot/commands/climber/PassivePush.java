@@ -8,7 +8,6 @@ public class PassivePush extends InstantCommand {
   Climber climber = Climber.getInstance();
   /** Creates a new PassivePush. */
   public PassivePush() {
-    addRequirements(climber);
   }
 
   // Called when the command is initially scheduled.

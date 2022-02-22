@@ -51,6 +51,7 @@ public class Climber extends SubsystemBase {
     //new Trigger(() -> lowLimitB.get()).whileActiveOnce(new ResetActiveB(), false);
 
     SmartDashboard.putNumber("Climber Set Voltage", 0.0);
+    setBrake(true);
   }
 
   @Override
@@ -84,6 +85,10 @@ public class Climber extends SubsystemBase {
 
   public boolean getPassivePosition() {
     return passive.getPosition();
+  }
+
+  public boolean getBrake() {
+    return brake.get();
   }
 
   public void setActivePosition(double output) {

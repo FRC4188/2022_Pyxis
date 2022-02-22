@@ -20,7 +20,7 @@ public class Sensors extends SubsystemBase {
   }
 
   private Limelight limelight = new Limelight("limelight-swervex");
-  private Pigeon pigeon = new Pigeon(25);
+  private Pigeon pigeon = new Pigeon(30);
 
   private Notifier notifier = new Notifier(() -> updateShuffleboard());
 
@@ -35,6 +35,7 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putNumber("Limelight Distance", getDistance());
     SmartDashboard.putNumber("Pigeon Angle", pigeon.get().getDegrees());
     SmartDashboard.putNumber("Pigeon Compass", pigeon.getCompass().getDegrees());
+    SmartDashboard.putNumber("Pigeon Pitch", pigeon.getPitch());
   }
 
   private void startNotifier() {
@@ -43,6 +44,10 @@ public class Sensors extends SubsystemBase {
 
   public boolean getHasTarget() {
     return limelight.getTargetCount() > 0;
+  }
+
+  public double getPitch() {
+    return pigeon.getPitch();
   }
 
   public double getTX() {

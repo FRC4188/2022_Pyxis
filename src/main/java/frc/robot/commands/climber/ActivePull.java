@@ -16,6 +16,7 @@ public class ActivePull extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    climber.setActiveVolts(0.0);
     climber.setBrake(false);
   }
 
@@ -35,6 +36,7 @@ public class ActivePull extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.max(climber.getActivePositionA() - Constants.climber.PULL_POSITION, climber.getActivePositionB() - Constants.climber.PULL_POSITION) <= Constants.climber.ACTIVE_TOLERANCE;
+    return Math.abs(climber.getActivePositionA() - Constants.climber.PULL_POSITION) < Constants.climber.ACTIVE_TOLERANCE &&
+    Math.abs(climber.getActivePositionA() - Constants.climber.PULL_POSITION) < Constants.climber.ACTIVE_TOLERANCE;
   }
 }

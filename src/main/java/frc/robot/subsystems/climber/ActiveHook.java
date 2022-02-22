@@ -15,8 +15,8 @@ public class ActiveHook {
     private TalonFX motorA = new TalonFX(Constants.climber.MOTOR_A_ID);
     private TalonFX motorB = new TalonFX(Constants.climber.MOTOR_B_ID);
 
-    //private CANCoder encoderA = new CANCoder(Constants.climber.ENCODER_A_ID);
-    //private CANCoder encoderB = new CANCoder(Constants.climber.ENCODER_B_ID);
+    private CANCoder encoderA = new CANCoder(Constants.climber.ENCODER_A_ID);
+    private CANCoder encoderB = new CANCoder(Constants.climber.ENCODER_B_ID);
 
     private ProfiledPIDController pidA = new ProfiledPIDController(Constants.climber.kP, Constants.climber.kI, Constants.climber.kD, new Constraints(Constants.climber.MAX_VELOCITY, Constants.climber.MAX_ACCEL));
     private ProfiledPIDController pidB = new ProfiledPIDController(Constants.climber.kP, Constants.climber.kI, Constants.climber.kD, new Constraints(Constants.climber.MAX_VELOCITY, Constants.climber.MAX_ACCEL));
@@ -24,6 +24,11 @@ public class ActiveHook {
     protected ActiveHook() {
         resetPositionA(0.0);
         resetPositionB(0.0);
+
+        encoderA.configFactoryDefault();
+        encoderB.configFactoryDefault();
+
+        motorB.setInverted(true);
     }
 
     public void setA(double power) {
@@ -45,6 +50,7 @@ public class ActiveHook {
 
     public void motorBrakes(boolean engaged) {
         motorA.setNeutralMode(engaged ? NeutralMode.Brake : NeutralMode.Coast);
+        motorB.setNeutralMode(engaged ? NeutralMode.Brake : NeutralMode.Coast);
     }
 
     /**
@@ -52,7 +58,7 @@ public class ActiveHook {
      * @return Position in meters.
      */
     public double getPositionA() {
-        return 0.0;//encoderA.getPosition() * Constants.climber.METERS_PER_COUNT;
+        return encoderA.getPosition() * Constants.climber.METERS_PER_COUNT;
     }
 
     /**
@@ -60,15 +66,15 @@ public class ActiveHook {
      * @return Position in meters.
      */
     public double getPositionB() {
-        return 0.0;//encoderB.getPosition() * Constants.climber.METERS_PER_COUNT;
+        return encoderB.getPosition() * -Constants.climber.METERS_PER_COUNT;
     }
 
     public void resetPositionA(double position) {
-        //encoderA.setPosition(position / Constants.climber.METERS_PER_COUNT);
+        encoderA.setPosition(position / Constants.climber.METERS_PER_COUNT);
     }
 
     public void resetPositionB(double position) {
-        //encoderB.setPosition(position / Constants.climber.METERS_PER_COUNT);
+        encoderB.setPosition(position / Constants.climber.METERS_PER_COUNT);
     }
 
     public double getMotorATemp(){

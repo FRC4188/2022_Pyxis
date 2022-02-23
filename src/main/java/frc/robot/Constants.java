@@ -210,7 +210,7 @@ public class Constants {
         public static final double MAX_VELOCITY = 0.7;
         /** Meters / Second^2 */
         public static final double MAX_ACCEL = 1.8;
-        public static final double PITCH_TOLERANCE = 2.0;
+        public static final double PITCH_TOLERANCE = 2.5;
 
         public static double kP = 96.0;
         public static double kI = 20.0;

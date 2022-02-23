@@ -1,5 +1,7 @@
 package frc.robot.subsystems.sensors;
 
+import java.util.Arrays;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Notifier;
@@ -35,7 +37,7 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putNumber("Limelight Distance", getDistance());
     SmartDashboard.putNumber("Pigeon Angle", pigeon.get().getDegrees());
     SmartDashboard.putNumber("Pigeon Compass", pigeon.getCompass().getDegrees());
-    SmartDashboard.putNumber("Pigeon Pitch", pigeon.getPitch());
+    SmartDashboard.putString("Pigeon YPR", Arrays.toString(new double[] {pigeon.getYaw(), pigeon.getPitch(), pigeon.getRoll()}));
   }
 
   private void startNotifier() {

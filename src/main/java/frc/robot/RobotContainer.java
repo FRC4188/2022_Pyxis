@@ -15,7 +15,7 @@ import frc.robot.commands.auto.TwoBall;
 import frc.robot.commands.climber.ActivePosition;
 import frc.robot.commands.climber.TestBrakes;
 import frc.robot.commands.climber.TestPassive;
-import frc.robot.commands.groups.AutoClimb;
+import frc.robot.commands.groups.MonkeyBar;
 import frc.robot.commands.groups.AutoIntake;
 import frc.robot.commands.groups.AutoShoot;
 import frc.robot.commands.intake.TestPistons;
@@ -122,7 +122,7 @@ public class RobotContainer {
       .whenPressed(new ActivePosition(0.0));
 
     pilot.getYButtonObj()
-      .whenPressed(new AutoClimb());
+      .whenPressed(new MonkeyBar());
 
     pilot.getDpadUpButtonObj()
       .whenPressed(new TestPassive());

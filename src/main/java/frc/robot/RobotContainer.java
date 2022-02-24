@@ -13,6 +13,7 @@ import frc.robot.commands.auto.FiveBall;
 import frc.robot.commands.auto.ThreeBall;
 import frc.robot.commands.auto.TwoBall;
 import frc.robot.commands.climber.ActivePosition;
+import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.climber.TestBrakes;
 import frc.robot.commands.climber.TestPassive;
 import frc.robot.commands.groups.MonkeyBar;
@@ -123,6 +124,9 @@ public class RobotContainer {
 
     pilot.getYButtonObj()
       .whenPressed(new MonkeyBar());
+    
+    pilot.getXButtonObj()
+      .whenPressed(new FindZeros().andThen(new ActivePosition(0.0)));
 
     pilot.getDpadUpButtonObj()
       .whenPressed(new TestPassive());

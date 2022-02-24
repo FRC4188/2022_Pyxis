@@ -76,6 +76,14 @@ public class Climber extends SubsystemBase {
     return active.getPositionB();
   }
 
+  public double getActiveVelocityA() {
+    return active.getVelocityA();
+  }
+
+  public double getActiveVelocityB() {
+    return active.getVelocityB();
+  }
+
   public int getPassivePosition() {
     if (passive.getLeftIn() && passive.getRightIn()) return -1;
     else if (passive.getLeftOut() && passive.getRightOut()) return 1;

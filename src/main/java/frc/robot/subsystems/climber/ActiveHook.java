@@ -69,6 +69,22 @@ public class ActiveHook {
         return encoderB.getPosition() * -Constants.climber.METERS_PER_COUNT;
     }
 
+    /**
+     * Method to get the current position of the active climber.
+     * @return Position in meters per second.
+     */
+    public double getVelocityA() {
+        return encoderA.getVelocity() * Constants.climber.METERS_PER_COUNT;
+    }
+
+    /**
+     * Method to get the current position of the active climber.
+     * @return Position in meters per second.
+     */
+    public double getVelocityB() {
+        return encoderB.getVelocity() * -Constants.climber.METERS_PER_COUNT;
+    }
+
     public void resetPositionA(double position) {
         encoderA.setPosition(position / Constants.climber.METERS_PER_COUNT);
     }

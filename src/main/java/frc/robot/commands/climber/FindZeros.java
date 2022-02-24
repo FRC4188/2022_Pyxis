@@ -47,6 +47,8 @@ public class FindZeros extends CommandBase {
       climber.resetActiveB(0.0);
       bVolts = 0.0;
     }
+
+    climber.setActiveVolts(aVolts, bVolts);
   }
 
   // Called once the command ends or is interrupted.

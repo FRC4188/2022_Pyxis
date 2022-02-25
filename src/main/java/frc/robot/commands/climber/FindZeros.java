@@ -13,11 +13,11 @@ public class FindZeros extends CommandBase {
 
   Climber climber = Climber.getInstance();
 
-  LinearFilter aFilter = LinearFilter.movingAverage(10);
-  LinearFilter bFilter = LinearFilter.movingAverage(10);
+  LinearFilter aFilter;
+  LinearFilter bFilter;
 
-  double aVolts = -2.5;
-  double bVolts = -2.5;
+  double aVolts = 0.0;
+  double bVolts = 0.0;
 
   /** Creates a new FindZeros. */
   public FindZeros() {
@@ -29,8 +29,13 @@ public class FindZeros extends CommandBase {
   public void initialize() {
     climber.setBrake(false);
     climber.setActiveVolts(aVolts);
+
+    aFilter = LinearFilter.movingAverage(10);
+    bFilter = LinearFilter.movingAverage(10);
     aFilter.calculate(-1.0);
     bFilter.calculate(-1.0);
+    aVolts = -2.0;
+    bVolts = -2.0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

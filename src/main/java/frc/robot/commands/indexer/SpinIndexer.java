@@ -5,11 +5,18 @@
 package frc.robot.commands.indexer;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.indexer.Indexer;
 
 public class SpinIndexer extends CommandBase {
+
+  private Indexer indexer = Indexer.getInstance();
+  private double power;
+
   /** Creates a new SpinIndexer. */
-  public SpinIndexer() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public SpinIndexer(double power) {
+    addRequirements(indexer);
+
+    this.power = power;
   }
 
   // Called when the command is initially scheduled.
@@ -18,11 +25,15 @@ public class SpinIndexer extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    indexer.setVoltage(power);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    indexer.setVoltage(0.0);
+  }
 
   // Returns true when the command should end.
   @Override

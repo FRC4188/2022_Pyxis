@@ -17,8 +17,10 @@ import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.climber.TestBrakes;
 import frc.robot.commands.climber.TestPassive;
 import frc.robot.commands.groups.MonkeyBar;
+import frc.robot.commands.indexer.SpinIndexer;
 import frc.robot.commands.groups.AutoIntake;
 import frc.robot.commands.groups.AutoShoot;
+import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.intake.TestPistons;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
@@ -108,13 +110,21 @@ public class RobotContainer {
     */
 
     //Testing Bindings
-    pilot.getAButtonObj()
+    pilot.getBButtonObj()
       .whileHeld(new AutoIntake())
       .whenReleased(new InterruptSubsystem(indexer, intake));
 
-    pilot.getBButtonObj()
-      .whileHeld(new PushTrigger(8.0))
+    pilot.getYButtonObj()
+      .whileHeld(new PushTrigger(12.0))
       .whenReleased(new InterruptSubsystem(trigger));
+    
+    pilot.getAButtonObj()
+      .whenPressed(new SpinIntake(-12.0))
+      .whenReleased(new InterruptSubsystem(intake));
+    
+    pilot.getXButtonObj()
+      .whenPressed(new SpinIndexer(-8.0))
+      .whenReleased(new InterruptSubsystem(indexer));
 
     pilot.getRbButtonObj()
       .whenPressed(new ActivePosition(Constants.climber.MAX_HEIGHT));
@@ -122,17 +132,15 @@ public class RobotContainer {
     pilot.getLbButtonObj()
       .whenPressed(new ActivePosition(0.0));
 
-    pilot.getYButtonObj()
+    pilot.getDpadUpButtonObj()
       .whenPressed(new MonkeyBar());
     
-    pilot.getXButtonObj()
+    pilot.getDpadDownButtonObj()
       .whenPressed(new FindZeros().andThen(new ActivePosition(0.0)));
 
-    pilot.getDpadUpButtonObj()
+    pilot.getDpadRightButtonObj()
       .whenPressed(new TestPassive());
     pilot.getDpadLeftButtonObj()
-      .whenPressed(new TestBrakes());
-    pilot.getDpadRightButtonObj()
       .whenPressed(new TestPistons());
   }
 

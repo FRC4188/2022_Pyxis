@@ -25,7 +25,7 @@ public class LoadBalls extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (trigger.getTop() && trigger.getBottom()) indexer.set(8.0);
+    if (!trigger.getTop() || !trigger.getBottom()) indexer.set(8.0);
     else indexer.set(0.0);
   }
 

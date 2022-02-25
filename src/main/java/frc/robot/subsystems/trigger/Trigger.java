@@ -54,6 +54,6 @@ public class Trigger extends SubsystemBase {
   }
 
   public boolean getBottom() {
-    return ! bot.get();
+    return !bot.get();
   }
 }

@@ -20,7 +20,7 @@ public class Indexer extends SubsystemBase {
  private WPI_TalonFX indexerMotor = new WPI_TalonFX(Constants.indexer.INDEXER_ID);
   /** Creates a new Indexer. */
   private Indexer() {
-    indexerMotor.configOpenloopRamp(0.75);
+    indexerMotor.configOpenloopRamp(0.25);
   }
 
   @Override

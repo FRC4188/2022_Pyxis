@@ -52,6 +52,7 @@ public class Intake extends SubsystemBase {
     piston = new DoubleSolenoid(Constants.intake.SOLENOID_A_ID, Constants.intake.SOLENOID_B_ID);
 
     shuffle.startPeriodic(0.1);
+    intakeMotor.setInverted(true);
 
     raise(false);
   }

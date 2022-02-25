@@ -34,7 +34,7 @@ public class ActivePosition extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     climber.setActiveVolts(0.0);
-    climber.setBrake(false);
+    climber.setBrake(true);
   }
 
   // Returns true when the command should end.

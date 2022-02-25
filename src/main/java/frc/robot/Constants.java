@@ -46,7 +46,7 @@ public class Constants {
         /** Volts */
         public static final double MAX_VOLTS = 12.0; // Maximum voltage allowed in the drivetrain.
         /** Meters / Second */
-        public static final double MAX_VELOCITY = 4.0; // Maximum velocity allowed in the drivetrain.
+        public static final double MAX_VELOCITY = 5.0; // Maximum velocity allowed in the drivetrain.
         /** Meters / Second^2 */
         public static final double MAX_ACCEL = 20.0; // Maximum acceleration of the drivetrain.
         /** Meters / Second^2 */
@@ -115,8 +115,8 @@ public class Constants {
     }
 
     public static final class shooter {
-        public static final int FOLLOWER_ID = 0;
-        public static final int LEADER_ID = 0;
+        public static final int FOLLOWER_ID = 41;
+        public static final int LEADER_ID = 42;
 
         public static double kV = 0.10964;
         public static double kA = 0.0148;
@@ -203,7 +203,7 @@ public class Constants {
         /** Meters */
         public static final double PUSH_POSITION = 0.97;
         /** Meters */
-        public static final double MAX_HEIGHT = Units.inchesToMeters(12.0 * 4.0 + 11.0);
+        public static final double MAX_HEIGHT = 0.97;
         /** Meters / Count */
         public static final double METERS_PER_COUNT = 0.97 / 2898.105469;
         /** Meters / Second */

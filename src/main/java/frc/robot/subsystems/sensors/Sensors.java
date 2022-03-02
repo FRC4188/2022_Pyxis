@@ -83,7 +83,12 @@ public class Sensors extends SubsystemBase {
 
   public double getFormulaRPM() {
     double distance = getDistance();
-    return 125.561*distance*distance - 529.004*distance + 2807.27;
+    return 244.0  * distance + 2220.5;
+  }
+
+  public double getFormulaAngle() {
+    double distance = getDistance();
+    return 3.04609 * distance + 11.2097;
   }
 
   public void setLEDMode(LedMode mode) {

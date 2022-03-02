@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Notifier;
@@ -52,6 +53,10 @@ public class Turret extends SubsystemBase {
 
     motor.setClosedLoopRampRate(1.0);
     motor.setOpenLoopRampRate(1.0);
+    motor.clearFaults();
+    motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 40000);
+    motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20000);
+    motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 100);
   }
 
   private void startNotifier() {

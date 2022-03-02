@@ -1,17 +1,20 @@
 package frc.robot.commands.shooter;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.subsystems.shooter.Shooter;
 
-public class Shoot extends CommandBase {
+public class FormulaAngle extends CommandBase {
 
-  Sensors sensors = Sensors.getInstance();
   Shooter shooter = Shooter.getInstance();
 
-  /** Creates a new Shoot. */
-  public Shoot() {
-    addRequirements(shooter);
+  DoubleSupplier velocity;
+
+  /** Creates a new ShooterVelocity. */
+  public FormulaAngle() {
+    addRequirements();
   }
 
   // Called when the command is initially scheduled.
@@ -21,16 +24,14 @@ public class Shoot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.isReady()) {
-      shooter.setVelocity(sensors.getFormulaRPM());
-    } else {
-      shooter.setVelocity(0.0);
-    }
+    shooter.setAngle(Sensors.getInstance().getFormulaAngle());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    shooter.setHoodVolts(0.0);
+  }
 
   // Returns true when the command should end.
   @Override

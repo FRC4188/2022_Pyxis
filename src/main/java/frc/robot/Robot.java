@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,6 +32,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    PneumaticsControlModule pcm = new PneumaticsControlModule();
+    pcm.clearAllStickyFaults();
+    pcm.close();
   }
 
   /**

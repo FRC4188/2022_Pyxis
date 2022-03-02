@@ -47,18 +47,21 @@ public class Module {
         speedMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         speedMotor.setSelectedSensorPosition(0);
         speedMotor.setInverted(true);
+        speedMotor.clearStickyFaults();
 
         angleMotor.configFactoryDefault();
         angleMotor.setNeutralMode(NeutralMode.Brake);
         anglePID.enableContinuousInput(-180.0, 180.0);
         angleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         angleMotor.setSelectedSensorPosition(0);
+        angleMotor.clearStickyFaults();
 
         encoder.configFactoryDefault();
         encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
         encoder.setPosition(0.0);
         encoder.configSensorDirection(false);
         encoder.configMagnetOffset(encoderZero);
+        encoder.clearStickyFaults();
     }
 
     /**

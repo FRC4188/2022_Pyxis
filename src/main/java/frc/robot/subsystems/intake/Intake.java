@@ -4,20 +4,13 @@
 
 package frc.robot.subsystems.intake;
 
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-//import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-//import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-//import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,58 +26,37 @@ public class Intake extends SubsystemBase {
     return intake;
   }
 
-  private WPI_TalonFX intakeMotor = new WPI_TalonFX(Constants.intake.MOTOR_ID);
-  private ProfiledPIDController pid = new ProfiledPIDController(1.0, 0.0, 0.0, new Constraints(3, 1));
+  private CANSparkMax intakeMotor = new CANSparkMax(Constants.intake.MOTOR_ID, MotorType.kBrushless);
   private DoubleSolenoid piston;
-
-  private double set;
 
   Notifier shuffle = new Notifier(() -> updateSuffleboard());
 
   public Intake(){
     CommandScheduler.getInstance().registerSubsystem(this);
-    initIntake();
-    resetEncoders();
-    intakeMotor.configFactoryDefault();
-    SmartDashboard.putNumber("Intake Set Voltage", 0.0);
-    intakeMotor.configOpenloopRamp(0.25);
+    intakeMotor.setOpenLoopRampRate(0.25);
 
     piston = new DoubleSolenoid(Constants.intake.SOLENOID_A_ID, Constants.intake.SOLENOID_B_ID);
 
     shuffle.startPeriodic(0.1);
     intakeMotor.setInverted(true);
 
+    intakeMotor.clearFaults();
+
+    intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 40000);
+    intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 40000);
+    intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 40000);
+
     raise(false);
   }
 
   @Override
   public void periodic() {
-    //SmartDashboard.putNumber("Temperature", testMotor.getMotorTemperature());
-    //SmartDashboard.putNumber("Intake Motor Temp", intakeMotor.getMotorTemperature());
-    
   }
 
   public void updateSuffleboard() {
-    SmartDashboard.putNumber("Motor Velocity", getVelocity());
-    SmartDashboard.putNumber("Motor Temperature", getTemperature());
-    SmartDashboard.putNumber("Set Value", set);
+    SmartDashboard.putNumber("Intake Temperature", getTemperature());
+    SmartDashboard.putNumber("Intake Position", intakeMotor.getEncoder().getPosition());
     }
-
- public void initIntake(){
-   intakeMotor.configClosedloopRamp(1.0);
-   intakeMotor.configOpenloopRamp(1.0);
-   intakeMotor.setNeutralMode(NeutralMode.Brake);
-  }
-
-  public void resetEncoders() {
-    intakeMotor.setSelectedSensorPosition(0);
-  }
-
-  public void setPID(double kP, double kI, double kD) {
-    pid.setP(kP);
-    pid.setI(kI);
-    pid.setD(kD);
-  }
 
   public void set(double percentage){
     intakeMotor.set(percentage);
@@ -94,17 +66,8 @@ public class Intake extends SubsystemBase {
     set(voltage / RobotController.getBatteryVoltage());
   }
 
-  public void setVelocity(double velocity) {
-    set = pid.calculate(getVelocity(), velocity);
-    set(set);
-  }
-
   private double getTemperature() {
-  return intakeMotor.getTemperature();
-}
-
-public double getVelocity() {
-  return intakeMotor.getSelectedSensorVelocity() / 3;
+  return intakeMotor.getMotorTemperature();
 }
 
 public void raise(boolean engaged) {

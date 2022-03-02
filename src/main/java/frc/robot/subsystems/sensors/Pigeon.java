@@ -14,6 +14,8 @@ public class Pigeon extends Pigeon2{
 
         super.configFactoryDefault();
         set(0.0);
+
+        super.clearStickyFaults();
     }
 
     public Rotation2d get() {

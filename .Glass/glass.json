@@ -1,5 +1,17 @@
 {
   "NetworkTables": {
+    "CameraPublisher": {
+      "limelight-swervex": {
+        "open": true
+      },
+      "open": true
+    },
+    "FMSInfo": {
+      "open": true
+    },
+    "LiveWindow": {
+      "open": true
+    },
     "SmartDashboard": {
       "open": true
     },
@@ -9,10 +21,17 @@
       "/LiveWindow/Flywheel": "Subsystem",
       "/LiveWindow/Indexer": "Subsystem",
       "/LiveWindow/Intake": "Subsystem",
+      "/LiveWindow/Sensors": "Subsystem",
       "/LiveWindow/Shooter": "Subsystem",
       "/LiveWindow/Swerve": "Subsystem",
       "/LiveWindow/Trigger": "Subsystem",
       "/LiveWindow/Turret": "Subsystem",
+      "/LiveWindow/Ungrouped/DigitalInput[0]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[1]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[2]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[3]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[4]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[5]": "Digital Input",
       "/LiveWindow/Ungrouped/PIDController[10]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[11]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[12]": "PIDController",
@@ -45,7 +64,10 @@
       "/SmartDashboard/Reset Rotation": "Command",
       "/SmartDashboard/ResetPose": "Command",
       "/SmartDashboard/ResetRotation": "Command",
-      "/SmartDashboard/Run To Velocity": "Command"
+      "/SmartDashboard/Run To Velocity": "Command",
+      "/SmartDashboard/Set Hood Command": "Command",
+      "/SmartDashboard/Set Hood Voltage Command": "Command",
+      "/SmartDashboard/Set Shooter Voltage Command": "Command"
     }
   },
   "NetworkTables Settings": {

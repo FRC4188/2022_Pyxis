@@ -3,7 +3,6 @@ package frc.robot.subsystems.climber;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -15,8 +14,8 @@ public class ActiveHook {
     private TalonFX motorA = new TalonFX(Constants.climber.MOTOR_A_ID);
     private TalonFX motorB = new TalonFX(Constants.climber.MOTOR_B_ID);
 
-    private CANCoder encoderA = new CANCoder(Constants.climber.ENCODER_A_ID);
-    private CANCoder encoderB = new CANCoder(Constants.climber.ENCODER_B_ID);
+    //private CANCoder encoderA = new CANCoder(Constants.climber.ENCODER_A_ID);
+    //private CANCoder encoderB = new CANCoder(Constants.climber.ENCODER_B_ID);
 
     private ProfiledPIDController pidA = new ProfiledPIDController(Constants.climber.kP, Constants.climber.kI, Constants.climber.kD, new Constraints(Constants.climber.MAX_VELOCITY, Constants.climber.MAX_ACCEL));
     private ProfiledPIDController pidB = new ProfiledPIDController(Constants.climber.kP, Constants.climber.kI, Constants.climber.kD, new Constraints(Constants.climber.MAX_VELOCITY, Constants.climber.MAX_ACCEL));
@@ -25,10 +24,15 @@ public class ActiveHook {
         resetPositionA(0.0);
         resetPositionB(0.0);
 
-        encoderA.configFactoryDefault();
-        encoderB.configFactoryDefault();
+        //encoderA.configFactoryDefault();
+        //encoderB.configFactoryDefault();
 
         motorB.setInverted(true);
+
+        motorA.clearStickyFaults();
+        motorB.clearStickyFaults();
+        //encoderA.clearStickyFaults();
+        //encoderB.clearStickyFaults();
     }
 
     public void setA(double power) {
@@ -58,7 +62,8 @@ public class ActiveHook {
      * @return Position in meters.
      */
     public double getPositionA() {
-        return encoderA.getPosition() * Constants.climber.METERS_PER_COUNT;
+        return motorA.getSelectedSensorPosition() * Constants.climber.METERS_PER_COUNT;
+        //return encoderA.getPosition() * Constants.climber.METERS_PER_COUNT;
     }
 
     /**
@@ -66,7 +71,8 @@ public class ActiveHook {
      * @return Position in meters.
      */
     public double getPositionB() {
-        return encoderB.getPosition() * -Constants.climber.METERS_PER_COUNT;
+        return motorB.getSelectedSensorPosition() * Constants.climber.METERS_PER_COUNT;
+        //return encoderB.getPosition() * -Constants.climber.METERS_PER_COUNT;
     }
 
     /**
@@ -74,7 +80,8 @@ public class ActiveHook {
      * @return Position in meters per second.
      */
     public double getVelocityA() {
-        return encoderA.getVelocity() * Constants.climber.METERS_PER_COUNT;
+        return motorA.getSelectedSensorVelocity() * Constants.climber.METERS_PER_COUNT;
+        //return encoderA.getVelocity() * Constants.climber.METERS_PER_COUNT;
     }
 
     /**
@@ -82,15 +89,18 @@ public class ActiveHook {
      * @return Position in meters per second.
      */
     public double getVelocityB() {
-        return encoderB.getVelocity() * -Constants.climber.METERS_PER_COUNT;
+        return motorA.getSelectedSensorVelocity() * Constants.climber.METERS_PER_COUNT;
+        //return encoderB.getVelocity() * -Constants.climber.METERS_PER_COUNT;
     }
 
     public void resetPositionA(double position) {
-        encoderA.setPosition(position / Constants.climber.METERS_PER_COUNT);
+        motorA.setSelectedSensorPosition(position / Constants.climber.METERS_PER_COUNT);
+        //encoderA.setPosition(position / Constants.climber.METERS_PER_COUNT);
     }
 
     public void resetPositionB(double position) {
-        encoderB.setPosition(position / Constants.climber.METERS_PER_COUNT);
+        motorB.setSelectedSensorPosition(position / Constants.climber.METERS_PER_COUNT);
+        //encoderB.setPosition(position / Constants.climber.METERS_PER_COUNT);
     }
 
     public double getMotorATemp(){

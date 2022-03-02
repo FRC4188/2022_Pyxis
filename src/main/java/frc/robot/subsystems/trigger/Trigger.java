@@ -1,5 +1,7 @@
 package frc.robot.subsystems.trigger;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Notifier;
@@ -29,11 +31,26 @@ public class Trigger extends SubsystemBase {
     motor.configFactoryDefault();
     motor.configOpenloopRamp(0.25);
     dashboard.startPeriodic(0.1);
+    motor.clearStickyFaults();
+    motor.setStatusFramePeriod(StatusFrame.Status_1_General, 255);
+    motor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 255);
+    motor.setStatusFramePeriod(StatusFrame.Status_10_Targets, 255);
+    motor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 255);
+    motor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 255);
+    motor.setStatusFramePeriod(StatusFrame.Status_9_MotProfBuffer, 255);
+    motor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 255);
+    motor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 255);
+    motor.setStatusFramePeriod(StatusFrame.Status_7_CommStatus, 255);
+    motor.setStatusFramePeriod(StatusFrame.Status_6_Misc, 255);
+
+
   }
 
   private void updateDashboard() {
     SmartDashboard.putBoolean("Top Beam Breaker", getTop());
     SmartDashboard.putBoolean("Bottom Beam Breaker", getBottom());
+    motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    SmartDashboard.putNumber("Trigger Position", motor.getSelectedSensorPosition());
   }
 
   @Override

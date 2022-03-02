@@ -1,9 +1,16 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.drive.FollowTrajectory;
+import frc.robot.commands.groups.AutoIntake;
+import frc.robot.commands.shooter.HoodAngle;
+import frc.robot.commands.shooter.ShooterVoltage;
+import frc.robot.commands.trigger.PushTrigger;
+import frc.robot.commands.turret.TrackTarget;
 import frc.robot.utils.paths.Trajectories;
 
 public class FiveBall extends SequentialCommandGroup {
@@ -17,12 +24,33 @@ public class FiveBall extends SequentialCommandGroup {
    */
   public FiveBall() {
     addCommands(
-      new FollowTrajectory(Trajectories.fiveball.first, Rotation2d.fromDegrees(24.13)),
-      new FollowTrajectory(Trajectories.fiveball.second, Rotation2d.fromDegrees(-48.03)),
-      new WaitCommand(3.0),
-      new FollowTrajectory(Trajectories.fiveball.terminal, Rotation2d.fromDegrees(-22.98)),
-      new WaitCommand(5.0),
-      new FollowTrajectory(Trajectories.fiveball.lastShoot, Rotation2d.fromDegrees(136.45))
+      new ParallelDeadlineGroup(
+        new SequentialCommandGroup(
+          new FollowTrajectory(Trajectories.fiveball.first, Rotation2d.fromDegrees(0.0)),
+          new ParallelDeadlineGroup(
+            new SequentialCommandGroup(
+              new WaitCommand(2.0),
+              new PushTrigger(8.0).withTimeout(1.0)
+            ),
+            new TrackTarget(true),
+    
+            new HoodAngle(13.0),
+            new ShooterVoltage(4.7)
+          ),
+          new FollowTrajectory(Trajectories.fiveball.second, Rotation2d.fromDegrees(-59.45))
+        ),
+        new AutoIntake()
+      ),
+      new ParallelDeadlineGroup(
+        new SequentialCommandGroup(
+          new WaitCommand(2.0),
+          new PushTrigger(8.0).withTimeout(1.0)
+        ),
+        new TrackTarget(true),
+        new AutoIntake(),
+        new HoodAngle(13.0),
+        new ShooterVoltage(4.7)
+      )
     );
   }
 }

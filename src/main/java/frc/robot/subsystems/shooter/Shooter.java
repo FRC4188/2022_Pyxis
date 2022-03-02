@@ -1,8 +1,6 @@
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,25 +20,37 @@ public class Shooter extends SubsystemBase {
   Wheel wheel = new Wheel(Constants.shooter.LEADER_ID, Constants.shooter.FOLLOWER_ID);
   Sensors sensors = Sensors.getInstance();
 
-  AnalogInput encoder = new AnalogInput(0);
-  PWM encoderpwm = new PWM(0);
-
   /** Creates a new Shooter. */
   private Shooter() {
     CommandScheduler.getInstance().registerSubsystem(this);
 
     SmartDashboard.putNumber("Shooter Set Velocity", 0.0);
+    SmartDashboard.putNumber("Hood Set Angle", 0.0);
+    SmartDashboard.putNumber("Hood Set Voltage", 0.0);
 
     dashboard = new Notifier(() -> updateDashboard());
     dashboard.startPeriodic(0.1);
   }
 
   public void updateDashboard() {
-    encoder.getAverageVoltage();
+    SmartDashboard.putNumber("Hood Position", hood.getPosition());
+    SmartDashboard.putNumber("Shooter Velocity", getVelocity());
+
+    SmartDashboard.putNumber("Leader Temp", wheel.getLeaderTemp());
+    SmartDashboard.putNumber("Follower Temp", wheel.getFollowerTemp());
   }
 
-  public void setVolts(double lowerVolts) {
-    wheel.setVoltage(lowerVolts);
+  public void setHoodVolts(double voltage) {
+    hood.setVolts(voltage, false);
+  }
+  
+
+  public double getHoodVelocity() {
+    return hood.getVelocity();
+  }
+
+  public void setVolts(double volts) {
+    wheel.setVoltage(volts);
   }
 
   public void setVelocity(double rpm) {
@@ -62,9 +72,14 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     wheel.periodic();
+    hood.periodic();
   }
 
 public boolean isReady() {
-    return Math.abs(sensors.getTX()) < 2.0;
+    return Math.abs(sensors.getTX()) < 1.0 && Math.abs(getVelocity()-sensors.getFormulaRPM()-300.0) < 100.0;
+}
+
+public void resetHood() {
+  hood.resetPosition();
 }
 }

@@ -7,9 +7,7 @@ package frc.robot.commands.shooter;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.hood.Hood;
-import frc.robot.subsystems.shooter.Shooter;
 
 public class HoodAngle extends CommandBase {
 
@@ -24,7 +22,7 @@ public class HoodAngle extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void initialize() {
+  public void execute() {
     hood.setPosition(angle.getAsDouble());
   }
 }

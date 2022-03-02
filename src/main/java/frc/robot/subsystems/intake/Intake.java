@@ -5,7 +5,6 @@
 package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
@@ -15,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.intake;
 import frc.robot.utils.DoubleSolenoid;
 
 public class Intake extends SubsystemBase {
@@ -33,7 +31,7 @@ public class Intake extends SubsystemBase {
 
   public Intake(){
     CommandScheduler.getInstance().registerSubsystem(this);
-    intakeMotor.setOpenLoopRampRate(0.25);
+    intakeMotor.setOpenLoopRampRate(0.125);
 
     piston = new DoubleSolenoid(Constants.intake.SOLENOID_A_ID, Constants.intake.SOLENOID_B_ID);
 
@@ -46,7 +44,7 @@ public class Intake extends SubsystemBase {
     intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 40000);
     intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 40000);
 
-    raise(false);
+    raise(true);
   }
 
   @Override
@@ -56,7 +54,7 @@ public class Intake extends SubsystemBase {
   public void updateSuffleboard() {
     SmartDashboard.putNumber("Intake Temperature", getTemperature());
     SmartDashboard.putNumber("Intake Position", intakeMotor.getEncoder().getPosition());
-    }
+  }
 
   public void set(double percentage){
     intakeMotor.set(percentage);
@@ -67,17 +65,14 @@ public class Intake extends SubsystemBase {
   }
 
   private double getTemperature() {
-  return intakeMotor.getMotorTemperature();
-}
+    return intakeMotor.getMotorTemperature();
+  }
 
-public void raise(boolean engaged) {
-  piston.set(engaged);
-}
+  public void raise(boolean engaged) {
+    piston.set(engaged);
+  }
 
-public boolean isRaised() {
-  return piston.get();
-}
-
-  // shows intake motor temp on smart dashboard
- 
+  public boolean isRaised() {
+    return piston.get();
+  } 
 }

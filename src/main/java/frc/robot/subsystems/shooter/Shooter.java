@@ -16,7 +16,6 @@ public class Shooter extends SubsystemBase {
   }
 
   private Notifier dashboard;
-  Hood hood = new Hood(Constants.shooter.hood.MOTOR_ID);
   Wheel wheel = new Wheel(Constants.shooter.LEADER_ID, Constants.shooter.FOLLOWER_ID);
   Sensors sensors = Sensors.getInstance();
 
@@ -26,27 +25,15 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putNumber("Shooter Set Velocity", 0.0);
     SmartDashboard.putNumber("Hood Set Angle", 0.0);
-    SmartDashboard.putNumber("Hood Set Voltage", 0.0);
 
     dashboard = new Notifier(() -> updateDashboard());
     dashboard.startPeriodic(0.1);
   }
 
   public void updateDashboard() {
-    SmartDashboard.putNumber("Hood Position", hood.getPosition());
     SmartDashboard.putNumber("Shooter Velocity", getVelocity());
-
     SmartDashboard.putNumber("Leader Temp", wheel.getLeaderTemp());
     SmartDashboard.putNumber("Follower Temp", wheel.getFollowerTemp());
-  }
-
-  public void setHoodVolts(double voltage) {
-    hood.setVolts(voltage, false);
-  }
-  
-
-  public double getHoodVelocity() {
-    return hood.getVelocity();
   }
 
   public void setVolts(double volts) {
@@ -57,29 +44,16 @@ public class Shooter extends SubsystemBase {
     wheel.setVelocity(rpm);
   }
 
-  public void setAngle(double angle) {
-    hood.setPosition(angle);
-  }
-
   public double getVelocity() {
     return wheel.getVelocity();
-  }
-
-  public double getAngle() {
-    return hood.getPosition();
   }
 
   @Override
   public void periodic() {
     wheel.periodic();
-    hood.periodic();
   }
 
 public boolean isReady() {
     return Math.abs(sensors.getTX()) < 1.0 && Math.abs(getVelocity()-sensors.getFormulaRPM()-300.0) < 100.0;
-}
-
-public void resetHood() {
-  hood.resetPosition();
 }
 }

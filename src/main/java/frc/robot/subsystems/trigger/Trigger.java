@@ -1,6 +1,5 @@
 package frc.robot.subsystems.trigger;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -49,8 +48,11 @@ public class Trigger extends SubsystemBase {
   private void updateDashboard() {
     SmartDashboard.putBoolean("Top Beam Breaker", getTop());
     SmartDashboard.putBoolean("Bottom Beam Breaker", getBottom());
-    motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    SmartDashboard.putNumber("Trigger Position", motor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Trigger Motor Temperature", getTemp());
+  }
+
+  private double getTemp() {
+    return motor.getTemperature();
   }
 
   @Override

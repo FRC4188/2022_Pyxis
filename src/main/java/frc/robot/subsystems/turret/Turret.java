@@ -41,8 +41,6 @@ public class Turret extends SubsystemBase {
     initialize();
 
     startNotifier();
-
-    putToShuffleboard();
   }
 
   private void initialize() {
@@ -61,14 +59,6 @@ public class Turret extends SubsystemBase {
 
   private void startNotifier() {
     notifier.startPeriodic(1.0);
-  }
-
-  private void putToShuffleboard() {
-    SmartDashboard.putNumber("Set P", 0);
-    SmartDashboard.putNumber("Set I", 0);
-    SmartDashboard.putNumber("Set D", 0);
-
-    SmartDashboard.putNumber("Set Angle", 0);
   }
 
   private void updateShuffleboard() {

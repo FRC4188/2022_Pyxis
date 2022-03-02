@@ -30,12 +30,10 @@ public class Swerve extends SubsystemBase {
   private Sensors sensors = Sensors.getInstance();
 
 
-  //private Kinematics kinematics = Constants.drive.KINEMATICS;
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(Constants.drive.FrontLeftLocation, Constants.drive.FrontRightLocation, Constants.drive.BackLeftLocation, Constants.drive.BackRightLocation);
 
   private PIDController rotationPID = new PIDController(0.15, 0.0, 0.03);
 
-  //private Odometry odometry = Odometry.getInstance();
   private Odometry odometry = new Odometry(new Pose2d());
 
   private Notifier dashboard = new Notifier(() -> smartDashboard());
@@ -47,15 +45,10 @@ public class Swerve extends SubsystemBase {
     rotationPID.setTolerance(1.0);
 
     dashboard.startPeriodic(0.1);
-
-    //USBLogger.getInstance().addSupplier(() -> odometryData()[0]);
-    //USBLogger.getInstance().addSupplier(() -> odometryData()[1]);
-    //USBLogger.getInstance().addSupplier(() -> odometryData()[2]);
   }
 
   @Override
   public void periodic() {
-    //odometry.update(sensors.getRotation(), getChassisSpeeds());
     odometry.update(getChassisSpeeds(), sensors.getRotation());
   }
 
@@ -77,7 +70,7 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Falcon 8 Temp", rightRear.getSpeedTemp());
   }
 
-  public void drive(double yInput, double xInput, double rotInput, boolean fieldOriented) {
+  public void drive(double yInput, double xInput, double rotInput) {
     yInput *= Constants.drive.MAX_VELOCITY;
     xInput *= -Constants.drive.MAX_VELOCITY;
     rotInput *= 4.0 * Math.PI;
@@ -91,9 +84,7 @@ public class Swerve extends SubsystemBase {
       }
     }
 
-    setChassisSpeeds(!fieldOriented ?
-    ChassisSpeeds.fromFieldRelativeSpeeds(yInput, xInput, rotInput, sensors.getRotation()) :
-    new ChassisSpeeds(yInput, xInput, rotInput));
+    setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(yInput, xInput, rotInput, sensors.getRotation()));
   }
 
   public void zeroPower() {

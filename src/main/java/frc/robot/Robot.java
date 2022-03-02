@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.climber.FindZeros;
+import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.subsystems.climber.Climber;
 
 /**
@@ -102,6 +104,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    new FindZeros().schedule();
+    new FindHoodZeros().schedule();
 
     if (RobotController.getBatteryVoltage() < 12.7) DriverStation.reportWarning("Battery voltage too low; please change battery.", false);
     //m_robotContainer.resetRobot();

@@ -4,38 +4,50 @@
 
 package frc.robot.commands.trigger;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.hood.Hood;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.trigger.Trigger;
 
-public class TestTrigger extends CommandBase {
-  private Trigger trigger = Trigger.getInstance();
-  /** Creates a new TestTrigger. */
-  public TestTrigger() {
+public class AutoFireQuantity extends CommandBase {
+  Trigger trigger = Trigger.getInstance();
+  Shooter shooter = Shooter.getInstance();
+  Hood hood = Hood.getInstance();
+
+  private int quantity = 0;
+  private boolean lastTop = false;
+
+  /** Creates a new AutoFire. */
+  public AutoFireQuantity(int quantity) {
     addRequirements(trigger);
-    // Use addRequirements() here to declare subsystem dependencies.
+
+    this.quantity = quantity;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    trigger.setVoltage(SmartDashboard.getNumber("trigger voltage", 0.0));
+    if (shooter.isReady() && hood.isReady()) trigger.set(12.0);
+    else trigger.set(0.0);
+
+    if (!trigger.getTop() && lastTop) quantity --;
+
+    lastTop = trigger.getTop();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    trigger.setVoltage(0.0);
+    trigger.set(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return quantity == 0;
   }
 }

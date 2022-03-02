@@ -6,7 +6,6 @@ package frc.robot.commands.climber;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.climber;
 import frc.robot.subsystems.climber.Climber;
 
 public class FindZeros extends CommandBase {

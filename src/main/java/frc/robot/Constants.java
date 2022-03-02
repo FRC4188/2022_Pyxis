@@ -134,6 +134,7 @@ public class Constants {
         public static final double kP = 1e-2;
         public static final double kI = 1.0;
         public static final double kD = 5e-4;
+        public static final double kF = 1.0;
         public static final double MAX_ACCEL = 1000.0;
         public static final double MAX_JERK = 5000.0;
 

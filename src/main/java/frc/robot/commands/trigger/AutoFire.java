@@ -5,6 +5,7 @@
 package frc.robot.commands.trigger;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.trigger.Trigger;
 
@@ -12,6 +13,7 @@ public class AutoFire extends CommandBase {
 
   Trigger trigger = Trigger.getInstance();
   Shooter shooter = Shooter.getInstance();
+  Hood hood = Hood.getInstance();
 
   /** Creates a new AutoFire. */
   public AutoFire() {
@@ -25,7 +27,7 @@ public class AutoFire extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.isReady()) trigger.set(12.0);
+    if (shooter.isReady() && hood.isReady()) trigger.set(12.0);
     else trigger.set(0.0);
   }
 

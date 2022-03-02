@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import frc.robot.subsystems.drive.Swerve;
+import frc.robot.subsystems.sensors.Sensors;
 
 public class ResetPose extends InstantCommand {
 
@@ -20,6 +21,7 @@ public class ResetPose extends InstantCommand {
 
   @Override
   public void initialize() {
+    Sensors.getInstance().setPigeonAngle(pose.getRotation().getDegrees());
     Swerve.getInstance().setPose(pose);
     Swerve.getInstance().setRotSetpoint(0.0);
   }

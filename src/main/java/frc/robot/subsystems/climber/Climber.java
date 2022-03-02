@@ -22,14 +22,6 @@ public class Climber extends SubsystemBase {
   private ActiveHook active = new ActiveHook();
   private PassiveHook passive = new PassiveHook();
 
-  /*
-  private DigitalInput lowLimitA = new DigitalInput(Constants.climber.LOW_LIMIT_A_ID);
-  private DigitalInput lowLimitB = new DigitalInput(Constants.climber.LOW_LIMIT_B_ID);
-
-  private DigitalInput hookLimitA = new DigitalInput(Constants.climber.HOOK_LIMIT_A_ID);
-  private DigitalInput hookLimitB = new DigitalInput(Constants.climber.HOOK_LIMIT_B_ID);
-*/
-
   private DoubleSolenoid brake = new DoubleSolenoid(Constants.climber.BRAKE_A_ID,Constants.climber.BRAKE_B_ID);
 
   private Notifier dashboardLoop = new Notifier(() -> updateDashboard());
@@ -39,9 +31,6 @@ public class Climber extends SubsystemBase {
     CommandScheduler.getInstance().registerSubsystem(this);
 
     dashboardLoop.startPeriodic(0.1);
-
-    //new Trigger(() -> lowLimitA.get()).whileActiveOnce(new ResetActiveA(), false);
-    //new Trigger(() -> lowLimitB.get()).whileActiveOnce(new ResetActiveB(), false);
 
     SmartDashboard.putNumber("Climber Set Voltage", 0.0);
     setBrake(true);
@@ -127,9 +116,5 @@ public class Climber extends SubsystemBase {
 
   public void resetActiveB(double position) {
     active.resetPositionB(position);
-  }
-
-  public boolean isHooked() {
-    return false;//hookLimitA.get() && hookLimitB.get();
   }
 }

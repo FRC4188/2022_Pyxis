@@ -13,10 +13,10 @@ import frc.robot.Constants;
 public class ActiveHook {
 
     private TalonFX motorA = new TalonFX(Constants.climber.MOTOR_A_ID);
-    private TalonFX motorB = new TalonFX(Constants.climber.MOTOR_B_ID);
+    private TalonFX motorB = new TalonFX(Constants.climber.MOTOR_B_ID, "Pyxis CANivore");
 
     private CANCoder encoderA = new CANCoder(Constants.climber.ENCODER_A_ID);
-    private CANCoder encoderB = new CANCoder(Constants.climber.ENCODER_B_ID);
+    private CANCoder encoderB = new CANCoder(Constants.climber.ENCODER_B_ID, "Pyxis CANivore");
 
     private ProfiledPIDController pidA = new ProfiledPIDController(Constants.climber.kP, Constants.climber.kI, Constants.climber.kD, new Constraints(Constants.climber.MAX_VELOCITY, Constants.climber.MAX_ACCEL));
     private ProfiledPIDController pidB = new ProfiledPIDController(Constants.climber.kP, Constants.climber.kI, Constants.climber.kD, new Constraints(Constants.climber.MAX_VELOCITY, Constants.climber.MAX_ACCEL));

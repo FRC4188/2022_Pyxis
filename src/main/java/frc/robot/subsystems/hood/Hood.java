@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Notifier;
@@ -40,6 +41,11 @@ public class Hood extends SubsystemBase {
       motor.clearFaults();
       motor.setOpenLoopRampRate(0.0125);
 
+      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
+      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
+      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 20);
+
       shuffle = new Notifier(() -> updateDashboard());
       shuffle.startPeriodic(0.1);
       /*
@@ -64,6 +70,8 @@ public class Hood extends SubsystemBase {
   }
 
   public void setPosition(double position) {
+      if (position > Constants.shooter.hood.MAX) position = Constants.shooter.hood.MAX;
+      else if (position < Constants.shooter.hood.MIN) position = Constants.shooter.hood.MIN;
       this.position = position;
   }
 

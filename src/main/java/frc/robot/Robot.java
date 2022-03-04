@@ -13,9 +13,11 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.climber.ActivePosition;
 import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.sensors.Sensors;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -37,6 +39,7 @@ public class Robot extends TimedRobot {
     PneumaticsControlModule pcm = new PneumaticsControlModule();
     pcm.clearAllStickyFaults();
     pcm.close();
+    Sensors.getInstance().setLED(false);
   }
 
   /**
@@ -67,6 +70,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     Climber.getInstance().setBrake(true);
+    Sensors.getInstance().setLED(false);
   }
 
   @Override
@@ -85,7 +89,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
 
-    //m_robotContainer.resetRobot();
+    Sensors.getInstance().setLED(true);
   }
 
   /**
@@ -105,11 +109,13 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    new FindZeros().schedule();
+    new FindZeros().andThen(new ActivePosition(0.0)).schedule();
     new FindHoodZeros().schedule();
 
     if (RobotController.getBatteryVoltage() < 12.7) DriverStation.reportWarning("Battery voltage too low; please change battery.", false);
     //m_robotContainer.resetRobot();
+
+    Sensors.getInstance().setLED(true);
   }
 
   /**

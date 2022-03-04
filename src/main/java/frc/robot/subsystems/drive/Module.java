@@ -8,6 +8,7 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.hal.can.CANInvalidBufferException;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -31,12 +32,13 @@ public class Module {
      * @param speedID CAN ID of the speed motor.
      * @param angleID CAN ID of the angle motor.
      * @param encoderID CAN ID of the CANCoder.
+     * @param canBus Name of the CAN bus the module is in.
      * @param encoderZero Magnet offset angle of the CANCoder.
      */
-    public Module(int angleID, int speedID, int encoderID, double encoderZero) {
-        speedMotor = new WPI_TalonFX(speedID);
-        angleMotor = new WPI_TalonFX(angleID);
-        encoder = new CANCoder(encoderID);
+    public Module(int angleID, int speedID, int encoderID, String canBus, double encoderZero) {
+        speedMotor = new WPI_TalonFX(speedID, canBus);
+        angleMotor = new WPI_TalonFX(angleID, canBus);
+        encoder = new CANCoder(encoderID, canBus);
 
         speedMotor.configFactoryDefault();
         speedMotor.setNeutralMode(NeutralMode.Brake);
@@ -62,6 +64,18 @@ public class Module {
         encoder.configSensorDirection(false);
         encoder.configMagnetOffset(encoderZero);
         encoder.clearStickyFaults();
+    }
+
+    /**
+     * Constructs a new Module object.
+     * Controls the velocity and angle of swerve wheels.
+     * @param speedID CAN ID of the speed motor.
+     * @param angleID CAN ID of the angle motor.
+     * @param encoderID CAN ID of the CANCoder.
+     * @param encoderZero Magnet offset angle of the CANCoder.
+     */
+    public Module(int angleID, int speedID, int encoderID, double encoderZero) {
+        this(angleID, speedID, encoderID, "rio", encoderZero);
     }
 
     /**

@@ -10,7 +10,7 @@ public class Pigeon extends Pigeon2{
     Derivative rate = new Derivative(0.0);
 
     public Pigeon(int canID) {
-        super(canID);
+        super(canID, "Pyxis CANivore");
 
         super.configFactoryDefault();
         set(0.0);

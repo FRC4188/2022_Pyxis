@@ -9,6 +9,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,7 +21,8 @@ public class Wheel {
 
   private WPI_TalonFX leader;
   private WPI_TalonFX follower;
-  private PIDController pid = new PIDController(Constants.shooter.kP, Constants.shooter.kI, Constants.shooter.kD);
+  private SimpleMotorFeedforward ff = new SimpleMotorFeedforward(Constants.shooter.kS, Constants.shooter.kV, Constants.shooter.kA);
+  private PIDController pid = new PIDController(Constants.shooter.kP, 0.0, Constants.shooter.kD);
   
   private Notifier shuffle = new Notifier(() -> updateShuffleboard());
 
@@ -80,6 +84,6 @@ public class Wheel {
   }
 
   public void periodic() {
-    setVoltage(pid.calculate(getVelocity(), velocity * Constants.shooter.kF));
+    setVoltage(pid.calculate(getVelocity() / 60.0, velocity / 60.0) + ff.calculate(velocity / 60.0));
   }
 }

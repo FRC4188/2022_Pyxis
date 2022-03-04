@@ -116,25 +116,18 @@ public class Constants {
         public static final int FOLLOWER_ID = 13;
         public static final int LEADER_ID = 14;
 
-        public static double kV = 0.097502;
-        public static double kA = 0.033103;
+        public static double kS = 0.72969;
+        public static double kV = 0.11586;
+        public static double kA = 0.0058329;
 
         public static final double GEARING = 24.0/32.0;
         public static final double RAMP = 2.5;
 
-        public static double SYSTEM_STDEV = 99999;
-        public static double ENC_STDEV = 0.0001;
-
-        public static final double QELMS = 0.0001e-5;
-        public static final double RELMS = 9999;
-
         public static final double RADIUS = Units.inchesToMeters(4.0);
         public static final double CIRCUMFRENCE = RADIUS * 2.0 * Math.PI;
 
-        public static final double kP = 1e-2;
-        public static final double kI = 1.0;
+        public static final double kP = 0.23619;
         public static final double kD = 5e-4;
-        public static final double kF = 1.0;
         public static final double MAX_ACCEL = 1000.0;
         public static final double MAX_JERK = 5000.0;
 

@@ -18,7 +18,7 @@ public class Indexer extends SubsystemBase {
     if (instance == null) instance = new Indexer();
     return instance;
   }
- private WPI_TalonFX indexer  = new WPI_TalonFX(Constants.indexer.INDEXER_ID);
+ private WPI_TalonFX indexer  = new WPI_TalonFX(Constants.indexer.INDEXER_ID, "Pyxis CANivore");
   /** Creates a new Indexer. */
   private Indexer() {
     indexer.configFactoryDefault();

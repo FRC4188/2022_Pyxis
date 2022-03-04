@@ -40,6 +40,10 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putString("Pigeon YPR", Arrays.toString(new double[] {pigeon.getYaw(), pigeon.getPitch(), pigeon.getRoll()}));
   }
 
+  public void setLED(boolean on) {
+    limelight.setLEDMode(on ? LedMode.ON : LedMode.OFF);
+  }
+
   private void startNotifier() {
     notifier.startPeriodic(0.4);
   }

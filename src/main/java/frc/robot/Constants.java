@@ -116,6 +116,8 @@ public class Constants {
         public static final int FOLLOWER_ID = 13;
         public static final int LEADER_ID = 14;
 
+        public static final double ALPHA = 1.075;
+
         public static double kS = 0.72969;
         public static double kV = 0.07986;
         public static double kA = 0.0058329;
@@ -134,6 +136,8 @@ public class Constants {
         public static final class hood {
             public static final int MOTOR_ID = 12;
             public static final int ENCODER_ID = 27;
+
+            public static final double ALPHA = 1.07;
 
             public static final double kP = 0.45;
             public static final double kI = 0.0;
@@ -201,13 +205,15 @@ public class Constants {
         /** Meters */
         public static final double PULL_POSITION = 0.0;
         /** Meters */
-        public static final double ACTIVE_TOLERANCE = 0.0075;
+        public static final double ACTIVE_TOLERANCE = 0.02;
         /** Meters */
-        public static final double PUSH_POSITION = 0.97;
+        public static final double PUSH_POSITION = 1.0;
         /** Meters */
-        public static final double MAX_HEIGHT = 0.97;
+        public static final double MAX_HEIGHT = 1.0;
         /** Meters / Count */
-        public static final double METERS_PER_COUNT = ((0.97 / 2898.105469) / 10.6) * (2048.0 / 360.0);
+        public static final double METERS_PER_COUNT_B = 1.0 / 3105.3515625;
+        public static final double METERS_PER_COUNT_A = 1.0 / 3393.369140625;
+
         /** Meters / Second */
         public static final double MAX_VELOCITY = 0.7;
         /** Meters / Second^2 */

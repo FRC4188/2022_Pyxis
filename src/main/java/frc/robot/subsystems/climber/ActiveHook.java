@@ -63,7 +63,7 @@ public class ActiveHook {
      * @return Position in meters.
      */
     public double getPositionA() {
-        return encoderA.getPosition() * Constants.climber.METERS_PER_COUNT;
+        return encoderA.getPosition() * Constants.climber.METERS_PER_COUNT_A;
     }
 
     /**
@@ -71,7 +71,7 @@ public class ActiveHook {
      * @return Position in meters.
      */
     public double getPositionB() {
-        return encoderB.getPosition() * -Constants.climber.METERS_PER_COUNT;
+        return encoderB.getPosition() * -Constants.climber.METERS_PER_COUNT_B;
     }
 
     /**
@@ -79,7 +79,7 @@ public class ActiveHook {
      * @return Position in meters per second.
      */
     public double getVelocityA() {
-        return encoderA.getVelocity() * Constants.climber.METERS_PER_COUNT;
+        return encoderA.getVelocity() * Constants.climber.METERS_PER_COUNT_A;
     }
 
     /**
@@ -87,15 +87,15 @@ public class ActiveHook {
      * @return Position in meters per second.
      */
     public double getVelocityB() {
-        return encoderB.getVelocity() * -Constants.climber.METERS_PER_COUNT;
+        return encoderB.getVelocity() * -Constants.climber.METERS_PER_COUNT_B;
     }
 
     public void resetPositionA(double position) {
-        encoderA.setPosition(position / Constants.climber.METERS_PER_COUNT);
+        encoderA.setPosition(position / Constants.climber.METERS_PER_COUNT_A);
     }
 
     public void resetPositionB(double position) {
-        encoderB.setPosition(position / Constants.climber.METERS_PER_COUNT);
+        encoderB.setPosition(position / Constants.climber.METERS_PER_COUNT_B);
     }
 
     public double getMotorATemp(){

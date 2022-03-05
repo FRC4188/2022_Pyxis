@@ -126,8 +126,8 @@ public class RobotContainer {
       .whenReleased(new InterruptSubsystem(turret));
     
     pilot.getYButtonObj()
-      .whenPressed(new PushTrigger(12.0))
-      //.whenPressed(new AutoShoot())
+      //.whenPressed(new PushTrigger(12.0))
+      .whenPressed(new AutoShoot())
       .whenReleased(new InterruptSubsystem(shooter, trigger, indexer));
     
     pilot.getXButtonObj()
@@ -148,6 +148,9 @@ public class RobotContainer {
 
     pilot.getStartButtonObj()
       .whenPressed(new MonkeyBar());
+
+    pilot.getBackButtonObj()
+      .whenPressed(new TogglePassive());
 
     pilot.getDpadRightButtonObj()
       .whenPressed(new InstantCommand(() -> turret.set(0.2), turret))

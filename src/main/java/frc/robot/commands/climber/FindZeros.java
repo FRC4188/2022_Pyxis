@@ -33,8 +33,8 @@ public class FindZeros extends CommandBase {
     bFilter = LinearFilter.movingAverage(10);
     aFilter.calculate(-1.0);
     bFilter.calculate(-1.0);
-    aVolts = -2.0;
-    bVolts = -2.0;
+    aVolts = -4.0;
+    bVolts = -4.0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

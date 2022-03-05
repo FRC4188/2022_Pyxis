@@ -54,6 +54,6 @@ public class Shooter extends SubsystemBase {
   }
 
 public boolean isReady() {
-    return Math.abs(sensors.getTX()) < 1.0 && Math.abs(getVelocity()-sensors.getFormulaRPM()) < 100.0;
+    return Math.abs(sensors.getTX()) < 1.0 && Math.abs(getVelocity()-sensors.getFormulaRPM()) < 150.0;
 }
 }

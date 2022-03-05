@@ -114,6 +114,6 @@ public class Hood extends SubsystemBase {
   }
 
   public boolean isReady() {
-    return Math.abs(getPosition() - position) < (1.0 / 3.0) && Math.abs(getVelocity()) < 1.0;
+    return Math.abs(getPosition() - position) < (1.0) && Math.abs(getVelocity()) < 1.0;
   }
 }

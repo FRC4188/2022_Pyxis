@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -29,6 +30,7 @@ public class Hood extends SubsystemBase {
   RelativeEncoder encoder;
   //CANCoder encoder;
   PIDController pid = new PIDController(Constants.shooter.hood.kP, Constants.shooter.hood.kI, Constants.shooter.hood.kD);
+  ArmFeedforward ff = new ArmFeedforward(0.0, Constants.shooter.hood.kCos, 0.0);
   private double position = 0.0;
   Notifier shuffle;
   
@@ -39,7 +41,12 @@ public class Hood extends SubsystemBase {
       motor.setInverted(true);
       motor.setIdleMode(IdleMode.kBrake);
       motor.clearFaults();
-      motor.setOpenLoopRampRate(0.0125);
+      motor.setOpenLoopRampRate(0.0);
+      //motor.setOpenLoopRampRate(0.0125);
+
+      encoder.setPositionConversionFactor(Constants.shooter.hood.CONVERSION);
+      encoder.setVelocityConversionFactor(Constants.shooter.hood.CONVERSION);
+      resetPosition();
 
       motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
       motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
@@ -61,7 +68,7 @@ public class Hood extends SubsystemBase {
 
   @Override
   public void periodic() {
-      setVolts(pid.calculate(getPosition(), position));
+      setVolts(pid.calculate(getPosition(), position) + ff.calculate(Math.toRadians(position + 9.8), 0.0));
   }
 
   private void updateDashboard() {
@@ -95,7 +102,7 @@ public class Hood extends SubsystemBase {
   }
 
   public double getPosition() {
-      return (encoder.getPosition() / Constants.shooter.hood.GEARING) * 360.0;
+      return encoder.getPosition();
   }
 
   public double getTemp() {
@@ -103,7 +110,7 @@ public class Hood extends SubsystemBase {
   }
 
   public double getVelocity() {
-      return (encoder.getVelocity() / Constants.shooter.hood.GEARING) * 360.0;
+      return encoder.getVelocity();
   }
 
   public boolean isReady() {

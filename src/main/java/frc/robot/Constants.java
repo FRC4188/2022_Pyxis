@@ -117,7 +117,7 @@ public class Constants {
         public static final int LEADER_ID = 14;
 
         public static double kS = 0.72969;
-        public static double kV = 0.11586;
+        public static double kV = 0.07986;
         public static double kA = 0.0058329;
 
         public static final double GEARING = 24.0/32.0;
@@ -135,12 +135,14 @@ public class Constants {
             public static final int MOTOR_ID = 12;
             public static final int ENCODER_ID = 27;
 
-            public static final double kP = 0.2;
+            public static final double kP = 0.45;
             public static final double kI = 0.0;
-            public static final double kD = 0.007;
+            public static final double kD = 0.01;
+            public static final double kCos = 0.53;
 
             public static final double GEARING = 7.0 * 7.0 * (40.0/16.0);
-            public static final double CONVERSION = 360.0 / (GEARING * 42.0);
+            public static final double CONVERSION = 30.0 / 10.74;//360.0 / (GEARING);
+            public static final double OFFSET = 9.8;
             
             public static final double MAX = 45.0;
             public static final double MIN = 0.0;

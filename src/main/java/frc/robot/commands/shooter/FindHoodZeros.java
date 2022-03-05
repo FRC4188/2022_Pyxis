@@ -25,7 +25,7 @@ public class FindHoodZeros extends CommandBase {
   @Override
   public void initialize() {
 
-    hood.setVolts(-2.0);
+    hood.setVolts(-0.25);
 
     aFilter = LinearFilter.movingAverage(20);
     aFilter.calculate(-1.0);

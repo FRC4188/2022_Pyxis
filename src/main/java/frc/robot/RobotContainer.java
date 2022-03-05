@@ -126,9 +126,9 @@ public class RobotContainer {
       .whenReleased(new InterruptSubsystem(turret));
     
     pilot.getYButtonObj()
-      //.whenPressed(new AutoShoot())
       .whenPressed(new PushTrigger(12.0))
-      .whenReleased(new InterruptSubsystem(shooter, trigger));
+      //.whenPressed(new AutoShoot())
+      .whenReleased(new InterruptSubsystem(shooter, trigger, indexer));
     
     pilot.getXButtonObj()
       .whenPressed(new ParallelCommandGroup(new SpinIndexer(-8.0), new SpinIntake(-12.0)))

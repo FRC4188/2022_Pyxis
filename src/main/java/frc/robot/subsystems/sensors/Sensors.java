@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems.sensors;
 
-import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;

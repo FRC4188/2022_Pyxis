@@ -26,6 +26,6 @@ public class Pigeon extends PigeonIMU{
     }
 
     public double getOmegaRadians() {
-        return rate.getRate(Math.toRadians(super.getFusedHeading()));
+        return Derivative.getRate(Math.toRadians(super.getFusedHeading()));
     }
 }

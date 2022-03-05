@@ -14,7 +14,6 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.drive.Kinematics;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -62,13 +61,12 @@ public class Constants {
             public static final Translation2d FrontRightLocation = new Translation2d(-(Constants.robot.A_WIDTH / 2), (Constants.robot.A_LENGTH / 2));
             public static final Translation2d BackLeftLocation = new Translation2d((Constants.robot.A_WIDTH / 2), -(Constants.robot.A_LENGTH / 2));
             public static final Translation2d BackRightLocation = new Translation2d((Constants.robot.A_WIDTH / 2), (Constants.robot.A_LENGTH / 2));
-            public static final Kinematics KINEMATICS = new Kinematics(FrontLeftLocation, FrontRightLocation, BackLeftLocation, BackRightLocation);
 
             public static final class modules {
-                public static final double M1_ZERO = 45.263672;
-                public static final double M2_ZERO = -122.958984;
-                public static final double M3_ZERO = -160.927734;
-                public static final double M4_ZERO = -48.164062;
+                public static final double M1_ZERO = 45.615234375;
+                public static final double M2_ZERO = -118.212890625;
+                public static final double M3_ZERO = -158.5546875;
+                public static final double M4_ZERO = -58.798828125;
             }
 
             public static final class anglemotor {
@@ -105,6 +103,7 @@ public class Constants {
             }
 
             public static final class auto {
+   
                 public static final double MAX_VELOCITY = 1.0; // Maximum velocity allowed in the drivetrain (Meters per Second).
                 public static final double MAX_ACCEL = 3.0; // Maximum acceleration of the drivetrain in (Meters per Second Squared).
                 public static final double MAX_CACCEL = 5.0; // Maximum centripital acceleration of the robot (Meters per Second Squared).

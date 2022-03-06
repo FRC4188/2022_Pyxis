@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.turret.SetToAngle;
 import frc.robot.subsystems.sensors.Sensors;
 
 public class Turret extends SubsystemBase {
@@ -81,8 +82,12 @@ public class Turret extends SubsystemBase {
     }
   }
 
+  public void setVolts(double volts) {
+    set(volts / RobotController.getBatteryVoltage());
+  }
+
   public void setAngle(double angle) {
-    set(12.0 * (pid.calculate(getPosition(), angle)) / RobotController.getBatteryVoltage());
+    setVolts(pid.calculate(getPosition(), angle));
   }
 
   public void trackTarget(boolean cont) {

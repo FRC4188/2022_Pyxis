@@ -14,7 +14,7 @@ public class AutoShoot extends ParallelCommandGroup {
     addCommands(
       new ShooterVelocity(() -> Sensors.getInstance().getFormulaRPM()),
       new AutoFire(),
-      new TrackTarget(true),
+      new TrackTarget(),
       new HoodAngle(() -> Sensors.getInstance().getFormulaAngle()),
       new LoadBalls()
     );

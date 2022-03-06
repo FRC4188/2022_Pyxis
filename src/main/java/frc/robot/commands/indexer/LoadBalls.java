@@ -6,12 +6,12 @@ package frc.robot.commands.indexer;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.indexer.Indexer;
-import frc.robot.subsystems.trigger.Trigger;
+import frc.robot.subsystems.trigger.PreShooter;
 
 public class LoadBalls extends CommandBase {
 
   Indexer indexer = Indexer.getInstance();
-  Trigger trigger = Trigger.getInstance();
+  PreShooter trigger = PreShooter.getInstance();
 
   /** Creates a new LoadBalls. */
   public LoadBalls() {

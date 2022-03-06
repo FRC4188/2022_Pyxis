@@ -6,12 +6,10 @@ import frc.robot.subsystems.turret.Turret;
 public class TrackTarget extends CommandBase {
   private Turret turret = Turret.getInstance();
 
-  private boolean cont;
   
   /** Creates a new TrackTarget. */
-  public TrackTarget(boolean cont) {
+  public TrackTarget() {
     addRequirements(turret);
-    this.cont = cont;
   }
 
   // Called when the command is initially scheduled.
@@ -21,7 +19,7 @@ public class TrackTarget extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.trackTarget(cont);
+    turret.trackTarget(true);
   }
 
   // Called once the command ends or is interrupted.
@@ -33,6 +31,6 @@ public class TrackTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !cont;
+    return false;
   }
 }

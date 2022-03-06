@@ -5,11 +5,11 @@
 package frc.robot.commands.trigger;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.trigger.Trigger;
+import frc.robot.subsystems.trigger.PreShooter;
 
 public class PushTrigger extends CommandBase {
 
-  private Trigger trigger = Trigger.getInstance();
+  private PreShooter trigger = PreShooter.getInstance();
   private double volts;
 
   /** Creates a new PushTrigger. */

@@ -74,6 +74,7 @@ public class Hood extends SubsystemBase {
   private void updateDashboard() {
     SmartDashboard.putNumber("Hood Angle", getPosition());
     SmartDashboard.putNumber("Hood Temperature", getTemp());
+    SmartDashboard.putBoolean("Hood is Ready", isReady());
   }
 
   public void setPosition(double position) {
@@ -114,6 +115,6 @@ public class Hood extends SubsystemBase {
   }
 
   public boolean isReady() {
-    return Math.abs(getPosition() - position) < (1.0) && Math.abs(getVelocity()) < 1.0;
+    return Math.abs(getPosition() - position) < 0.75;
   }
 }

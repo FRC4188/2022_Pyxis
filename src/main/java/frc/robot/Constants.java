@@ -101,9 +101,9 @@ public class Constants {
 
         public static final class auto {
             /** Meters / Second */
-            public static final double MAX_VELOCITY = 3.0; // Maximum velocity allowed in the drivetrain.
+            public static final double MAX_VELOCITY = 5.0; // Maximum velocity allowed in the drivetrain.
             /** Meters / Second^2 */
-            public static final double MAX_ACCEL = 3.25; // Maximum acceleration of the drivetrain.
+            public static final double MAX_ACCEL = 2.2; // Maximum acceleration of the drivetrain.
             /** Meters / Second^2 */
             public static final double MAX_CACCEL = 2.5; // Maximum centripital acceleration of the robot.
 
@@ -116,7 +116,7 @@ public class Constants {
         public static final int FOLLOWER_ID = 13;
         public static final int LEADER_ID = 14;
 
-        public static final double ALPHA = 1.075;
+        public static final double ALPHA = 1.3;
 
         public static double kS = 0.72969;
         public static double kV = 0.07986;
@@ -137,9 +137,9 @@ public class Constants {
             public static final int MOTOR_ID = 12;
             public static final int ENCODER_ID = 27;
 
-            public static final double ALPHA = 1.07;
+            public static final double ALPHA = 1.0;
 
-            public static final double kP = 0.45;
+            public static final double kP = 0.375;
             public static final double kI = 0.0;
             public static final double kD = 0.01;
             public static final double kCos = 0.53;
@@ -158,12 +158,12 @@ public class Constants {
     }
 
     public static final class turret {
-            public static final double kP = 0.03;
+            public static final double kP = 0.275;
             public static final double kI = 0.0;
-            public static final double kD = 0.001;
+            public static final double kD = 0.05;
 
-            public static final double MIN_ANGLE = -55.0;
-            public static final double MAX_ANGLE = 161.0;
+            public static final double MIN_ANGLE = -400.0;
+            public static final double MAX_ANGLE = 55.0;
 
             public static final double GEAR_RATIO = 20.0 * 14.0;
             public static final double ENCODER_TO_DEGREES = 360.0 / GEAR_RATIO;

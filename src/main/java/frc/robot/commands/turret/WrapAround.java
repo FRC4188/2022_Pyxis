@@ -2,22 +2,22 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.trigger;
+package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.hood.Hood;
-import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.trigger.PreShooter;
+import frc.robot.Constants.turret;
+import frc.robot.subsystems.sensors.Sensors;
+import frc.robot.subsystems.turret.Turret;
 
-public class AutoFire extends CommandBase {
+public class WrapAround extends CommandBase {
+  Turret turret = Turret.getInstance();
 
-  PreShooter trigger = PreShooter.getInstance();
-  Shooter shooter = Shooter.getInstance();
-  Hood hood = Hood.getInstance();
+  boolean reverse = true;
 
-  /** Creates a new AutoFire. */
-  public AutoFire() {
-    addRequirements(trigger);
+  /** Creates a new WrapAround. */
+  public WrapAround(boolean reverse) {
+    addRequirements(turret);
+    this.reverse = reverse;
   }
 
   // Called when the command is initially scheduled.
@@ -27,19 +27,18 @@ public class AutoFire extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.isReady() && hood.isReady()) trigger.set(12.0);
-    else trigger.set(0.0);
+    turret.setVolts(reverse ? -3.0 : 3.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    trigger.set(0.0);
+    turret.setVolts(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Sensors.getInstance().getHasTarget();
   }
 }

@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Trigger extends SubsystemBase {
+public class PreShooter extends SubsystemBase {
 
-  private static Trigger instance = null;
-  public static synchronized Trigger getInstance() {
-    if (instance == null) instance = new Trigger();
+  private static PreShooter instance = null;
+  public static synchronized PreShooter getInstance() {
+    if (instance == null) instance = new PreShooter();
     return instance;
   }
 
@@ -25,7 +25,7 @@ public class Trigger extends SubsystemBase {
   private DigitalInput bot = new DigitalInput(Constants.indexer.BOTTOM_BB);
 
   /** Creates a new Trigger. */
-  private Trigger() {
+  private PreShooter() {
     motor = new WPI_TalonFX(Constants.indexer.TRIGGER_ID, "Pyxis CANivore");
     motor.configFactoryDefault();
     motor.configOpenloopRamp(0.25);

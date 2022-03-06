@@ -25,7 +25,7 @@ public class FindHoodZeros extends CommandBase {
   @Override
   public void initialize() {
 
-    hood.setVolts(-0.25);
+    hood.setVolts(-0.02);
 
     aFilter = LinearFilter.movingAverage(20);
     aFilter.calculate(-1.0);
@@ -34,7 +34,7 @@ public class FindHoodZeros extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hood.setVolts(-1.0);
+    hood.setVolts(-0.02);
   }
 
   // Called once the command ends or is interrupted.

@@ -1,11 +1,20 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.drive.FollowTrajectory;
 import frc.robot.commands.groups.AutoIntake;
+import frc.robot.commands.groups.AutoShootQuantity;
+import frc.robot.commands.shooter.HoodAngle;
+import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.trigger.AutoFireQuantity;
+import frc.robot.commands.turret.SetToAngle;
+import frc.robot.commands.turret.TrackTarget;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.utils.paths.Trajectories;
 
 public class FiveBall extends SequentialCommandGroup {
@@ -18,14 +27,25 @@ public class FiveBall extends SequentialCommandGroup {
     addCommands(
       new ParallelDeadlineGroup(
         new FollowTrajectory(Trajectories.fiveball.first, Rotation2d.fromDegrees(0.0)),
-        new AutoIntake()
+        new AutoIntake(),
+        new HoodAngle(()->21.0),
+        new ShooterVelocity(()->2730.0)
       ),
-      new AutoFireQuantity(2),
+      new AutoShootQuantity(2, true),
       new ParallelDeadlineGroup(
-        new FollowTrajectory(Trajectories.fiveball.second, Rotation2d.fromDegrees(-59.45)),
-        new AutoIntake()
+        new SequentialCommandGroup(
+          new FollowTrajectory(Trajectories.fiveball.terminal1, Rotation2d.fromDegrees(-50.0)),
+          new FollowTrajectory(Trajectories.fiveball.terminal2, Rotation2d.fromDegrees(-50.0)),
+          new FollowTrajectory(Trajectories.fiveball.shoot2, Rotation2d.fromDegrees(119.9))
+        ),
+        new WaitCommand(1.0).andThen(new AutoIntake()),
+        new SetToAngle(-180.0),
+        new HoodAngle(()->30.0),
+        new ShooterVelocity(()->3180.0)
       ),
-      new AutoFireQuantity(1)
+      new AutoShootQuantity(1, true),
+      new FollowTrajectory(Trajectories.fiveball.shoot3, Rotation2d.fromDegrees(116.0)),
+      new AutoShootQuantity(2, true)
     );
   }
 }

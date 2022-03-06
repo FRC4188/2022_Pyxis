@@ -7,10 +7,10 @@ package frc.robot.commands.trigger;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.trigger.Trigger;
+import frc.robot.subsystems.trigger.PreShooter;
 
 public class AutoFireQuantity extends CommandBase {
-  Trigger trigger = Trigger.getInstance();
+  PreShooter trigger = PreShooter.getInstance();
   Shooter shooter = Shooter.getInstance();
   Hood hood = Hood.getInstance();
 

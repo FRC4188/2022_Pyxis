@@ -28,14 +28,17 @@ import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.trigger.PushTrigger;
+import frc.robot.commands.turret.SetToAngle;
 import frc.robot.commands.turret.TrackTarget;
+import frc.robot.commands.turret.WrapAround;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.trigger.Trigger;
+import frc.robot.subsystems.trigger.PreShooter;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.turret.Turret;
 import frc.robot.utils.controllers.CSPController;
 import frc.robot.utils.controllers.CSPController.Scaling;
@@ -54,7 +57,7 @@ public class RobotContainer {
   private Climber climber = Climber.getInstance();
   private Intake intake = Intake.getInstance();
   private Indexer indexer = Indexer.getInstance();
-  private Trigger trigger = Trigger.getInstance();
+  private PreShooter trigger = PreShooter.getInstance();
   private Turret turret = Turret.getInstance();
   private Shooter shooter = Shooter.getInstance();
   /**
@@ -81,7 +84,17 @@ public class RobotContainer {
       pilot.getRightX(Scaling.CUBED)),
       swerve)
     );
-  }
+
+    new Trigger(() -> turret.getPosition() > Constants.turret.MAX_ANGLE).whenActive(
+      new SequentialCommandGroup(
+        new SetToAngle(Constants.turret.MAX_ANGLE - 180.0),
+        new WrapAround(true)
+    ));
+    new Trigger(() -> turret.getPosition() > Constants.turret.MIN_ANGLE).whenActive(
+      new SequentialCommandGroup(
+        new SetToAngle(Constants.turret.MIN_ANGLE + 180.0),
+        new WrapAround(false)
+    ));  }
 
   /**
    * Method which assigns commands to different button actions.
@@ -94,6 +107,8 @@ public class RobotContainer {
     SmartDashboard.putData("Find Hood Zero", new FindHoodZeros());
     SmartDashboard.putData("Zero Climber", new FindZeros().andThen(new ActivePosition(0.0)));
     SmartDashboard.putData("Set Shooter Velocity Command", new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0)));
+    SmartDashboard.putData("Turret to -90", new SetToAngle(-90.0));
+    SmartDashboard.putData("Turret to 0.0", new SetToAngle(0.0));
     SmartDashboard.putData("Toggle Climber Brakes", new ToggleBrakes());
 
 
@@ -122,12 +137,12 @@ public class RobotContainer {
       .whenReleased(new InterruptSubsystem(indexer, intake));
     
     pilot.getAButtonObj()
-      .whenPressed(new TrackTarget(true))
+      .whileHeld(new TrackTarget())
       .whenReleased(new InterruptSubsystem(turret));
     
     pilot.getYButtonObj()
-      //.whenPressed(new PushTrigger(12.0))
-      .whenPressed(new AutoShoot())
+      .whenPressed(new PushTrigger(12.0))
+      //.whenPressed(new AutoShoot())
       .whenReleased(new InterruptSubsystem(shooter, trigger, indexer));
     
     pilot.getXButtonObj()

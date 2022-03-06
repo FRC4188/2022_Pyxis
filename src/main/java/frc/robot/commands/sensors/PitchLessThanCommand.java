@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.sensors.Sensors;
 
-public class PitchWaitCommand extends CommandBase {
+public class PitchLessThanCommand extends CommandBase {
 
   Sensors sensors = Sensors.getInstance();
   double target;
 
   /** Creates a new PitchWaitCommand. */
-  public PitchWaitCommand(double target) {
+  public PitchLessThanCommand(double target) {
     this.target = target;
   }
 
@@ -33,6 +33,6 @@ public class PitchWaitCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(sensors.getPitch() - target) < Constants.climber.PITCH_TOLERANCE;
+    return sensors.getPitch() < target;
   }
 }

@@ -26,7 +26,7 @@ public class PreShooter extends SubsystemBase {
 
   /** Creates a new Trigger. */
   private PreShooter() {
-    motor = new WPI_TalonFX(Constants.indexer.TRIGGER_ID, "Pyxis CANivore");
+    motor = new WPI_TalonFX(Constants.indexer.TRIGGER_ID);
     motor.configFactoryDefault();
     motor.configOpenloopRamp(0.25);
     dashboard.startPeriodic(0.1);

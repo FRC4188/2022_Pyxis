@@ -116,7 +116,7 @@ public class Constants {
         public static final int FOLLOWER_ID = 13;
         public static final int LEADER_ID = 14;
 
-        public static final double ALPHA = 1.3;
+        public static final double ALPHA = 0.96;
 
         public static double kS = 0.72969;
         public static double kV = 0.07986;

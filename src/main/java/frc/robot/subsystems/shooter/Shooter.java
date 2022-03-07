@@ -30,7 +30,7 @@ public class Shooter extends SubsystemBase {
     dashboard.startPeriodic(0.1);
   }
 
-  public void updateDashboard() {
+  private void updateDashboard() {
     SmartDashboard.putNumber("Shooter Velocity", getVelocity());
     SmartDashboard.putNumber("Leader Temp", wheel.getLeaderTemp());
     SmartDashboard.putNumber("Follower Temp", wheel.getFollowerTemp());
@@ -54,7 +54,11 @@ public class Shooter extends SubsystemBase {
     wheel.periodic();
   }
 
-public boolean isReady() {
-    return Math.abs(sensors.getTX()) < 8.0 && Math.abs(getVelocity()-sensors.getFormulaRPM()) < 200.0;
-}
+  public boolean isReady(double rpm) {
+    return Math.abs(sensors.getTX()) < 6.0 && Math.abs(getVelocity()-rpm) < 200.0;
+  }
+
+  public boolean isReady() {
+      return isReady(sensors.getFormulaRPM());
+  }
 }

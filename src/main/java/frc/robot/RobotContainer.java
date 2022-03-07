@@ -27,7 +27,6 @@ import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
-import frc.robot.commands.trigger.PushTrigger;
 import frc.robot.commands.turret.SetToAngle;
 import frc.robot.commands.turret.TrackTarget;
 import frc.robot.commands.turret.WrapAround;

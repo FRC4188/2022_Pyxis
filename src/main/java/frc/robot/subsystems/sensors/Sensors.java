@@ -2,7 +2,6 @@ package frc.robot.subsystems.sensors;
 
 import java.util.Arrays;
 
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Notifier;
@@ -27,19 +26,11 @@ public class Sensors extends SubsystemBase {
 
   private Notifier notifier = new Notifier(() -> updateShuffleboard());
 
-  private LinearFilter txFilter = LinearFilter.movingAverage(5);
-  double tx = 0.0;
-
   /** Creates a new Sensors. */
   private Sensors() {
     CommandScheduler.getInstance().registerSubsystem(this);
     
     startNotifier();
-  }
-
-  @Override
-  public void periodic() {
-    tx = limelight.getHorizontal();
   }
 
   private void updateShuffleboard() {
@@ -66,7 +57,7 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getTX() {
-    return tx;
+    return limelight.getHorizontal();
   }
 
   public double getTY() {

@@ -4,58 +4,39 @@
 
 package frc.robot.subsystems.shooter;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.utils.motors.CSPMotor;
+import frc.robot.utils.motors.CSP_Falcon;
 
 public class Wheel {
 
-  private WPI_TalonFX leader;
-  private WPI_TalonFX follower;
+  private CSPMotor leader;
+  private CSPMotor follower;
   private SimpleMotorFeedforward ff = new SimpleMotorFeedforward(Constants.shooter.kS, Constants.shooter.kV, Constants.shooter.kA);
   private PIDController pid = new PIDController(Constants.shooter.kP, 0.0, Constants.shooter.kD);
-  
-  private Notifier shuffle = new Notifier(() -> updateShuffleboard());
-
   private double velocity = 0.0;
 
   protected Wheel(int leaderID, int followerID) {
-    leader = new WPI_TalonFX(leaderID);
-    follower = new WPI_TalonFX(followerID);
+    leader = new CSP_Falcon(leaderID);
+    follower = new CSP_Falcon(followerID);
     
-    leader.clearStickyFaults();
-    follower.clearStickyFaults();
+    leader.reset();
+    follower.reset();
 
     leader.setInverted(false);
     follower.setInverted(true);
 
-    leader.setNeutralMode(NeutralMode.Coast);
-    leader.setSelectedSensorPosition(0.0);
-    leader.configOpenloopRamp(Constants.shooter.RAMP);
-    leader.configClosedloopRamp(Constants.shooter.RAMP);
-
-    openNotifier();
-  }
-
-  public void openNotifier() {
-    shuffle.startPeriodic(0.1);
-  }
-
-  private void updateShuffleboard() {
-    SmartDashboard.putNumber("Wheel Vel", getVelocity());
-    SmartDashboard.putNumber("Wheel Volts", leader.get() * RobotController.getBatteryVoltage());
+    leader.setBrake(false);
+    leader.setRamp(Constants.shooter.RAMP);
+    leader.setRamp(Constants.shooter.RAMP);
   }
 
   public void set(double percentage) {
-    leader.set(ControlMode.PercentOutput, percentage);
-    follower.set(ControlMode.PercentOutput, percentage);
+    leader.set(percentage);
+    follower.set(percentage);
   }
 
   public void setVoltage(double voltage) {
@@ -67,11 +48,11 @@ public class Wheel {
   }
 
   public double getVelocity() {
-    return (leader.getSelectedSensorVelocity() * 600.0) / (2048.0 * Constants.shooter.GEARING);
+    return (leader.getVelocity() * 60.0) / Constants.shooter.GEARING;
   }
 
   public double getPosition() {
-    return (leader.getSelectedSensorPosition()) / (2048.0 * Constants.shooter.GEARING);
+    return leader.getPosition() / Constants.shooter.GEARING;
   }
 
   public double getLeaderTemp() {

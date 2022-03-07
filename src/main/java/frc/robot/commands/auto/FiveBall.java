@@ -1,8 +1,6 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -11,10 +9,7 @@ import frc.robot.commands.groups.AutoIntake;
 import frc.robot.commands.groups.AutoShootQuantity;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
-import frc.robot.commands.trigger.AutoFireQuantity;
 import frc.robot.commands.turret.SetToAngle;
-import frc.robot.commands.turret.TrackTarget;
-import frc.robot.subsystems.intake.Intake;
 import frc.robot.utils.paths.Trajectories;
 
 public class FiveBall extends SequentialCommandGroup {

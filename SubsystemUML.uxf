@@ -1,0 +1,133 @@
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>0</x><y>400</y><w>320</w><h>100</h></coordinates><panel_attributes>_Abstract Class: SubsystemBase_
+--
+public void periodic();
+/Runs every robot loop (50 Hz)/
+--
+Responsibilities
+-- Provide base type to represent subsystems of the robot.
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>420</x><y>20</y><w>360</w><h>460</h></coordinates><panel_attributes>_Singelton Class: Swerve_
+--
+public static synchronized Swerve getInstance();
+/Returns the static instance of Swerve common to the entire program/
+
+public void drive(double yInput, double xInput, double rotInput);
+/Converts driver input into robot behavior/
+
+public void setChassisSpeeds(ChassisSpeeds speeds);
+/Converts robot behavior into module behavior/
+
+public void setModuleStates(SwerveModuleStates[] states);
+/Assigns instructions to each swerve module/
+
+public void setPose(Pose2d pose);
+/Resets the odometry to a new given position/
+
+public Pose2d getPose();
+/Returns the position of the robot according to odometry/
+
+public ChassisSpeeds getChassisSpeeds();
+/Returns the current chassis speeds of the robot/
+
+public SwerveModuleStates[] getModuleStates();
+/Returns the current module states of the robot/
+
+private void smartDashboard();
+/Sends information about the drivetrain back to the driverstation/
+--
+Responsibilities
+-- Provides methods to control the motion of the robot's chassis</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>210</y><w>130</w><h>270</h></coordinates><panel_attributes>lt=&lt;.
+/extends/</panel_attributes><additional_attributes>10;250;50;250;50;10;110;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>830</x><y>380</y><w>360</w><h>220</h></coordinates><panel_attributes>_Class: Odometry_
+--
+Constructor:
+public Odometry(Pose2d pose);
+--
+public void update(ChassisSpeeds speeds, Rotation2d gyro);
+/Updates the odometry given the current state of the robot/
+
+public Pose2d getPose();
+/Returns the position of the robot relative to the starting position/
+
+public void setPose(Pose2d pose);
+/Resets the odometry to a new position/
+--
+Responsibilities
+-- Integrates position from velocities and headings</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>830</x><y>0</y><w>360</w><h>360</h></coordinates><panel_attributes>_Class: Module_
+--
+Constructor:
+public Module(int angleID, int speedID, int encoderID, String canBus, double encoderZero);
+--
+public void setModuleState(SwerveModuleState state);
+/Sets a desired angle and velocity of the module/
+
+public SwerveModuleState getModuleState();
+/Returns the angle and velocity of the module as a SwerveModuleState object/
+
+public double getAbsoluteAngle();
+/Returns the absolute [-180, 180] angle of the module/
+
+public double getVelocity();
+/Returns the velocity of the module/
+
+public double getAngleTemp();
+/Returns the temperature of the angle motor/
+
+public double getSpeedTemp();
+/Returns the temperature of the speed motor/
+--
+Responsibilities
+-- Controls a specific swerve module of the robot</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>769</x><y>260</y><w>80</w><h>240</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;60;220</additional_attributes></element><element><id>Relation</id><coordinates><x>769</x><y>170</y><w>80</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;80;60;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1270</x><y>420</y><w>360</w><h>180</h></coordinates><panel_attributes>_Class: Integral_
+--
+Constructor:
+public Integral(double c);
+--
+public void sample(double value);
+/Updates the integral with the next rate of change value/
+
+public double getValue();
+/Returns the integrated value/
+--
+Responsibilities
+-- Integrates a rate of change and supplies an accumulated change</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1179</x><y>480</y><w>110</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;90;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>420</x><y>570</y><w>360</w><h>280</h></coordinates><panel_attributes>_Singelton Class: Shooter_
+--
+public static synchronized Shooter getInstance();
+/Returns the static instance of Shooter common to the entire program/
+
+public void setVolts(double volts);
+/Sets the voltage power (not percentage but voltage) to the shooter/
+
+public void setVelocity(double rpm);
+/Sets the closed loop velocity of the shooter/
+
+public double getVelocity();
+/Returns the rpm velocity of the shooter/
+
+private void updateDashboard();
+/Sends information about the drivetrain back to the driverstation/
+--
+Responsibilities
+-- Provides methods to control shooter wheel.</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>450</y><w>130</w><h>300</h></coordinates><panel_attributes>lt=&lt;.
+/extends/</panel_attributes><additional_attributes>10;10;50;10;50;280;110;280</additional_attributes></element><element><id>UMLClass</id><coordinates><x>830</x><y>650</y><w>360</w><h>360</h></coordinates><panel_attributes>_Class: Wheel_
+--
+Constructor:
+protected Wheel(int leaderID, int followerID);
+--
+public void set(double percentage);
+/Sets the percent output power/
+
+public void setVoltage(double voltage);
+/Sets the voltage to the shooter (not percent output)/
+
+public void setVelocity(double velocity);
+/Sets the closed loop velocity of the shooter/
+
+public double getVelocity();
+/Returns the velocity of the shooter/
+
+public double getLeaderTemp();
+/Returns the temperature of the leading motor/
+
+public double getFollowerTemp();
+/Returns the temperature of the following motor/
+--
+Responsibilities
+-- Consolidates following motors and servo functions into single methods for the subsystem</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>769</x><y>710</y><w>80</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;60;70</additional_attributes></element></diagram>

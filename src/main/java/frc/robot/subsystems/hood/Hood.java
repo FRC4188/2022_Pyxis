@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.sensors.Sensors;
 
 public class Hood extends SubsystemBase {
 
@@ -114,7 +115,11 @@ public class Hood extends SubsystemBase {
       return encoder.getVelocity();
   }
 
+  public boolean isReady(double angle) {
+    return Math.abs(getPosition() - angle) < 0.75;
+  }
+
   public boolean isReady() {
-    return Math.abs(getPosition() - position) < 0.75;
+    return isReady(Sensors.getInstance().getFormulaAngle());
   }
 }

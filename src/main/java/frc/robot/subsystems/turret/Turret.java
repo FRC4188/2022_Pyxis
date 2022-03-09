@@ -75,7 +75,8 @@ public class Turret extends SubsystemBase {
   }
 
   public void trackTarget() {
-    setVolts(targetPID.calculate(0.0, Sensors.getInstance().getTargetAngle()));
+    if (Sensors.getInstance().getHasTarget()) setVolts(targetPID.calculate(0.0, Sensors.getInstance().getTargetAngle()));
+    else set(0.0);
   }
 
   public double getPosition() {

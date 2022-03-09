@@ -19,7 +19,7 @@ public class TrackTarget extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.trackTarget(true);
+    turret.trackTarget();
   }
 
   // Called once the command ends or is interrupted.

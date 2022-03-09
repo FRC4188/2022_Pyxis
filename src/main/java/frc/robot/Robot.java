@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.climber.ActivePosition;
-import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.sensors.Sensors;

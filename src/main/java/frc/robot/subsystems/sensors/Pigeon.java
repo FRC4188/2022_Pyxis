@@ -9,13 +9,17 @@ public class Pigeon extends Pigeon2{
 
     Derivative rate = new Derivative(0.0);
 
-    public Pigeon(int canID) {
-        super(canID, "Pyxis CANivore");
+    public Pigeon(int canID, String can) {
+        super(canID, can);
 
         super.configFactoryDefault();
         set(0.0);
 
         super.clearStickyFaults();
+    }
+
+    public Pigeon(int canID) {
+        this(canID, "Pyxis CANivore");
     }
 
     public Rotation2d get() {

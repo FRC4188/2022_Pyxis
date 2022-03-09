@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.sensors.Sensors;
 
 public class Shooter extends SubsystemBase {
@@ -16,7 +15,7 @@ public class Shooter extends SubsystemBase {
   }
 
   private Notifier dashboard;
-  Wheel wheel = new Wheel(Constants.shooter.LEADER_ID, Constants.shooter.FOLLOWER_ID);
+  Wheel wheel = new Wheel();
   Sensors sensors = Sensors.getInstance();
 
   /** Creates a new Shooter. */

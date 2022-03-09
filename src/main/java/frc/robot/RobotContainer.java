@@ -17,6 +17,7 @@ import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.climber.ToggleBrakes;
 import frc.robot.commands.climber.TogglePassive;
 import frc.robot.commands.groups.MonkeyBar;
+import frc.robot.commands.groups.PresetShoot;
 import frc.robot.commands.indexer.SpinIndexer;
 import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.intake.ToggleIntakePistons;
@@ -33,6 +34,7 @@ import frc.robot.commands.turret.TrackTarget;
 import frc.robot.commands.turret.WrapAround;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Swerve;
+import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.sensors.Sensors;
@@ -40,8 +42,9 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.trigger.PreShooter;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.turret.Turret;
-import frc.robot.utils.controllers.CSPController;
-import frc.robot.utils.controllers.CSPController.Scaling;
+import frc.robot.utils.ButtonBox;
+import frc.robot.utils.CSPController;
+import frc.robot.utils.CSPController.Scaling;
 
 /**
  * Controls the robot, holding commands, button bindings, and auto routines.
@@ -52,6 +55,8 @@ public class RobotContainer {
   private final SendableChooser<SequentialCommandGroup> autoChooser = new SendableChooser<SequentialCommandGroup>();
 
   private CSPController pilot = new CSPController(0);
+  private CSPController copilot = new CSPController(1);
+  private ButtonBox buttonBox = new ButtonBox(2);
 
   private Swerve swerve = Swerve.getInstance();
   private Climber climber = Climber.getInstance();
@@ -60,6 +65,10 @@ public class RobotContainer {
   private PreShooter trigger = PreShooter.getInstance();
   private Turret turret = Turret.getInstance();
   private Shooter shooter = Shooter.getInstance();
+  private Hood hood = Hood.getInstance();
+
+  private double lastSetHood = 0.0;
+  private double lastSetShooter = 0.0;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -94,7 +103,20 @@ public class RobotContainer {
       new SequentialCommandGroup(
         new SetToAngle(Constants.turret.MIN_ANGLE + 180.0),
         new WrapAround(false)
-    ));  }
+    ));
+
+    new Trigger(() -> {
+      boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
+      lastSetShooter = SmartDashboard.getNumber("Shooter Set Velocity", 0.0);
+      return changed;
+    }).whenActive(new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0)));
+
+    new Trigger(() -> {
+      boolean changed = SmartDashboard.getNumber("Hood Set Angle", 0.0) != lastSetHood;
+      lastSetHood = SmartDashboard.getNumber("Hood Set Angle", 0.0);
+      return changed;
+    }).whenActive(new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));
+  }
 
   /**
    * Method which assigns commands to different button actions.
@@ -102,36 +124,10 @@ public class RobotContainer {
   private void configureButtonBindings() {
     SmartDashboard.putData("Reset Position", new ResetPose());
     SmartDashboard.putData("Reset Rotation", new ResetRotation());
-    SmartDashboard.putData("Set Shooter Voltage Command", new RunCommand(() -> shooter.setVolts(SmartDashboard.getNumber("Hood Set Voltage", 0.0))));
-    SmartDashboard.putData("Hood Set Angle Command", new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));
     SmartDashboard.putData("Find Hood Zero", new FindHoodZeros());
     SmartDashboard.putData("Zero Climber", new FindZeros().andThen(new ActivePosition(0.0)));
-    SmartDashboard.putData("Set Shooter Velocity Command", new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0)));
-    SmartDashboard.putData("Turret to -90", new SetToAngle(-90.0));
-    SmartDashboard.putData("Turret to 0.0", new SetToAngle(0.0));
     SmartDashboard.putData("Toggle Climber Brakes", new ToggleBrakes());
 
-
-    /*//Competition Bindings
-    pilot.getAButtonObj()
-      .whenPressed(new AutoIntake())
-      .whenReleased(new InterruptSubsystem(intake, indexer));
-    
-    pilot.getBButtonObj()
-      .whenPressed(new AutoShoot())
-      .whenReleased(new InterruptSubsystem(shooter, indexer, intake));
-    
-    pilot.getYButtonObj()
-      .whenPressed(new AutoClimb());
-    
-    pilot.getRbButtonObj()
-      .whenPressed(new ActivePosition(Constants.climber.MAX_HEIGHT));
-    
-    pilot.getLbButtonObj()
-      .whenPressed(new ActivePosition(0.0));
-    */
-
-    //Testing Bindings
     pilot.getBButtonObj()
       .whileHeld(new AutoIntake())
       .whenReleased(new InterruptSubsystem(indexer, intake));
@@ -141,9 +137,8 @@ public class RobotContainer {
       .whenReleased(new InterruptSubsystem(turret));
     
     pilot.getYButtonObj()
-      //.whenPressed(new PushTrigger(12.0))
       .whenPressed(new AutoShoot())
-      .whenReleased(new InterruptSubsystem(shooter, trigger, indexer));
+      .whenReleased(new InterruptSubsystem(shooter, trigger, indexer, hood));
     
     pilot.getXButtonObj()
       .whenPressed(new ParallelCommandGroup(new PushTrigger(-8.0), new SpinIndexer(-8.0), new SpinIntake(-12.0, true)))
@@ -165,7 +160,7 @@ public class RobotContainer {
       .whenPressed(new MonkeyBar());
 
     pilot.getBackButtonObj()
-      .whenPressed(new TogglePassive());
+      .whenPressed(new ResetPose());
 
     pilot.getDpadRightButtonObj()
       .whenPressed(new InstantCommand(() -> turret.set(0.2), turret))
@@ -174,6 +169,38 @@ public class RobotContainer {
     pilot.getDpadLeftButtonObj()
       .whenPressed(new InstantCommand(() -> turret.set(-0.2), turret))
       .whenReleased(new InstantCommand(() -> turret.set(0.0), turret));
+
+    copilot.getAButtonObj()
+      .whenPressed(new SpinIntake(12.0, false))
+      .whenReleased(new InterruptSubsystem(intake));
+    
+    copilot.getBButtonObj()
+      .whenPressed(new SpinIndexer(8.0))
+      .whenReleased(new InterruptSubsystem(indexer));
+    
+    copilot.getXButtonObj()
+      .whenPressed(new PushTrigger(12.0))
+      .whenReleased(new InterruptSubsystem(trigger));
+    
+    copilot.getDpadUpButtonObj()
+      .whenPressed(new SetToAngle(0.0))
+      .whenReleased(new InterruptSubsystem(turret));
+
+    copilot.getDpadLeftButtonObj()
+      .whenPressed(new SetToAngle(-90.0))
+      .whenReleased(new InterruptSubsystem(turret));
+
+    copilot.getDpadDownButtonObj()
+      .whenPressed(new SetToAngle(-180.0))
+      .whenReleased(new InterruptSubsystem(turret));
+
+    copilot.getDpadRightButtonObj()
+      .whenPressed(new SetToAngle(-270.0))
+      .whenReleased(new InterruptSubsystem(turret));
+    
+    buttonBox.getButton1Obj()
+      .whenPressed(new PresetShoot(22.8, 2650.0))
+      .whenReleased(new InterruptSubsystem(shooter, hood, turret, trigger));
   }
 
   private void addChooser() {

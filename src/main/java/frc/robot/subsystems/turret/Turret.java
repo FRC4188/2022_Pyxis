@@ -4,13 +4,9 @@
 
 package frc.robot.subsystems.turret;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
-
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.sensors.Sensors;
+import frc.robot.utils.motors.CSPMotor;
 
 public class Turret extends SubsystemBase {
   private static Turret instance;
@@ -27,10 +24,10 @@ public class Turret extends SubsystemBase {
     return instance;
   }
 
-  private CANSparkMax motor = new CANSparkMax(Constants.turret.MOTOR_ID, MotorType.kBrushless);
-  private RelativeEncoder encoder = motor.getEncoder();
+  private CSPMotor motor = Constants.devices.turretMotor;
 
-  private PIDController pid = new PIDController(Constants.turret.kP, Constants.turret.kI, Constants.turret.kD);
+  private PIDController targetPID = new PIDController(Constants.turret.TkP, Constants.turret.TkI, Constants.turret.TkD);
+  private ProfiledPIDController positionPID = new ProfiledPIDController(Constants.turret.PkP, Constants.turret.PkI, Constants.turret.PkD, new Constraints(Constants.turret.MAX_VEL, Constants.turret.MAX_ACCEL));
 
   Notifier notifier = new Notifier(() -> updateShuffleboard());
 
@@ -44,17 +41,11 @@ public class Turret extends SubsystemBase {
   }
 
   private void initialize() {
-    encoder.setPositionConversionFactor(Constants.turret.ENCODER_TO_DEGREES);
-    encoder.setPosition(0.0);
+    motor.reset();
 
-    motor.setIdleMode(IdleMode.kBrake);
+    motor.setBrake(true);
 
-    motor.setClosedLoopRampRate(1.0);
-    motor.setOpenLoopRampRate(1.0);
-    motor.clearFaults();
-    motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 40000);
-    motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20000);
-    motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 100);
+    motor.setRamp(0.1);
   }
 
   private void startNotifier() {
@@ -64,12 +55,6 @@ public class Turret extends SubsystemBase {
   private void updateShuffleboard() {
     SmartDashboard.putNumber("Turret Motor Temp", getTemperature());
     SmartDashboard.putNumber("Turret Position", getPosition());
-  }
-
-  public void setPIDs(double kP, double kI, double kD) {
-    pid.setP(kP);
-    pid.setI(kI);
-    pid.setD(kD);
   }
 
   public void set(double percent) {
@@ -86,26 +71,24 @@ public class Turret extends SubsystemBase {
   }
 
   public void setAngle(double angle) {
-    setVolts(pid.calculate(getPosition(), angle));
+    setVolts(positionPID.calculate(getPosition(), angle));
   }
 
-  public void trackTarget(boolean cont) {
-    double angle = Sensors.getInstance().getTX();
-
-    setAngle(getPosition() + angle);
+  public void trackTarget() {
+    setVolts(targetPID.calculate(0.0, Sensors.getInstance().getTargetAngle()));
   }
 
   public double getPosition() {
-    return encoder.getPosition();
+    return motor.getPosition() * Constants.turret.ENCODER_TO_DEGREES;
   }
 
   public double getTemperature() {
-    return motor.getMotorTemperature();
+    return motor.getTemperature();
   }
 
   public boolean getIsAimed() {
     double angle = Sensors.getInstance().getTX();
-    boolean aimed = (Math.abs(angle) < Constants.turret.ANGLE_TOLERANCE);
+    boolean aimed = (Math.abs(angle) < Constants.turret.ANGLE_TOLERANCE) && Sensors.getInstance().getHasTarget();
     return aimed;
   }
 }

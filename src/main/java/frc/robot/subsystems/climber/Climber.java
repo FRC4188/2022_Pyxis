@@ -22,7 +22,7 @@ public class Climber extends SubsystemBase {
   private ActiveHook active = new ActiveHook();
   private PassiveHook passive = new PassiveHook();
 
-  private DoubleSolenoid brake = new DoubleSolenoid(Constants.climber.BRAKE_A_ID,Constants.climber.BRAKE_B_ID);
+  private DoubleSolenoid brake = Constants.devices.brake;
 
   private Notifier dashboardLoop = new Notifier(() -> updateDashboard());
 
@@ -45,10 +45,6 @@ public class Climber extends SubsystemBase {
     SmartDashboard.putNumber("Active Climber A Position", active.getPositionA());
     SmartDashboard.putNumber("Active Climber B Position", active.getPositionB());
     SmartDashboard.putBoolean("Passive Climber Set State", passive.getSet());
-    SmartDashboard.putBoolean("Passive Climber Left In", passive.getLeftIn());
-    SmartDashboard.putBoolean("Passive Climber Right In", passive.getRightIn());
-    SmartDashboard.putBoolean("Passive Climber Left Out", passive.getLeftOut());
-    SmartDashboard.putBoolean("Passive Climber Right Out", passive.getRightOut());
     SmartDashboard.putNumber("Temperature Motor A", active.getMotorATemp());
     SmartDashboard.putNumber("Temperature Motor B", active.getMotorBTemp());
   }
@@ -71,12 +67,6 @@ public class Climber extends SubsystemBase {
 
   public double getActiveVelocityB() {
     return active.getVelocityB();
-  }
-
-  public int getPassivePosition() {
-    if (passive.getLeftIn() && passive.getRightIn()) return -1;
-    else if (passive.getLeftOut() && passive.getRightOut()) return 1;
-    else return 0;
   }
 
   public boolean getPassiveSet() {

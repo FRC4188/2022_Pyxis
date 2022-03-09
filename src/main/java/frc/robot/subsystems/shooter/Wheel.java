@@ -9,20 +9,16 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
 import frc.robot.utils.motors.CSPMotor;
-import frc.robot.utils.motors.CSP_Falcon;
 
 public class Wheel {
 
-  private CSPMotor leader;
-  private CSPMotor follower;
+  private CSPMotor leader = Constants.devices.shooterLeader;
+  private CSPMotor follower = Constants.devices.shooterFollower;
   private SimpleMotorFeedforward ff = new SimpleMotorFeedforward(Constants.shooter.kS, Constants.shooter.kV, Constants.shooter.kA);
   private PIDController pid = new PIDController(Constants.shooter.kP, 0.0, Constants.shooter.kD);
   private double velocity = 0.0;
 
-  protected Wheel(int leaderID, int followerID) {
-    leader = new CSP_Falcon(leaderID);
-    follower = new CSP_Falcon(followerID);
-    
+  protected Wheel() {
     leader.reset();
     follower.reset();
 

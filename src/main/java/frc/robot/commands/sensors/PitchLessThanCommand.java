@@ -5,7 +5,6 @@
 package frc.robot.commands.sensors;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.sensors.Sensors;
 
 public class PitchLessThanCommand extends CommandBase {

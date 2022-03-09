@@ -1,5 +1,6 @@
 package frc.robot.utils.motors;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -24,6 +25,7 @@ public class CSP_Falcon extends WPI_TalonFX implements CSPMotor {
         super.configFactoryDefault();
         super.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         super.clearStickyFaults();
+        setEncoder(0.0);
     }
 
     public void setBrake(boolean braking) {
@@ -45,6 +47,20 @@ public class CSP_Falcon extends WPI_TalonFX implements CSPMotor {
 
     public void setEncoder(double position) {
         super.setSelectedSensorPosition(position);
+    }
+
+    public void setPID(double kP, double kI, double kD) {
+        super.config_kP(0, kP);
+        super.config_kI(0, kI);
+        super.config_kD(0, kD);
+    }
+
+    public void setPosition(double position) {
+        super.set(ControlMode.Position, position);
+    }
+    
+    public void setVelocity(double velocity) {
+        super.set(ControlMode.Velocity, velocity);
     }
 
     public double get() {

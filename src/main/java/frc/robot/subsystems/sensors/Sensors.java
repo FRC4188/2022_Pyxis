@@ -4,15 +4,18 @@ import java.util.Arrays;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Limelight.CameraMode;
 import frc.robot.subsystems.sensors.Limelight.LedMode;
+import frc.robot.subsystems.turret.Turret;
 
 
 public class Sensors extends SubsystemBase {
@@ -24,10 +27,10 @@ public class Sensors extends SubsystemBase {
     return instance;
   }
 
-  private Limelight limelight = new Limelight("limelight-swervex");
-  private Pigeon pigeon = new Pigeon(30);
-  private BallDetector ballDetector = new BallDetector("Ball Detector");
-  private ColorSensor colorSensor = new ColorSensor(I2C.Port.kOnboard);
+  private Limelight limelight = Constants.devices.limelight;
+  private Pigeon pigeon = Constants.devices.pigeon;
+  private BallDetector ballDetector = Constants.devices.ballDetector;
+  private ColorSensor colorSensor = Constants.devices.colorSensor;
 
   private Notifier notifier = new Notifier(() -> updateShuffleboard());
 
@@ -66,6 +69,14 @@ public class Sensors extends SubsystemBase {
     return limelight.getHorizontal();
   }
 
+  public double getTargetAngle() {
+    Translation2d tVel = getTargetVelocityVector();
+    double tX = -getTimeOfFlight() * tVel.getX();
+    double tY = getDistance() - getTimeOfFlight() * tVel.getY();
+
+    return getTX() - Math.toDegrees(Math.atan2(tY, tX)) % 180.0 - 90.0;
+  }
+
   public double getTY() {
     return limelight.getVertical();
   }
@@ -73,6 +84,14 @@ public class Sensors extends SubsystemBase {
   public double getDistance() {
     return (Constants.field.GOAL_HEIGHT - Constants.turret.LIMELIGHT_HEIGHT)
         / Math.tan(Math.toRadians(getTY() + Constants.turret.MOUNTING_ANGLE));
+  }
+
+  public double getTargetDistance() {
+    Translation2d tVel = getTargetVelocityVector();
+    double tX = -getTimeOfFlight() * tVel.getX();
+    double tY = getDistance() - getTimeOfFlight() * tVel.getY();
+
+    return Math.hypot(tX, tY);
   }
 
   public void setPigeonAngle(double angle) {
@@ -91,13 +110,27 @@ public class Sensors extends SubsystemBase {
     }
   }
 
+  public double getTimeOfFlight() {
+    return getDistance();
+  }
+
+  private Translation2d getTargetVelocityVector() {
+    ChassisSpeeds cSpeeds = Swerve.getInstance().getChassisSpeeds();
+    double tAngle = Turret.getInstance().getPosition();
+    double lAngle = getTX();
+
+    double cAngle = -tAngle+lAngle;
+
+    return new Translation2d(cSpeeds.vxMetersPerSecond, cSpeeds.vyMetersPerSecond).rotateBy(Rotation2d.fromDegrees(-cAngle));
+  }
+
   public double getFormulaRPM() {
-    double distance = getDistance();
+    double distance = getTargetDistance();
     return (isRightColor()) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
   }
 
   public double getFormulaAngle() {
-    double distance = getDistance();
+    double distance = getTargetDistance();
     return (isRightColor()) ? Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29 : 2.0;
   }
 

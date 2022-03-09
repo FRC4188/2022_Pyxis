@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.DoubleSolenoid;
 import frc.robot.utils.motors.CSPMotor;
-import frc.robot.utils.motors.CSP_CANSparkMax;
 
 public class Intake extends SubsystemBase {
   private static Intake intake;
@@ -22,8 +21,8 @@ public class Intake extends SubsystemBase {
     return intake;
   }
 
-  private CSPMotor intakeMotor = new CSP_CANSparkMax(Constants.intake.MOTOR_ID);
-  private DoubleSolenoid piston;
+  private CSPMotor intakeMotor = Constants.devices.intakeMotor;
+  private DoubleSolenoid piston = Constants.devices.intakePiston;
 
   Notifier shuffle = new Notifier(() -> updateSuffleboard());
 
@@ -31,8 +30,6 @@ public class Intake extends SubsystemBase {
     CommandScheduler.getInstance().registerSubsystem(this);
     intakeMotor.reset();
     intakeMotor.setRamp(0.125);
-
-    piston = new DoubleSolenoid(Constants.intake.SOLENOID_A_ID, Constants.intake.SOLENOID_B_ID);
 
     shuffle.startPeriodic(0.1);
     intakeMotor.setInverted(true);

@@ -2,16 +2,19 @@ package frc.robot.utils.motors;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.RobotController;
 
 public class CSP_CANSparkMax extends CANSparkMax implements CSPMotor {
 
     private RelativeEncoder encoder;
+    private SparkMaxPIDController pid;
     
     public CSP_CANSparkMax(int id, MotorType type) {
         super(id, type);
         this.encoder = super.getEncoder();
+        this.pid = super.getPIDController();
     }
 
     public CSP_CANSparkMax(int id) {
@@ -46,6 +49,20 @@ public class CSP_CANSparkMax extends CANSparkMax implements CSPMotor {
 
     public void setEncoder(double position) {
         encoder.setPosition(position);
+    }
+
+    public void setPID(double kP, double kI, double kD) {
+        pid.setP(kP);
+        pid.setI(kI);
+        pid.setD(kD);
+    }
+
+    public void setPosition(double position) {
+        pid.setReference(position, ControlType.kPosition);
+    }
+    
+    public void setVelocity(double velocity) {
+        pid.setReference(velocity, ControlType.kVelocity);
     }
 
     public double get() {

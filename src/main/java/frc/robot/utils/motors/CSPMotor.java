@@ -16,6 +16,12 @@ public interface CSPMotor {
 
     public void setEncoder(double position);
 
+    public void setPID(double kP, double kI, double kD);
+
+    public void setPosition(double position);
+    
+    public void setVelocity(double velocity);
+
     public double get();
 
     public double getVoltage();

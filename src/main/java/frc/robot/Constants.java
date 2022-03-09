@@ -1,14 +1,52 @@
 package frc.robot;
 
+import com.ctre.phoenix.sensors.CANCoder;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.sensors.BallDetector;
+import frc.robot.subsystems.sensors.ColorSensor;
+import frc.robot.subsystems.sensors.Limelight;
+import frc.robot.subsystems.sensors.Pigeon;
+import frc.robot.utils.DoubleSolenoid;
+import frc.robot.utils.motors.CSPMotor;
+import frc.robot.utils.motors.CSP_CANSparkMax;
+import frc.robot.utils.motors.CSP_Falcon;
 
 public class Constants {
+
+    public static final class devices {
+        public static final CSPMotor turretMotor = new CSP_CANSparkMax(9);
+        public static final CSPMotor preshooterMotor = new CSP_Falcon(11);
+        public static final CSPMotor shooterLeader = new CSP_Falcon(14);
+        public static final CSPMotor shooterFollower = new CSP_Falcon(13);
+        public static final CSPMotor intakeMotor = new CSP_CANSparkMax(17);
+        public static final CSPMotor indexerMotor = new CSP_Falcon(10, "Pyxis CANivore");
+        public static final CSPMotor hoodMotor = new CSP_CANSparkMax(12);
+        public static final CSPMotor climberA = new CSP_Falcon(16);
+        public static final CSPMotor climberB = new CSP_Falcon(15, "Pyxis CANivore");
+
+        public static final CANCoder encoderA = new CANCoder(25);
+        public static final CANCoder encoderB = new CANCoder(26, "Pyxis CANivore");
+
+        public static final Pigeon pigeon = new Pigeon(30);
+        public static final Limelight limelight = new Limelight("limelight-swervex");
+        public static final BallDetector ballDetector = new BallDetector("Ball Detector");
+        public static final ColorSensor colorSensor = new ColorSensor(I2C.Port.kOnboard);
+        public static final DigitalInput top = new DigitalInput(1);
+        public static final DigitalInput bot = new DigitalInput(0);
+
+        public static final DoubleSolenoid climberPiston = new DoubleSolenoid(3, 2);
+        public static final DoubleSolenoid brake = new DoubleSolenoid(4, 5);
+        public static final DoubleSolenoid intakePiston = new DoubleSolenoid(0, 1);
+    }
 
     /** Constants for the entire robot as a whole. */
     public final class robot {
@@ -113,9 +151,6 @@ public class Constants {
     }
 
     public static final class shooter {
-        public static final int FOLLOWER_ID = 13;
-        public static final int LEADER_ID = 14;
-
         public static final double ALPHA = 0.96;
 
         public static double kS = 0.72969;
@@ -134,9 +169,6 @@ public class Constants {
         public static final double MAX_JERK = 5000.0;
 
         public static final class hood {
-            public static final int MOTOR_ID = 12;
-            public static final int ENCODER_ID = 27;
-
             public static final double ALPHA = 1.0;
 
             public static final double kP = 0.375;
@@ -158,9 +190,15 @@ public class Constants {
     }
 
     public static final class turret {
-            public static final double kP = 0.325;
-            public static final double kI = 0.0;
-            public static final double kD = 0.225;
+            public static final double TkP = 0.325;
+            public static final double TkI = 0.0;
+            public static final double TkD = 0.125;
+
+            public static final double PkP = 0.325;
+            public static final double PkI = 0.0;
+            public static final double PkD = 0.225;
+            public static final double MAX_VEL = 180.0;
+            public static final double MAX_ACCEL = 180.0;
 
             public static final double MIN_ANGLE = -400.0;
             public static final double MAX_ANGLE = 55.0;
@@ -169,9 +207,7 @@ public class Constants {
             public static final double ENCODER_TO_DEGREES = 360.0 / GEAR_RATIO;
 
             public static final double ANGLE_TOLERANCE = 0.0;
-    
-            public static final int MOTOR_ID = 9;
-        
+            
         public static final double LIMELIGHT_HEIGHT = Units.inchesToMeters(43.6);
         public static final double MOUNTING_ANGLE = 20.0;
 
@@ -179,7 +215,6 @@ public class Constants {
 
     public static final class intake{
 
-        public static final int MOTOR_ID = 17;
         public static final double RAMP_RATE = 1.5;
         public static final int SOLENOID_A_ID = 0;
         public static final int SOLENOID_B_ID = 1;
@@ -187,21 +222,6 @@ public class Constants {
     };
 
     public static final class climber {
-        public static final int MOTOR_A_ID = 16;
-        public static final int MOTOR_B_ID = 15;
-        public static final int ENCODER_A_ID = 25;
-        public static final int ENCODER_B_ID = 26;
-        public static final int BRAKE_A_ID = 4;
-        public static final int BRAKE_B_ID = 5;
-
-        public static final int LEFT_IN = 4;
-        public static final int LEFT_OUT = 5;
-        public static final int RIGHT_IN = 2;
-        public static final int RIGHT_OUT = 3;
-                ;
-        public static final int SOLENOID_A_ID = 3;
-        public static final int SOLENOID_B_ID = 2;
-
         /** Meters */
         public static final double PULL_POSITION = 0.0;
         /** Meters */
@@ -224,12 +244,5 @@ public class Constants {
         public static double kI = 20.0;
         public static double kD = 7.2;
 
-    }
-
-    public static final class indexer {
-        public static final int INDEXER_ID = 10;
-        public static final int TRIGGER_ID = 11;
-        public static final int TOP_BB = 1;
-        public static final int BOTTOM_BB = 0;
     }
 }

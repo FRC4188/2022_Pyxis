@@ -1,22 +1,20 @@
 package frc.robot.subsystems.climber;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
+import frc.robot.utils.motors.CSPMotor;
 
 public class ActiveHook {
 
-    private TalonFX motorA = new TalonFX(Constants.climber.MOTOR_A_ID);
-    private TalonFX motorB = new TalonFX(Constants.climber.MOTOR_B_ID, "Pyxis CANivore");
+    private CSPMotor motorA = Constants.devices.climberA;
+    private CSPMotor motorB = Constants.devices.climberB;
 
-    private CANCoder encoderA = new CANCoder(Constants.climber.ENCODER_A_ID);
-    private CANCoder encoderB = new CANCoder(Constants.climber.ENCODER_B_ID, "Pyxis CANivore");
+    private CANCoder encoderA = Constants.devices.encoderA;
+    private CANCoder encoderB = Constants.devices.encoderB;
 
     private ProfiledPIDController pidA = new ProfiledPIDController(Constants.climber.kP, Constants.climber.kI, Constants.climber.kD, new Constraints(Constants.climber.MAX_VELOCITY, Constants.climber.MAX_ACCEL));
     private ProfiledPIDController pidB = new ProfiledPIDController(Constants.climber.kP, Constants.climber.kI, Constants.climber.kD, new Constraints(Constants.climber.MAX_VELOCITY, Constants.climber.MAX_ACCEL));
@@ -30,18 +28,18 @@ public class ActiveHook {
 
         motorB.setInverted(true);
 
-        motorA.clearStickyFaults();
-        motorB.clearStickyFaults();
+        motorA.reset();
+        motorB.reset();
         encoderA.clearStickyFaults();
         encoderB.clearStickyFaults();
     }
 
     public void setA(double power) {
-        motorA.set(ControlMode.PercentOutput, power / RobotController.getBatteryVoltage());
+        motorA.set(power / RobotController.getBatteryVoltage());
     }
 
     public void setB(double power) {
-        motorB.set(ControlMode.PercentOutput, power / RobotController.getBatteryVoltage());
+        motorB.set(power / RobotController.getBatteryVoltage());
     }
     
     /**
@@ -54,8 +52,8 @@ public class ActiveHook {
     }
 
     public void motorBrakes(boolean engaged) {
-        motorA.setNeutralMode(engaged ? NeutralMode.Brake : NeutralMode.Coast);
-        motorB.setNeutralMode(engaged ? NeutralMode.Brake : NeutralMode.Coast);
+        motorA.setBrake(engaged);
+        motorB.setBrake(engaged);
     }
 
     /**
@@ -104,13 +102,5 @@ public class ActiveHook {
 
     public double getMotorBTemp(){
         return motorB.getTemperature();
-    }
-
-    public double getMotorACurrent(){
-        return motorA.getStatorCurrent();
-    }
-
-    public double getMotorBCurrent(){
-        return motorB.getStatorCurrent();
     }
 }

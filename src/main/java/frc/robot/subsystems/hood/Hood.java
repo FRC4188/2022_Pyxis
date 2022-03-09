@@ -4,12 +4,6 @@
 
 package frc.robot.subsystems.hood;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Notifier;
@@ -18,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.sensors.Sensors;
+import frc.robot.utils.motors.CSPMotor;
 
 public class Hood extends SubsystemBase {
 
@@ -27,44 +22,20 @@ public class Hood extends SubsystemBase {
     return instance;
   }
 
-  CANSparkMax motor;
-  RelativeEncoder encoder;
-  //CANCoder encoder;
+  CSPMotor motor = Constants.devices.hoodMotor;
   PIDController pid = new PIDController(Constants.shooter.hood.kP, Constants.shooter.hood.kI, Constants.shooter.hood.kD);
   ArmFeedforward ff = new ArmFeedforward(0.0, Constants.shooter.hood.kCos, 0.0);
   private double position = 0.0;
   Notifier shuffle;
   
   private Hood() {
-      motor = new CANSparkMax(Constants.shooter.hood.MOTOR_ID, MotorType.kBrushless);
-      encoder = motor.getEncoder();
-      motor.restoreFactoryDefaults();
+      motor.reset();
       motor.setInverted(true);
-      motor.setIdleMode(IdleMode.kBrake);
-      motor.clearFaults();
-      motor.setOpenLoopRampRate(0.0);
-      //motor.setOpenLoopRampRate(0.0125);
-
-      encoder.setPositionConversionFactor(Constants.shooter.hood.CONVERSION);
-      encoder.setVelocityConversionFactor(Constants.shooter.hood.CONVERSION);
-      resetPosition();
-
-      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20);
-      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
-      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20);
-      motor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 20);
+      motor.setBrake(false);
+      motor.setRamp(0.0);
 
       shuffle = new Notifier(() -> updateDashboard());
       shuffle.startPeriodic(0.1);
-      /*
-      encoder = new CANCoder(Constants.shooter.hood.ENCODER_ID);
-      encoder.configFactoryDefault();
-      encoder.setPosition(0.0);
-      encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
-      encoder.configMagnetOffset(Constants.shooter.hood.ZERO);
-      encoder.clearStickyFaults();
-      encoder.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 65000);
-      */
   }
 
   @Override
@@ -85,7 +56,7 @@ public class Hood extends SubsystemBase {
   }
 
   public void resetPosition() {
-      encoder.setPosition(0.0);
+      motor.reset();
   }
 
   public void setVolts(double volts) {
@@ -99,20 +70,19 @@ public class Hood extends SubsystemBase {
           else motor.set(volts / RobotController.getBatteryVoltage());
       } else {
           motor.set(0.0);
-          //motor.set(volts / RobotController.getBatteryVoltage());
       }
   }
 
   public double getPosition() {
-      return encoder.getPosition();
+      return motor.getPosition() * Constants.shooter.hood.CONVERSION;
   }
 
   public double getTemp() {
-      return motor.getMotorTemperature();
+      return motor.getTemperature();
   }
 
   public double getVelocity() {
-      return encoder.getVelocity();
+      return motor.getVelocity();
   }
 
   public boolean isReady(double angle) {

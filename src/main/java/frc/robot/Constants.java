@@ -103,7 +103,7 @@ public class Constants {
             /** Meters / Second */
             public static final double MAX_VELOCITY = 5.0; // Maximum velocity allowed in the drivetrain.
             /** Meters / Second^2 */
-            public static final double MAX_ACCEL = 2.2; // Maximum acceleration of the drivetrain.
+            public static final double MAX_ACCEL = 2.5; // Maximum acceleration of the drivetrain.
             /** Meters / Second^2 */
             public static final double MAX_CACCEL = 2.5; // Maximum centripital acceleration of the robot.
 
@@ -158,9 +158,9 @@ public class Constants {
     }
 
     public static final class turret {
-            public static final double kP = 0.275;
+            public static final double kP = 0.325;
             public static final double kI = 0.0;
-            public static final double kD = 0.05;
+            public static final double kD = 0.225;
 
             public static final double MIN_ANGLE = -400.0;
             public static final double MAX_ANGLE = 55.0;

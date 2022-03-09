@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.InterruptSubsystem;
 import frc.robot.commands.auto.FiveBall;
-import frc.robot.commands.auto.ThreeBall;
-import frc.robot.commands.auto.TwoBall;
+import frc.robot.commands.auto.FourBall;
+import frc.robot.commands.auto.GenericTwoBall;
 import frc.robot.commands.climber.ActivePosition;
 import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.climber.ToggleBrakes;
@@ -27,6 +27,7 @@ import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
+import frc.robot.commands.trigger.PushTrigger;
 import frc.robot.commands.turret.SetToAngle;
 import frc.robot.commands.turret.TrackTarget;
 import frc.robot.commands.turret.WrapAround;
@@ -145,7 +146,7 @@ public class RobotContainer {
       .whenReleased(new InterruptSubsystem(shooter, trigger, indexer));
     
     pilot.getXButtonObj()
-      .whenPressed(new ParallelCommandGroup(new SpinIndexer(-8.0), new SpinIntake(-12.0)))
+      .whenPressed(new ParallelCommandGroup(new PushTrigger(-8.0), new SpinIndexer(-8.0), new SpinIntake(-12.0, true)))
       .whenReleased(new InterruptSubsystem(indexer, trigger));
     
     pilot.getRbButtonObj()
@@ -177,9 +178,9 @@ public class RobotContainer {
 
   private void addChooser() {
     autoChooser.setDefaultOption("Do nothing", new SequentialCommandGroup());
-    autoChooser.addOption("Two Ball Auto", new TwoBall());
-    autoChooser.addOption("Three Ball Auto", new ThreeBall());
     autoChooser.addOption("Five Ball Auto", new FiveBall());
+    autoChooser.addOption("Four Ball Auto", new FourBall());
+    autoChooser.addOption("Generic Two Ball Auto", new GenericTwoBall());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }

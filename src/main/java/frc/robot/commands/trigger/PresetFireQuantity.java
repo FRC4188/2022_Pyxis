@@ -15,8 +15,8 @@ public class PresetFireQuantity extends CommandBase {
   private Shooter shooter = Shooter.getInstance();
   private Hood hood = Hood.getInstance();
 
-  private double angle, rpm;
-  private int quantity;
+  private double angle, rpm = 0.0;
+  private int quantity = 0;
 
   private boolean lastTop = false;
 
@@ -39,7 +39,10 @@ public void execute() {
   if (shooter.isReady(rpm) && hood.isReady(angle)) trigger.set(12.0);
   else trigger.set(0.0);
 
-  if (!trigger.getTop() && lastTop) quantity --;
+  if (!trigger.getTop() && lastTop) {
+    quantity --;
+    System.out.print("Ball Shot");
+  }
 
   lastTop = trigger.getTop();
 }
@@ -48,6 +51,7 @@ public void execute() {
 @Override
 public void end(boolean interrupted) {
   trigger.set(0.0);
+  System.out.print("Command finished");
 }
 
 // Returns true when the command should end.

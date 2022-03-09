@@ -25,4 +25,9 @@ public class HoodAngle extends CommandBase {
   public void execute() {
     hood.setPosition(angle.getAsDouble());
   }
+
+  @Override
+  public void end(boolean interrupted) {
+    hood.setPosition(10.0);
+  }
 }

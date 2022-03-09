@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -11,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.sensors.Limelight.CameraMode;
 import frc.robot.subsystems.sensors.Limelight.LedMode;
+
 
 public class Sensors extends SubsystemBase {
 
@@ -23,6 +26,8 @@ public class Sensors extends SubsystemBase {
 
   private Limelight limelight = new Limelight("limelight-swervex");
   private Pigeon pigeon = new Pigeon(30);
+  private BallDetector ballDetector = new BallDetector("Ball Detector");
+  private ColorSensor colorSensor = new ColorSensor(I2C.Port.kOnboard);
 
   private Notifier notifier = new Notifier(() -> updateShuffleboard());
 
@@ -38,6 +43,7 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putNumber("Pigeon Angle", pigeon.get().getDegrees());
     SmartDashboard.putNumber("Pigeon Compass", pigeon.getCompass().getDegrees());
     SmartDashboard.putString("Pigeon YPR", Arrays.toString(new double[] {pigeon.getYaw(), pigeon.getPitch(), pigeon.getRoll()}));
+    SmartDashboard.putBoolean("Right Color", isRightColor());
   }
 
   public void setLED(boolean on) {
@@ -87,12 +93,12 @@ public class Sensors extends SubsystemBase {
 
   public double getFormulaRPM() {
     double distance = getDistance();
-    return Constants.shooter.ALPHA * 362.0 * distance + 1800.0;
+    return (isRightColor()) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
   }
 
   public double getFormulaAngle() {
     double distance = getDistance();
-    return Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29;
+    return (isRightColor()) ? Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29 : 2.0;
   }
 
   public void setLEDMode(LedMode mode) {
@@ -117,6 +123,18 @@ public class Sensors extends SubsystemBase {
 
   public int getPipeline() {
     return limelight.getPipeline();
+  }
+
+  public double[] getClosestInfo() {
+    return ballDetector.getClosestInfo(DriverStation.getAlliance());
+  }
+
+  public double getClosestTX() {
+    return ballDetector.xPixelToAngle(getClosestInfo()[0]);
+  }
+
+  public boolean isRightColor() {
+    return (DriverStation.getAlliance() == DriverStation.Alliance.Red ? colorSensor.getColor() != 1 : colorSensor.getColor() != -1);
   }
 
 }

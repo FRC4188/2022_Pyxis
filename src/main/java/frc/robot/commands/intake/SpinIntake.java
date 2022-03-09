@@ -10,18 +10,24 @@ import frc.robot.subsystems.intake.Intake;
 public class SpinIntake extends CommandBase {
   private Intake intake = Intake.getInstance();
   private double power;
+  private boolean raised;
+
+  public SpinIntake(double power, boolean raised) {
+    addRequirements(intake);
+
+    this.power = power;
+    this.raised = raised;
+  }
 
   /** Creates a new SpinIntake. */
   public SpinIntake(double power) {
-    addRequirements (intake);
-
-    this.power = power;
+    this(power, false);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.raise(false);
+    intake.raise(raised);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

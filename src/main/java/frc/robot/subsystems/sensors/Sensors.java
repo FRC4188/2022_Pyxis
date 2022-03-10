@@ -111,7 +111,7 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getTimeOfFlight() {
-    return getDistance();
+    return -0.0408107 * Math.pow(getDistance(), 2.0) + 0.327671 * getDistance() + 0.292099;
   }
 
   private Translation2d getTargetVelocityVector() {

@@ -13,11 +13,13 @@ import frc.robot.commands.auto.FiveBall;
 import frc.robot.commands.auto.FourBall;
 import frc.robot.commands.auto.GenericTwoBall;
 import frc.robot.commands.climber.ActivePosition;
+import frc.robot.commands.climber.ActiveVolts;
 import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.climber.ToggleBrakes;
 import frc.robot.commands.climber.TogglePassive;
 import frc.robot.commands.groups.MonkeyBar;
 import frc.robot.commands.groups.PresetShoot;
+import frc.robot.commands.groups.WrapTurret;
 import frc.robot.commands.indexer.SpinIndexer;
 import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.intake.ToggleIntakePistons;
@@ -31,7 +33,7 @@ import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.trigger.PushTrigger;
 import frc.robot.commands.turret.SetToAngle;
 import frc.robot.commands.turret.TrackTarget;
-import frc.robot.commands.turret.WrapAround;
+import frc.robot.commands.turret.Hunt;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.hood.Hood;
@@ -94,16 +96,10 @@ public class RobotContainer {
       swerve)
     );
 
-    new Trigger(() -> turret.getPosition() > Constants.turret.MAX_ANGLE).whenActive(
-      new SequentialCommandGroup(
-        new SetToAngle(Constants.turret.MAX_ANGLE - 180.0),
-        new WrapAround(true)
-    ));
-    new Trigger(() -> turret.getPosition() > Constants.turret.MIN_ANGLE).whenActive(
-      new SequentialCommandGroup(
-        new SetToAngle(Constants.turret.MIN_ANGLE + 180.0),
-        new WrapAround(false)
-    ));
+    climber.setDefaultCommand(new ActiveVolts(() -> copilot.getLeftY(Scaling.LINEAR), () -> copilot.getRightY(Scaling.LINEAR)));
+
+    new Trigger(() -> turret.getPosition() > Constants.turret.MAX_ANGLE).whenActive(new WrapTurret());
+    new Trigger(() -> turret.getPosition() > Constants.turret.MIN_ANGLE).whenActive(new WrapTurret());
 
     new Trigger(() -> {
       boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
@@ -142,7 +138,7 @@ public class RobotContainer {
     
     pilot.getXButtonObj()
       .whenPressed(new ParallelCommandGroup(new PushTrigger(-8.0), new SpinIndexer(-8.0), new SpinIntake(-12.0, true)))
-      .whenReleased(new InterruptSubsystem(indexer, trigger));
+      .whenReleased(new InterruptSubsystem(indexer, trigger, intake));
     
     pilot.getRbButtonObj()
       .whenPressed(new ToggleIntakePistons());
@@ -163,11 +159,11 @@ public class RobotContainer {
       .whenPressed(new ResetPose());
 
     pilot.getDpadRightButtonObj()
-      .whenPressed(new InstantCommand(() -> turret.set(0.2), turret))
+      .whenPressed(new InstantCommand(() -> turret.setVolts(3.0), turret))
       .whenReleased(new InstantCommand(() -> turret.set(0.0), turret));
     
     pilot.getDpadLeftButtonObj()
-      .whenPressed(new InstantCommand(() -> turret.set(-0.2), turret))
+      .whenPressed(new InstantCommand(() -> turret.setVolts(-3.0), turret))
       .whenReleased(new InstantCommand(() -> turret.set(0.0), turret));
 
     copilot.getAButtonObj()
@@ -199,7 +195,11 @@ public class RobotContainer {
       .whenReleased(new InterruptSubsystem(turret));
     
     buttonBox.getButton1Obj()
-      .whenPressed(new PresetShoot(22.8, 2650.0))
+      .whenPressed(new PresetShoot(0.0, 2560.0))
+      .whenReleased(new InterruptSubsystem(shooter, hood, turret, trigger));
+
+    buttonBox.getButton2Obj()
+      .whenPressed(new PresetShoot(16.6, 2630.0))
       .whenReleased(new InterruptSubsystem(shooter, hood, turret, trigger));
   }
 

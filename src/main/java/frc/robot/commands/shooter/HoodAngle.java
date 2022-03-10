@@ -28,6 +28,6 @@ public class HoodAngle extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    hood.setPosition(10.0);
+    hood.setPosition(15.0);
   }
 }

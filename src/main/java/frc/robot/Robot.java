@@ -11,9 +11,16 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.shooter.FindHoodZeros;
+import frc.robot.commands.tests.BallTrackTest;
+import frc.robot.commands.tests.PneumaticsTest;
+import frc.robot.commands.tests.ShooterTest;
+import frc.robot.commands.tests.SwerveTest;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.sensors.Sensors;
 
@@ -28,6 +35,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer = new RobotContainer();
 
+  private final SendableChooser<SequentialCommandGroup> testChooser = new SendableChooser<SequentialCommandGroup>();
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -38,6 +47,14 @@ public class Robot extends TimedRobot {
     pcm.clearAllStickyFaults();
     pcm.close();
     Sensors.getInstance().setLED(false);
+
+    testChooser.setDefaultOption("Do nothing", new SequentialCommandGroup());
+    testChooser.addOption("Swerve Test", new SwerveTest());
+    testChooser.addOption("Ball Track Test", new BallTrackTest());
+    testChooser.addOption("Pneumatics Test", new PneumaticsTest());
+    testChooser.addOption("Shooter Test", new ShooterTest());
+
+    SmartDashboard.putData("Test Chooser", testChooser);
   }
 
   /**
@@ -129,6 +146,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    testChooser.getSelected().schedule();
   }
 
   /**

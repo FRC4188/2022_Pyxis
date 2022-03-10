@@ -26,13 +26,13 @@ public class ShooterVelocity extends CommandBase {
   @Override
   public void execute() {
     double vel = velocity.getAsDouble();
-    shooter.setVelocity(vel - (vel / 100.0));
+    shooter.setVelocity(vel);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setVelocity(1000.0);
+    shooter.setVelocity(1500.0);
   }
 
   // Returns true when the command should end.

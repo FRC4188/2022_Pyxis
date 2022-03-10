@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.subsystems.turret.Turret;
 
-public class WrapAround extends CommandBase {
+public class Hunt extends CommandBase {
   Turret turret = Turret.getInstance();
 
   boolean reverse = true;
 
   /** Creates a new WrapAround. */
-  public WrapAround(boolean reverse) {
+  public Hunt(boolean reverse) {
     addRequirements(turret);
     this.reverse = reverse;
   }

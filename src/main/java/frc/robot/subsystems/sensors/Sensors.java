@@ -73,8 +73,9 @@ public class Sensors extends SubsystemBase {
     Translation2d tVel = getTargetVelocityVector();
     double tX = -getTimeOfFlight() * tVel.getX();
     double tY = getDistance() - getTimeOfFlight() * tVel.getY();
+    double adjust = Math.toDegrees(Math.atan2(tY, tX)) % 180.0 - 90.0;
 
-    return getTX() - Math.toDegrees(Math.atan2(tY, tX)) % 180.0 - 90.0;
+    return Math.abs(adjust) > 20.0 ? getTX() : getTX() - adjust;
   }
 
   public double getTY() {
@@ -111,7 +112,9 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getTimeOfFlight() {
-    return -0.0408107 * Math.pow(getDistance(), 2.0) + 0.327671 * getDistance() + 0.292099;
+    double distance = getDistance();
+    //return -0.0408107 * Math.pow(distance, 2.0) + 0.327671 * distance + 0.292099;
+    return 0.00167838 * Math.pow(distance, 3.0) - 0.0141796 * Math.pow(distance, 2.0) + 0.0606332 * distance + 1.07604;
   }
 
   private Translation2d getTargetVelocityVector() {
@@ -126,12 +129,14 @@ public class Sensors extends SubsystemBase {
 
   public double getFormulaRPM() {
     double distance = getTargetDistance();
-    return (isRightColor()) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
+    //return (isRightColor()) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
+    return getHasTarget() ? isRightColor() ? Constants.shooter.ALPHA * (2.96647 * Math.pow(distance, 2.0) + 144.938 * distance + 2519.71) : 1500 : 2000;
   }
 
   public double getFormulaAngle() {
     double distance = getTargetDistance();
-    return (isRightColor()) ? Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29 : 2.0;
+    //return (isRightColor()) ? Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29 : 2.0;
+    return getHasTarget() ? isRightColor() ? Constants.shooter.hood.ALPHA * (-0.679772 * Math.pow(distance, 2.0) + 9.03067 * distance - 1.95385) : 2.0 : 15.0;
   }
 
   public void setLEDMode(LedMode mode) {

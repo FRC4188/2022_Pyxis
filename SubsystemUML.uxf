@@ -1,14 +1,15 @@
-<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>0</x><y>870</y><w>320</w><h>100</h></coordinates><panel_attributes>_Abstract Class: SubsystemBase_
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>Space for diagram noteslic </help_text><element><id>UMLClass</id><coordinates><x>0</x><y>850</y><w>320</w><h>100</h></coordinates><panel_attributes>_Abstract Class: SubsystemBase_
 --
 public void periodic();
 /Runs every robot loop (50 Hz)/
 --
 Responsibilities
 -- Provide base type to represent subsystems of the robot.
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>20</y><w>360</w><h>460</h></coordinates><panel_attributes>_Singelton Class: Swerve_
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>0</y><w>360</w><h>470</h></coordinates><panel_attributes>_Singelton Class: Swerve_
 --
 public static synchronized Swerve getInstance();
-/Returns the static instance of Swerve common to the entire program/
+/Returns the static instance of Swerve common to the entire/
+/program/
 
 public void drive(double yInput, double xInput, double rotInput);
 /Converts driver input into robot behavior/
@@ -35,7 +36,7 @@ private void smartDashboard();
 /Sends information about the drivetrain back to the driverstation/
 --
 Responsibilities
--- Provides methods to control the motion of the robot's chassis</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>210</y><w>140</w><h>740</h></coordinates><panel_attributes>lt=&lt;.
+-- Provides methods to control the motion of the robot's chassis</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>190</y><w>140</w><h>740</h></coordinates><panel_attributes>lt=&lt;.
 /extends/</panel_attributes><additional_attributes>10;720;60;720;60;10;120;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>840</x><y>380</y><w>360</w><h>220</h></coordinates><panel_attributes>_Class: Odometry_
 --
 Constructor:
@@ -75,7 +76,7 @@ public double getSpeedTemp();
 /Returns the temperature of the speed motor/
 --
 Responsibilities
--- Controls a specific swerve module of the robot</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>779</x><y>260</y><w>80</w><h>240</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;60;220</additional_attributes></element><element><id>Relation</id><coordinates><x>779</x><y>170</y><w>80</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;80;60;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1280</x><y>420</y><w>360</w><h>180</h></coordinates><panel_attributes>_Class: Integral_
+-- Controls a specific swerve module of the robot</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>779</x><y>240</y><w>80</w><h>260</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;60;240</additional_attributes></element><element><id>Relation</id><coordinates><x>779</x><y>170</y><w>80</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;60;60;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1250</x><y>420</y><w>360</w><h>180</h></coordinates><panel_attributes>_Class: Integral_
 --
 Constructor:
 public Integral(double c);
@@ -87,10 +88,11 @@ public double getValue();
 /Returns the integrated value/
 --
 Responsibilities
--- Integrates a rate of change and supplies an accumulated change</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1189</x><y>480</y><w>110</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;90;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>570</y><w>360</w><h>280</h></coordinates><panel_attributes>_Singelton Class: Shooter_
+-- Integrates a rate of change and supplies an accumulated change</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1189</x><y>480</y><w>80</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;60;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>490</y><w>360</w><h>290</h></coordinates><panel_attributes>_Singelton Class: Shooter_
 --
 public static synchronized Shooter getInstance();
-/Returns the static instance of Shooter common to the entire program/
+/Returns the static instance of Shooter common to the entire/
+/program/
 
 public void setVolts(double volts);
 /Sets the voltage power (not percentage but voltage) to the shooter/
@@ -105,11 +107,11 @@ private void updateDashboard();
 /Sends information about the shooter back to the driverstation/
 --
 Responsibilities
--- Provides methods to control shooter wheel.</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>720</y><w>140</w><h>230</h></coordinates><panel_attributes>lt=&lt;.
-/extends/</panel_attributes><additional_attributes>10;210;60;210;60;10;120;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>840</x><y>650</y><w>360</w><h>360</h></coordinates><panel_attributes>_Class: Wheel_
+-- Provides methods to control shooter wheel.</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>640</y><w>140</w><h>290</h></coordinates><panel_attributes>lt=&lt;.
+/extends/</panel_attributes><additional_attributes>10;270;60;270;60;10;120;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>840</x><y>620</y><w>360</w><h>360</h></coordinates><panel_attributes>_Class: Wheel_
 --
 Constructor:
-protected Wheel(int leaderID, int followerID);
+protected Wheel();
 --
 public void set(double percentage);
 /Sets the percent output power/
@@ -130,7 +132,7 @@ public double getFollowerTemp();
 /Returns the temperature of the following motor/
 --
 Responsibilities
--- Consolidates following motors and servo functions into single methods for the subsystem</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>779</x><y>710</y><w>80</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;60;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>1030</y><w>360</w><h>460</h></coordinates><panel_attributes>_Singelton Class: Hood_
+-- Consolidates following motors and servo functions into single methods for the subsystem</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>779</x><y>630</y><w>80</w><h>140</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;60;120</additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>800</y><w>360</w><h>460</h></coordinates><panel_attributes>_Singelton Class: Hood_
 --
 public static synchronized Hood getInstance();
 /Returns the static instance of Hood common to the entire program/
@@ -160,5 +162,218 @@ private void updateDashboard();
 /Sends information about the hood back to the driverstation/
 --
 Responsibilities
--- Provides methods to control shooter hood.</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>920</y><w>140</w><h>320</h></coordinates><panel_attributes>lt=&lt;.
-/extends/</panel_attributes><additional_attributes>10;10;60;10;60;300;120;300</additional_attributes></element></diagram>
+-- Provides methods to control shooter hood.</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>900</y><w>140</w><h>110</h></coordinates><panel_attributes>lt=&lt;.
+/extends/</panel_attributes><additional_attributes>10;10;60;10;60;90;120;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>1260</y><w>360</w><h>650</h></coordinates><panel_attributes>_Singelton Class: Climber_
+--
+public static synchronized Climber getInstance();
+/Returns the static instance of Climber common to the entire/
+/program/
+
+public void setActivePosition(double output);
+/Sets the position of both motorized climber hooks./
+
+public void setPassivePosition(boolean output);
+/Sets the position of both pneumatic climber hooks./
+
+public void setBrake(boolean state);
+/Sets the braking state of both motorized climber hooks./
+
+public void setActiveVolts(double volts);
+/Sets the voltage of both motorized climber hooks./
+
+public void setActiveVolts(double A, double B);
+/Sets the voltage of each individual motorized climber hook./
+
+public void resetActiveA(double position);
+/Resets the encoder of climber A./
+
+public void resetActiveB(double position);
+/Resets the encoder of climber B./
+
+public double getActivePositionA();
+/Returns the position of climber A/
+
+public double getActivePositionB();
+/Returns the position of climber B/
+
+public double getActiveVelocityA();
+/Returns the velocity of climber A/
+
+public double getActiveVelocityB();
+/Returns the velocity of climber B/
+
+private void updateDashboard();
+/Sends information about the climber back to the driverstation/
+--
+Responsibilities
+-- Provides methods to control the climber system.</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>840</x><y>1000</y><w>360</w><h>630</h></coordinates><panel_attributes>_Class: ActiveHook_
+--
+Constructor:
+protected ActiveHook();
+--
+public void setA(double power);
+/Sets the voltage to climber hook A./
+
+public void setB(double power);
+/Sets the voltage to climber hook B./
+
+public void setPosition(double position);
+/Sets the target position for each climber hook./
+
+public void motorBrakes(boolean engaged);
+/Sets the engaged state for each climber hook./
+
+public double getPositionA();
+/Returns the position of climber A./
+
+public double getPositionB();
+/Returns the position of climber B./
+
+public double getVelocityA();
+/Returns the velocity of climber A./
+
+public double getVelocityB();
+/Returns the velocity of climber B./
+
+public void resetPositionA(double position);
+/Resets the encoder of climber A./
+
+public void resetPositionB(double position);
+/Resets the encoder of climber B./
+
+public double getMotorATemp();
+/Returns the temperature of climber A./
+
+public double getMotorBTemp();
+/Returns the temperature of climber B./
+--
+Responsibilities
+-- Consolidates climber motors and servo functions into single methods for the subsystem</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>777</x><y>1371</y><w>80</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;179;60;19</additional_attributes></element><element><id>UMLClass</id><coordinates><x>840</x><y>1650</y><w>360</w><h>260</h></coordinates><panel_attributes>_Class: PassiveHook_
+--
+Constructor:
+protected PassiveHook();
+--
+public void setPosition(boolean output);
+/Sets the boolean position of the passive hooks./
+
+public boolean getSet();
+/Returns the boolean position the passive hooks are set to./
+
+public void off();
+/Relieves air pressure to the passive climber pistons./
+--
+Responsibilities
+-- Honestly there's not much advantage to having this class,
+   but we have one for the active cimbers and to keep code
+   consistent we added one for the passives.</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>775</x><y>1535</y><w>80</w><h>240</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;15;60;220</additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>900</y><w>140</w><h>650</h></coordinates><panel_attributes>lt=&lt;.
+/extends/</panel_attributes><additional_attributes>10;10;60;10;60;630;120;630</additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>1930</y><w>360</w><h>190</h></coordinates><panel_attributes>_Singelton Class: Indexer_
+--
+public static synchronized Indexer getInstance();
+/Returns the static instance of Indexer common to the entire program/
+
+private void set(double power);
+/Sets the percent output power to the indexer motor./
+
+private void setVoltage(double number);
+/Sets the voltage output power to the indexer motor./
+--
+Responsibilities
+-- Provides methods to control the indexer system.</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>2140</y><w>360</w><h>370</h></coordinates><panel_attributes>_Singelton Class: Intake_
+--
+public static synchronized Intake getInstance();
+/Returns the static instance of Intake common to the entire program/
+
+public void set(double percentage);
+/Sets the percent power output to the intake motor./
+
+public void setVoltage(double voltage);
+/Sets the voltage output power to the intake motor./
+
+public double getTemperature();
+/Returns the temperature of the intake motor./
+
+public void raise(boolean engaged);
+/Raises the intake if true, and lowers it if false./
+
+public boolean isRaised();
+/Returns the boolean state of the intake piston./
+
+public void updateSuffleboard();
+/Sends information about the intake back to the driverstation/
+--
+Responsibilities
+-- Provides methods to control the intake system.</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>2530</y><w>360</w><h>370</h></coordinates><panel_attributes>_Singelton Class: PreShooter_
+--
+public static synchronized PreShooter getInstance();
+/Returns the static instance of PreShooter common to the entire/
+/program/
+
+public void set(double percentage);
+/Sets the percent power output to the intake motor./
+
+public void setVoltage(double voltage);
+/Sets the voltage output power to the intake motor./
+
+public boolean getTop();
+/Returns the state of the top beam breaker./
+
+public boolean getBottom();
+/Returns the state of the bottom beam breaker./
+
+public double getTemp();
+/Returns the temperature of the intake motor./
+
+public void updateDashboard();
+/Sends information about the PreShooter back to the driverstation/
+--
+Responsibilities
+-- Provides methods to control the pre-shooter system.</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>2920</y><w>360</w><h>460</h></coordinates><panel_attributes>_Singelton Class: Turret_
+--
+public static synchronized Turret getInstance();
+/Returns the static instance of Turret common to the entire/
+/program/
+
+public void set(double percent);
+/Sets the percent power output to the motor./
+
+public void setVolts(double volts);
+/Sets the voltage power output to the motor./
+
+public void setAngle(double angle);
+/Sets the angle of the turret./
+
+public void trackTarget();
+/Follows the target seen by the limelight./
+
+public double getPosition();
+/Returns the position of the turret./
+
+public double getTemperature();
+/Returns the temperature of the turret./
+
+public boolean getIsAimed();
+/Returns whether or not the turret is aimed at the target./
+
+private void updateShuffleboard();
+/Sends information about the Turret back to the driverstation/
+--
+Responsibilities
+-- Provides methods to control the turret system.</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>3400</y><w>360</w><h>190</h></coordinates><panel_attributes>_Singelton Class: Sensors_
+--
+public static synchronized Sensors getInstance();
+/Returns the static instance of Sensors common to the/
+/entire program/
+
+Methods in this subsystem process and return input from various 
+sensors which are not centralized to any other subsystem.
+
+private void updateShuffleboard();
+/Sends information about the various sensors back to the driverstation/
+--
+Responsibilities
+-- Provides methods to take input from various sensors.</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>900</y><w>140</w><h>1160</h></coordinates><panel_attributes>lt=&lt;.
+/extends/</panel_attributes><additional_attributes>10;10;60;10;60;1130;120;1140</additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>900</y><w>140</w><h>1460</h></coordinates><panel_attributes>lt=&lt;.
+/extends/</panel_attributes><additional_attributes>10;10;60;10;60;1440;120;1440</additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>900</y><w>140</w><h>1840</h></coordinates><panel_attributes>lt=&lt;.
+/extends/</panel_attributes><additional_attributes>10;10;60;10;60;1820;120;1820</additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>900</y><w>140</w><h>2630</h></coordinates><panel_attributes>lt=&lt;.
+/extends/</panel_attributes><additional_attributes>10;10;60;10;60;2610;120;2610</additional_attributes></element><element><id>Relation</id><coordinates><x>310</x><y>900</y><w>140</w><h>2270</h></coordinates><panel_attributes>lt=&lt;.
+/extends/</panel_attributes><additional_attributes>10;10;60;10;60;2250;120;2250</additional_attributes></element></diagram>

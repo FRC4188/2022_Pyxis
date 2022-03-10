@@ -49,10 +49,6 @@ public class Climber extends SubsystemBase {
     SmartDashboard.putNumber("Temperature Motor B", active.getMotorBTemp());
   }
 
-  public double getActivePosition() {
-    return (active.getPositionA()  + active.getPositionB()) / 2;
-  }
-
   public double getActivePositionA() {
     return active.getPositionA();
   }

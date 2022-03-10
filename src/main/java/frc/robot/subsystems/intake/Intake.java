@@ -53,7 +53,7 @@ public class Intake extends SubsystemBase {
     set(voltage / RobotController.getBatteryVoltage());
   }
 
-  private double getTemperature() {
+  public double getTemperature() {
     return intakeMotor.getTemperature();
   }
 

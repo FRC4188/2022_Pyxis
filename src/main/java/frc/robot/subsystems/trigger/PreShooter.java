@@ -35,7 +35,7 @@ public class PreShooter extends SubsystemBase {
     SmartDashboard.putNumber("Trigger Motor Temperature", getTemp());
   }
 
-  private double getTemp() {
+  public double getTemp() {
     return motor.getTemperature();
   }
 

@@ -41,7 +41,7 @@ public class ActiveHook {
     public void setB(double power) {
         motorB.set(power / RobotController.getBatteryVoltage());
     }
-    
+
     /**
      * Method to set the position of the active climber.
      * @param position Position in meters.

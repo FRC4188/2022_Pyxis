@@ -7,6 +7,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.RobotController;
@@ -16,6 +20,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.climber.ActivePosition;
+import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.commands.tests.BallTrackTest;
 import frc.robot.commands.tests.PneumaticsTest;
@@ -50,8 +56,8 @@ public class Robot extends TimedRobot {
 
     testChooser.setDefaultOption("Do nothing", new SequentialCommandGroup());
     testChooser.addOption("Swerve Test", new SwerveTest());
-    testChooser.addOption("Ball Track Test", new BallTrackTest());
-    testChooser.addOption("Pneumatics Test", new PneumaticsTest());
+    testChooser.addOption("Ball Path Test", new BallTrackTest());
+    //testChooser.addOption("Pneumatics Test", new PneumaticsTest());
     testChooser.addOption("Shooter Test", new ShooterTest());
 
     SmartDashboard.putData("Test Chooser", testChooser);
@@ -124,7 +130,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    //new FindZeros().andThen(new ActivePosition(0.0)).schedule();
+    new FindZeros().andThen(new ActivePosition(0.0)).schedule();
     new FindHoodZeros().schedule();
 
     if (RobotController.getBatteryVoltage() < 12.7) DriverStation.reportWarning("Battery voltage too low; please change battery.", false);

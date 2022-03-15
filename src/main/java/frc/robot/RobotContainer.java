@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.shooter;
+import frc.robot.Constants.turret;
 import frc.robot.commands.InterruptSubsystem;
 import frc.robot.commands.auto.FiveBall;
 import frc.robot.commands.auto.FourBall;
@@ -15,6 +17,7 @@ import frc.robot.commands.auto.GenericTwoBall;
 import frc.robot.commands.climber.ActivePosition;
 import frc.robot.commands.climber.ActiveVolts;
 import frc.robot.commands.climber.FindZeros;
+import frc.robot.commands.climber.SetBrake;
 import frc.robot.commands.climber.ToggleBrakes;
 import frc.robot.commands.climber.TogglePassive;
 import frc.robot.commands.groups.MonkeyBar;
@@ -25,6 +28,8 @@ import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.intake.ToggleIntakePistons;
 import frc.robot.commands.groups.AutoIntake;
 import frc.robot.commands.groups.AutoShoot;
+import frc.robot.commands.groups.BlindShoot;
+import frc.robot.commands.groups.LowerPortShot;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.commands.shooter.FindHoodZeros;
@@ -92,14 +97,16 @@ public class RobotContainer {
     swerve.setDefaultCommand(new RunCommand(() -> swerve.drive(
       pilot.getLeftY(Scaling.CUBED),
       pilot.getLeftX(Scaling.CUBED),
-      pilot.getRightX(Scaling.CUBED)),
+      pilot.getRightX(Scaling.
+      CUBED)),
       swerve)
     );
 
-    climber.setDefaultCommand(new ActiveVolts(() -> copilot.getLeftY(Scaling.LINEAR), () -> copilot.getRightY(Scaling.LINEAR)));
+    turret.setDefaultCommand(new TrackTarget());
 
-    new Trigger(() -> turret.getPosition() > Constants.turret.MAX_ANGLE).whenActive(new WrapTurret());
-    new Trigger(() -> turret.getPosition() > Constants.turret.MIN_ANGLE).whenActive(new WrapTurret());
+    new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new SetToAngle(Constants.turret.MAX_ANGLE - 270.0).andThen(new Hunt(true)), false);
+    new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new SetToAngle(Constants.turret.MIN_ANGLE + 270.0).andThen(new Hunt(false)), false);
+
 
     new Trigger(() -> {
       boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
@@ -112,6 +119,7 @@ public class RobotContainer {
       lastSetHood = SmartDashboard.getNumber("Hood Set Angle", 0.0);
       return changed;
     }).whenActive(new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));
+
   }
 
   /**
@@ -133,7 +141,7 @@ public class RobotContainer {
       .whenReleased(new InterruptSubsystem(turret));
     
     pilot.getYButtonObj()
-      .whenPressed(new AutoShoot())
+      .whenPressed(new AutoShoot(true))
       .whenReleased(new InterruptSubsystem(shooter, trigger, indexer, hood));
     
     pilot.getXButtonObj()
@@ -141,7 +149,8 @@ public class RobotContainer {
       .whenReleased(new InterruptSubsystem(indexer, trigger, intake));
     
     pilot.getRbButtonObj()
-      .whenPressed(new ToggleIntakePistons());
+      .whenPressed(new LowerPortShot())
+      .whenReleased(new InterruptSubsystem(turret, shooter, trigger, indexer));
     
     pilot.getLbButtonObj()
       .whenPressed(new TogglePassive());
@@ -150,8 +159,8 @@ public class RobotContainer {
       .whenPressed(new ActivePosition(Constants.climber.MAX_HEIGHT));
 
     pilot.getDpadDownButtonObj()
-      .whenPressed(new ActivePosition(0.0));
-
+    .whenPressed(new ActivePosition(0.0));
+    
     pilot.getStartButtonObj()
       .whenPressed(new MonkeyBar());
 
@@ -159,11 +168,11 @@ public class RobotContainer {
       .whenPressed(new ResetPose());
 
     pilot.getDpadRightButtonObj()
-      .whenPressed(new InstantCommand(() -> turret.setVolts(3.0), turret))
+      .whenPressed(new RunCommand(() -> turret.setVolts(3.0), turret))
       .whenReleased(new InstantCommand(() -> turret.set(0.0), turret));
     
     pilot.getDpadLeftButtonObj()
-      .whenPressed(new InstantCommand(() -> turret.setVolts(-3.0), turret))
+      .whenPressed(new RunCommand(() -> turret.setVolts(-3.0), turret))
       .whenReleased(new InstantCommand(() -> turret.set(0.0), turret));
 
     copilot.getAButtonObj()
@@ -179,23 +188,28 @@ public class RobotContainer {
       .whenReleased(new InterruptSubsystem(trigger));
     
     copilot.getDpadUpButtonObj()
-      .whenPressed(new SetToAngle(0.0))
-      .whenReleased(new InterruptSubsystem(turret));
+      .whenPressed(new SetToAngle(0.0));
 
     copilot.getDpadLeftButtonObj()
-      .whenPressed(new SetToAngle(-90.0))
-      .whenReleased(new InterruptSubsystem(turret));
+      .whenPressed(new SetToAngle(-90.0));
 
     copilot.getDpadDownButtonObj()
-      .whenPressed(new SetToAngle(-180.0))
-      .whenReleased(new InterruptSubsystem(turret));
+      .whenPressed(new SetToAngle(-180.0));
 
     copilot.getDpadRightButtonObj()
-      .whenPressed(new SetToAngle(-270.0))
-      .whenReleased(new InterruptSubsystem(turret));
+      .whenPressed(new SetToAngle(-270.0));
+
+    copilot.getLbButtonObj()
+      .whenPressed(new RunCommand(() -> hood.setVolts(-2.0, false), hood))
+      .whenReleased(new RunCommand(() -> hood.setVolts(0.0), hood));
+      
+    copilot.getLbButtonObj()
+        .whenPressed(new RunCommand(() -> hood.setVolts(2.0), hood))
+        .whenReleased(new RunCommand(() -> hood.setVolts(0.0), hood));
+
     
     buttonBox.getButton1Obj()
-      .whenPressed(new PresetShoot(0.0, 2560.0))
+      .whenPressed(new BlindShoot(10.5, 2500.0))
       .whenReleased(new InterruptSubsystem(shooter, hood, turret, trigger));
 
     buttonBox.getButton2Obj()

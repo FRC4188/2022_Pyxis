@@ -22,7 +22,7 @@ public class Climber extends SubsystemBase {
   private ActiveHook active = new ActiveHook();
   private PassiveHook passive = new PassiveHook();
 
-  private DoubleSolenoid brake = Constants.devices.brake;
+  private DoubleSolenoid brake = new DoubleSolenoid(4, 5);
 
   private Notifier dashboardLoop = new Notifier(() -> updateDashboard());
 
@@ -70,7 +70,7 @@ public class Climber extends SubsystemBase {
   }
 
   public boolean getBrake() {
-    return brake.get();
+    return !brake.get();
   }
 
   public void setActivePosition(double output) {
@@ -82,7 +82,7 @@ public class Climber extends SubsystemBase {
   }
 
   public void setBrake(boolean state) {
-    brake.set(state);
+    brake.set(!state);
     active.motorBrakes(state);
   }
 

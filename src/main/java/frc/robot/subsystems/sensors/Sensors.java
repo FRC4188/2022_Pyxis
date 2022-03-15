@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -34,19 +35,25 @@ public class Sensors extends SubsystemBase {
 
   private Notifier notifier = new Notifier(() -> updateShuffleboard());
 
+  private SendableChooser<String> alliance = new SendableChooser<>();
+
   /** Creates a new Sensors. */
   private Sensors() {
     CommandScheduler.getInstance().registerSubsystem(this);
     
     startNotifier();
+
+    alliance.setDefaultOption("FMS", "FMS");
+    alliance.addOption("Blue", "Blue");
+    alliance.addOption("Red", "Red");
+
+    SmartDashboard.putData("Alliance Color", alliance);
   }
 
   private void updateShuffleboard() {
     SmartDashboard.putNumber("Limelight Distance", getDistance());
     SmartDashboard.putNumber("Pigeon Angle", pigeon.get().getDegrees());
-    SmartDashboard.putNumber("Pigeon Compass", pigeon.getCompass().getDegrees());
-    SmartDashboard.putString("Pigeon YPR", Arrays.toString(new double[] {pigeon.getYaw(), pigeon.getPitch(), pigeon.getRoll()}));
-    SmartDashboard.putBoolean("Right Color", isRightColor());
+    SmartDashboard.putNumber("Formula RPM", getFormulaRPM());
   }
 
   public void setLED(boolean on) {
@@ -54,7 +61,7 @@ public class Sensors extends SubsystemBase {
   }
 
   private void startNotifier() {
-    notifier.startPeriodic(0.4);
+    notifier.startPeriodic(0.1);
   }
 
   public boolean getHasTarget() {
@@ -66,20 +73,20 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getTX() {
-    return limelight.getHorizontal();
+    return limelight.getTX() - 3.0;
   }
-
+/*
   public double getTargetAngle() {
     Translation2d tVel = getTargetVelocityVector();
     double tX = -getTimeOfFlight() * tVel.getX();
     double tY = getDistance() - getTimeOfFlight() * tVel.getY();
     double adjust = Math.toDegrees(Math.atan2(tY, tX)) % 180.0 - 90.0;
 
-    return Math.abs(adjust) > 20.0 ? getTX() : getTX() - adjust;
-  }
+    return Math.abs(adjust) > 20.0 ? getTX() : getTX() + adjust;
+  }*/
 
   public double getTY() {
-    return limelight.getVertical();
+    return limelight.getTY();
   }
 
   public double getDistance() {
@@ -87,6 +94,7 @@ public class Sensors extends SubsystemBase {
         / Math.tan(Math.toRadians(getTY() + Constants.turret.MOUNTING_ANGLE));
   }
 
+  /*
   public double getTargetDistance() {
     Translation2d tVel = getTargetVelocityVector();
     double tX = -getTimeOfFlight() * tVel.getX();
@@ -94,7 +102,7 @@ public class Sensors extends SubsystemBase {
 
     return Math.hypot(tX, tY);
   }
-
+*/
   public void setPigeonAngle(double angle) {
     pigeon.set(angle);
   }
@@ -111,32 +119,33 @@ public class Sensors extends SubsystemBase {
     }
   }
 
+  /*
   public double getTimeOfFlight() {
     double distance = getDistance();
-    //return -0.0408107 * Math.pow(distance, 2.0) + 0.327671 * distance + 0.292099;
-    return 0.00167838 * Math.pow(distance, 3.0) - 0.0141796 * Math.pow(distance, 2.0) + 0.0606332 * distance + 1.07604;
+    return -0.0408107 * Math.pow(distance, 2.0) + 0.327671 * distance + 0.292099;
+    //return 0.00167838 * Math.pow(distance, 3.0) - 0.0141796 * Math.pow(distance, 2.0) + 0.0606332 * distance + 1.07604;
   }
 
   private Translation2d getTargetVelocityVector() {
     ChassisSpeeds cSpeeds = Swerve.getInstance().getChassisSpeeds();
-    double tAngle = Turret.getInstance().getPosition();
+    double tAngle = Turret.getInstance().getPosition() + 180.0;
     double lAngle = getTX();
 
-    double cAngle = -tAngle+lAngle;
+    double cAngle = lAngle-tAngle;
 
-    return new Translation2d(cSpeeds.vxMetersPerSecond, cSpeeds.vyMetersPerSecond).rotateBy(Rotation2d.fromDegrees(-cAngle));
+    return new Translation2d(cSpeeds.vxMetersPerSecond, cSpeeds.vyMetersPerSecond).rotateBy(Rotation2d.fromDegrees(cAngle));
   }
-
+*/
   public double getFormulaRPM() {
-    double distance = getTargetDistance();
-    //return (isRightColor()) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
-    return getHasTarget() ? isRightColor() ? Constants.shooter.ALPHA * (2.96647 * Math.pow(distance, 2.0) + 144.938 * distance + 2519.71) : 1500 : 2000;
+    double distance = getDistance();
+    return (isRightColor()) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
+    //return getHasTarget() ? isRightColor() ? Constants.shooter.ALPHA * (2.96647 * Math.pow(distance, 2.0) + 144.938 * distance + 2519.71) : 1500 : 2000;
   }
 
   public double getFormulaAngle() {
-    double distance = getTargetDistance();
-    //return (isRightColor()) ? Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29 : 2.0;
-    return getHasTarget() ? isRightColor() ? Constants.shooter.hood.ALPHA * (-0.679772 * Math.pow(distance, 2.0) + 9.03067 * distance - 1.95385) : 2.0 : 15.0;
+    double distance = getDistance();
+    return (isRightColor()) ? Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29 : 2.0;
+    //return getHasTarget() ? isRightColor() ? Constants.shooter.hood.ALPHA * (-0.679772 * Math.pow(distance, 2.0) + 9.03067 * distance - 1.95385) : 2.0 : 15.0;
   }
 
   public void setLEDMode(LedMode mode) {
@@ -172,7 +181,12 @@ public class Sensors extends SubsystemBase {
   }
 
   public boolean isRightColor() {
-    return (DriverStation.getAlliance() == DriverStation.Alliance.Red ? colorSensor.getColor() != 1 : colorSensor.getColor() != -1);
+    String alliance = this.alliance.getSelected();
+    if (alliance.equals("Red"))
+      return colorSensor.getColor() != 1;
+    else if (alliance.equals("Blue"))
+      return colorSensor.getColor() != -1;
+    else return (DriverStation.getAlliance() == DriverStation.Alliance.Red ? colorSensor.getColor() != 1 : colorSensor.getColor() != -1);
   }
 
 }

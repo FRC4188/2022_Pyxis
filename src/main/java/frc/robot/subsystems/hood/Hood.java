@@ -46,7 +46,7 @@ public class Hood extends SubsystemBase {
   private void updateDashboard() {
     SmartDashboard.putNumber("Hood Angle", getPosition());
     SmartDashboard.putNumber("Hood Temperature", getTemp());
-    SmartDashboard.putBoolean("Hood is Ready", isReady());
+    SmartDashboard.putBoolean("Hood is ready", isReady());
   }
 
   public void setPosition(double position) {
@@ -67,14 +67,14 @@ public class Hood extends SubsystemBase {
       if (softLimit) {
           if (getPosition() <= Constants.shooter.hood.MIN && volts < 0.0) motor.set(0.0);
           else if (getPosition() >= Constants.shooter.hood.MAX && volts > 0.0) motor.set(0.0);
-          else motor.set(volts / RobotController.getBatteryVoltage());
+          else motor.set(-volts / RobotController.getBatteryVoltage());
       } else {
           motor.set(0.0);
       }
   }
 
   public double getPosition() {
-      return motor.getPosition() * Constants.shooter.hood.CONVERSION;
+      return -motor.getPosition() * Constants.shooter.hood.CONVERSION;
   }
 
   public double getTemp() {

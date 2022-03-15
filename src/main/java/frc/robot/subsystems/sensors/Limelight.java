@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.Constants;
 
 
 public class Limelight {
@@ -66,12 +67,30 @@ public class Limelight {
     goalPose = pose;
   }
 
-  public double getHorizontal() {
+  public double getAngle() {
+    return Math.atan2(getTY(), getTX());
+  }
+
+  public double getHypot() {
+    return Math.hypot(getTY(), getTX());
+  }
+
+  public double getTX() {
     return limeTable.getEntry("tx").getDouble(0.0);
   }
 
-  public double getVertical() {
+  public double getTY() {
     return limeTable.getEntry("ty").getDouble(0.0);
+  }
+
+  public double getVertical() {
+    double r = getHypot();
+    return Math.cos(getAngle()) * (r + (0.164*r + 0.102) + Constants.turret.MOUNTING_ANGLE);
+  }
+
+  public double getHorizontal() {
+    double r = getHypot();
+    return -Math.sin(getAngle()) * (r + (0.164*r + 0.102) + Constants.turret.MOUNTING_ANGLE);
   }
 
   public int getTargetCount() {

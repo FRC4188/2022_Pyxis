@@ -28,6 +28,9 @@ public class CSP_CANSparkMax extends CANSparkMax implements CSPMotor {
     public void reset() {
         super.restoreFactoryDefaults();
         super.clearFaults();
+        setEncoder(0.0);
+        encoder.setPositionConversionFactor(1.0);
+        encoder.setVelocityConversionFactor(1.0);
     }
 
     public void setBrake(boolean braking) {

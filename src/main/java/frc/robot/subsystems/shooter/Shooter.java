@@ -33,7 +33,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Velocity", getVelocity());
     SmartDashboard.putNumber("Leader Temp", wheel.getLeaderTemp());
     SmartDashboard.putNumber("Follower Temp", wheel.getFollowerTemp());
-    SmartDashboard.putBoolean("Shooter is Ready", isReady());
+    SmartDashboard.putBoolean("Shooter is ready", isReady());
   }
 
   public void setVolts(double volts) {
@@ -54,7 +54,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isReady(double rpm) {
-    return Math.abs(sensors.getTX()) < 4.0 && Math.abs(getVelocity()-rpm) < 75.0 && sensors.getHasTarget();
+    return Math.abs(sensors.getTX()) < 4.0 && Math.abs(getVelocity()-rpm) < 200.0 && sensors.getHasTarget();
   }
 
   public boolean isReady() {

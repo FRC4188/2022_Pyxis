@@ -24,7 +24,7 @@ public class Constants {
 
     public static final class devices {
         public static final CSPMotor turretMotor = new CSP_CANSparkMax(9);
-        public static final CSPMotor preshooterMotor = new CSP_Falcon(11);
+        public static final CSPMotor preshooterMotor = new CSP_CANSparkMax(11);
         public static final CSPMotor shooterLeader = new CSP_Falcon(14);
         public static final CSPMotor shooterFollower = new CSP_Falcon(13);
         public static final CSPMotor intakeMotor = new CSP_CANSparkMax(17);
@@ -44,7 +44,6 @@ public class Constants {
         public static final DigitalInput bot = new DigitalInput(0);
 
         public static final DoubleSolenoid climberPiston = new DoubleSolenoid(3, 2);
-        public static final DoubleSolenoid brake = new DoubleSolenoid(4, 5);
         public static final DoubleSolenoid intakePiston = new DoubleSolenoid(0, 1);
     }
 
@@ -98,10 +97,10 @@ public class Constants {
         public static final Translation2d BackRightLocation = new Translation2d((Constants.robot.A_WIDTH / 2), (Constants.robot.A_LENGTH / 2));
 
         public static final class modules {
-            public static final double M1_ZERO = 175.95703125;
-            public static final double M2_ZERO = 120.498046875;
-            public static final double M3_ZERO = -97.03125;
-            public static final double M4_ZERO = -164.794921875;
+            public static final double M1_ZERO = 174.287109375;
+            public static final double M2_ZERO = 117.0703125;
+            public static final double M3_ZERO = 44.47265625;
+            public static final double M4_ZERO = -166.201171875;
         }
 
         public static final class anglemotor {
@@ -131,7 +130,7 @@ public class Constants {
         }
 
         public static final class thetaPID {
-            public static final double kP = -17.25;
+            public static final double kP = -12.25;
             public static final double kI = 0.0;
             public static final double kD = -0.05;  
             public static final ProfiledPIDController thetaPID = new ProfiledPIDController(kP, kI, kD, new Constraints(Math.PI * 2.0, Math.PI / 2.0));
@@ -141,9 +140,9 @@ public class Constants {
             /** Meters / Second */
             public static final double MAX_VELOCITY = 5.0; // Maximum velocity allowed in the drivetrain.
             /** Meters / Second^2 */
-            public static final double MAX_ACCEL = 2.5; // Maximum acceleration of the drivetrain.
+            public static final double MAX_ACCEL = 2.3; // Maximum acceleration of the drivetrain.
             /** Meters / Second^2 */
-            public static final double MAX_CACCEL = 2.5; // Maximum centripital acceleration of the robot.
+            public static final double MAX_CACCEL = 2.3; // Maximum centripital acceleration of the robot.
 
             public static final TrajectoryConfig CONFIG = new TrajectoryConfig(MAX_VELOCITY, MAX_ACCEL)
                 .addConstraint(new CentripetalAccelerationConstraint(MAX_CACCEL)); 
@@ -151,11 +150,11 @@ public class Constants {
     }
 
     public static final class shooter {
-        public static final double ALPHA = 0.96;
+        public static final double ALPHA = 0.8;
 
-        public static double kS = 0.72969;
-        public static double kV = 0.07986;
-        public static double kA = 0.0058329;
+        public static double kS = 0.7391;
+        public static double kV = 0.09001;
+        public static double kA = 0.0072442;
 
         public static final double GEARING = 24.0/32.0;
         public static final double RAMP = 2.5;
@@ -163,7 +162,8 @@ public class Constants {
         public static final double RADIUS = Units.inchesToMeters(4.0);
         public static final double CIRCUMFRENCE = RADIUS * 2.0 * Math.PI;
 
-        public static final double kP = 0.23619;
+        public static final double kP = 0.2;
+        public static final double kI = 0.0;
         public static final double kD = 5e-4;
         public static final double MAX_ACCEL = 1000.0;
         public static final double MAX_JERK = 5000.0;
@@ -171,16 +171,16 @@ public class Constants {
         public static final class hood {
             public static final double ALPHA = 1.0;
 
-            public static final double kP = 0.375;
+            public static final double kP = 0.35;
             public static final double kI = 0.0;
-            public static final double kD = 0.01;
+            public static final double kD = 0.005;
             public static final double kCos = 0.53;
 
-            public static final double GEARING = 7.0 * 7.0 * (40.0/16.0);
-            public static final double CONVERSION = 30.0 / 10.74;//360.0 / (GEARING);
-            public static final double OFFSET = 9.8;
+            public static final double GEARING = 125.0 * (40.0/16.0);
+            public static final double CONVERSION = 360.0 / (GEARING);
+            public static final double OFFSET = 8.6;
             
-            public static final double MAX = 45.0;
+            public static final double MAX = 50.0;
             public static final double MIN = 0.0;
         }
     }
@@ -190,26 +190,26 @@ public class Constants {
     }
 
     public static final class turret {
-            public static final double TkP = 0.325;
+            public static final double TkP = 0.225;
             public static final double TkI = 0.0;
-            public static final double TkD = 0.125;
+            public static final double TkD = 0.003;
 
-            public static final double PkP = 0.325;
+            public static final double PkP = 0.4;
             public static final double PkI = 0.0;
-            public static final double PkD = 0.225;
+            public static final double PkD = 0.01;
             public static final double MAX_VEL = 180.0;
             public static final double MAX_ACCEL = 180.0;
 
             public static final double MIN_ANGLE = -400.0;
             public static final double MAX_ANGLE = 55.0;
 
-            public static final double GEAR_RATIO = 20.0 * 14.0;
+            public static final double GEAR_RATIO = 35.0 * 14.0;
             public static final double ENCODER_TO_DEGREES = 360.0 / GEAR_RATIO;
 
-            public static final double ANGLE_TOLERANCE = 0.0;
+            public static final double ANGLE_TOLERANCE = 4.5;
             
         public static final double LIMELIGHT_HEIGHT = Units.inchesToMeters(43.6);
-        public static final double MOUNTING_ANGLE = 20.0;
+        public static final double MOUNTING_ANGLE = 27.5;
 
     }
 
@@ -227,12 +227,12 @@ public class Constants {
         /** Meters */
         public static final double ACTIVE_TOLERANCE = 0.02;
         /** Meters */
-        public static final double PUSH_POSITION = 1.0;
+        public static final double PUSH_POSITION = 1.05;
         /** Meters */
-        public static final double MAX_HEIGHT = 1.0;
+        public static final double MAX_HEIGHT = 1.05;
         /** Meters / Count */
         public static final double METERS_PER_COUNT_B = 1.0 / 3105.3515625;
-        public static final double METERS_PER_COUNT_A = 1.0 / 3393.369140625;
+        public static final double METERS_PER_COUNT_A = 1.0 / 3105.3515625;
 
         /** Meters / Second */
         public static final double MAX_VELOCITY = 0.7;

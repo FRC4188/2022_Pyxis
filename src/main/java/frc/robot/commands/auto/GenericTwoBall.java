@@ -10,6 +10,7 @@ import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
+import frc.robot.commands.turret.SetToAngle;
 import frc.robot.subsystems.drive.Trajectories;
 
 public class GenericTwoBall extends SequentialCommandGroup {
@@ -28,7 +29,19 @@ public class GenericTwoBall extends SequentialCommandGroup {
         new HoodAngle(()->21.0),
         new ShooterVelocity(()->2730.0)
       ),
-      new PresetShootQuantity(22.8, 2650.0, 2, true)
+      new PresetShootQuantity(22.8, 2650.0, 2, true),
+      new ParallelDeadlineGroup(
+        new SequentialCommandGroup(
+          new FollowTrajectory(Trajectories.fiveball.terminal1, Rotation2d.fromDegrees(-50.0)),
+          new FollowTrajectory(Trajectories.fiveball.terminal2, Rotation2d.fromDegrees(-50.0)),
+          new FollowTrajectory(Trajectories.fiveball.shoot2, Rotation2d.fromDegrees(119.9))
+        ),
+        new AutoIntake(),
+        new SetToAngle(-180.0)
+      ),
+      new PresetShootQuantity(37.5, 3050.0, 1, true).withTimeout(1.5),
+      new FollowTrajectory(Trajectories.fiveball.shoot3, Rotation2d.fromDegrees(116.0)),
+      new PresetShootQuantity(34.5, 3050.0, 2, true)
     );
   }
 }

@@ -15,7 +15,7 @@ public class Wheel {
   private CSPMotor leader = Constants.devices.shooterLeader;
   private CSPMotor follower = Constants.devices.shooterFollower;
   private SimpleMotorFeedforward ff = new SimpleMotorFeedforward(Constants.shooter.kS, Constants.shooter.kV, Constants.shooter.kA);
-  private PIDController pid = new PIDController(Constants.shooter.kP, 0.0, Constants.shooter.kD);
+  private PIDController pid = new PIDController(Constants.shooter.kP, Constants.shooter.kI, Constants.shooter.kD);
   private double velocity = 0.0;
 
   protected Wheel() {

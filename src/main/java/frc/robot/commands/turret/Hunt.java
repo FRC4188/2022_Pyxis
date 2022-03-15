@@ -11,7 +11,7 @@ import frc.robot.subsystems.turret.Turret;
 public class Hunt extends CommandBase {
   Turret turret = Turret.getInstance();
 
-  boolean reverse = true;
+  boolean reverse;
 
   /** Creates a new WrapAround. */
   public Hunt(boolean reverse) {
@@ -26,7 +26,7 @@ public class Hunt extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.setVolts(reverse ? -3.0 : 3.0);
+    turret.setVolts(reverse ? -6.0 : 6.0);
   }
 
   // Called once the command ends or is interrupted.

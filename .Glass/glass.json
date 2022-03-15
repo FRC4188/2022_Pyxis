@@ -13,6 +13,9 @@
       "open": true
     },
     "SmartDashboard": {
+      "Auto Chooser": {
+        "open": true
+      },
       "open": true
     },
     "types": {
@@ -35,6 +38,8 @@
       "/LiveWindow/Ungrouped/PIDController[10]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[11]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[12]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[13]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[14]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
@@ -59,6 +64,7 @@
       "/LiveWindow/Ungrouped/Talon FX [7]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon FX [8]": "Motor Controller",
       "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Find Hood Zero": "Command",
       "/SmartDashboard/InstantCommand": "Command",
       "/SmartDashboard/Reset Position": "Command",
       "/SmartDashboard/Reset Rotation": "Command",
@@ -67,7 +73,22 @@
       "/SmartDashboard/Run To Velocity": "Command",
       "/SmartDashboard/Set Hood Command": "Command",
       "/SmartDashboard/Set Hood Voltage Command": "Command",
-      "/SmartDashboard/Set Shooter Voltage Command": "Command"
+      "/SmartDashboard/Set Shooter Voltage Command": "Command",
+      "/SmartDashboard/Test Chooser": "String Chooser",
+      "/SmartDashboard/Toggle Climber Brakes": "Command",
+      "/SmartDashboard/Zero Climber": "Command"
+    },
+    "windows": {
+      "/SmartDashboard/Auto Chooser": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Reset Rotation": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables Settings": {

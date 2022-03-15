@@ -10,6 +10,7 @@ import frc.robot.commands.climber.ActivePosition;
 import frc.robot.commands.climber.ImpatientPassive;
 import frc.robot.commands.sensors.PitchGreaterThanCommand;
 import frc.robot.commands.sensors.PitchLessThanCommand;
+import frc.robot.commands.turret.SetToAngle;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -18,13 +19,15 @@ public class MonkeyBar extends SequentialCommandGroup {
   /** Creates a new AutoClimb. */
   public MonkeyBar() {
     addCommands(
+      new SetToAngle(-180.0),
+      new ActivePosition(0.0),
       new ImpatientPassive(true),
       new ActivePosition(0.7),
-      new PitchGreaterThanCommand(44.0),
+      new PitchGreaterThanCommand(40.0),
       new ActivePosition(Constants.climber.MAX_HEIGHT),
       new ImpatientPassive(false),
       new PitchLessThanCommand(37.0),
-      new ActivePosition(0.0)
+      new ActivePosition(0.1)
     );
   }
 }

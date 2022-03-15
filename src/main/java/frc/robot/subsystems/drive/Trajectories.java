@@ -60,7 +60,7 @@ public final class Trajectories {
             List.of(
                 new Pose2d(0.98, 0.0, Rotation2d.fromDegrees(-96.0)),
                 new Pose2d(0.86, -2.38, Rotation2d.fromDegrees(-90.0)),
-                new Pose2d(0.26, -5.89, Rotation2d.fromDegrees(-46.96))
+                new Pose2d(0.41, -5.74, Rotation2d.fromDegrees(-46.96))
             ), autoConfig);
         
         public static final Trajectory terminal2 = TrajectoryGenerator.generateTrajectory(

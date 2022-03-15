@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.utils.motors.CSPMotor;
 
@@ -27,7 +28,7 @@ public class Turret extends SubsystemBase {
   private CSPMotor motor = Constants.devices.turretMotor;
 
   private PIDController targetPID = new PIDController(Constants.turret.TkP, Constants.turret.TkI, Constants.turret.TkD);
-  private ProfiledPIDController positionPID = new ProfiledPIDController(Constants.turret.PkP, Constants.turret.PkI, Constants.turret.PkD, new Constraints(Constants.turret.MAX_VEL, Constants.turret.MAX_ACCEL));
+  private PIDController positionPID = new PIDController(Constants.turret.PkP, Constants.turret.PkI, Constants.turret.PkD/*, new Constraints(Constants.turret.MAX_VEL, Constants.turret.MAX_ACCEL)*/);
 
   Notifier notifier = new Notifier(() -> updateShuffleboard());
 
@@ -46,6 +47,8 @@ public class Turret extends SubsystemBase {
     motor.setBrake(true);
 
     motor.setRamp(0.1);
+
+    motor.set(0.0);
   }
 
   private void startNotifier() {
@@ -75,7 +78,7 @@ public class Turret extends SubsystemBase {
   }
 
   public void trackTarget() {
-    if (Sensors.getInstance().getHasTarget()) setVolts(targetPID.calculate(0.0, Sensors.getInstance().getTargetAngle()));
+    if (Sensors.getInstance().getHasTarget()) setVolts(targetPID.calculate(0.0, Sensors.getInstance().getTX()) + -Swerve.getInstance().getChassisSpeeds().omegaRadiansPerSecond * 3.0);
     else set(0.0);
   }
 

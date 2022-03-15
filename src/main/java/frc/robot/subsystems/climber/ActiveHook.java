@@ -26,7 +26,8 @@ public class ActiveHook {
         encoderA.configFactoryDefault();
         encoderB.configFactoryDefault();
 
-        motorB.setInverted(true);
+        motorB.setInverted(false);
+        motorA.setInverted(true);
 
         motorA.reset();
         motorB.reset();
@@ -61,7 +62,7 @@ public class ActiveHook {
      * @return Position in meters.
      */
     public double getPositionA() {
-        return encoderA.getPosition() * Constants.climber.METERS_PER_COUNT_A;
+        return encoderA.getPosition() * -Constants.climber.METERS_PER_COUNT_A;
     }
 
     /**
@@ -69,7 +70,7 @@ public class ActiveHook {
      * @return Position in meters.
      */
     public double getPositionB() {
-        return encoderB.getPosition() * -Constants.climber.METERS_PER_COUNT_B;
+        return encoderB.getPosition() * Constants.climber.METERS_PER_COUNT_B;
     }
 
     /**
@@ -77,7 +78,7 @@ public class ActiveHook {
      * @return Position in meters per second.
      */
     public double getVelocityA() {
-        return encoderA.getVelocity() * Constants.climber.METERS_PER_COUNT_A;
+        return encoderA.getVelocity() * -Constants.climber.METERS_PER_COUNT_A;
     }
 
     /**
@@ -85,7 +86,7 @@ public class ActiveHook {
      * @return Position in meters per second.
      */
     public double getVelocityB() {
-        return encoderB.getVelocity() * -Constants.climber.METERS_PER_COUNT_B;
+        return encoderB.getVelocity() * Constants.climber.METERS_PER_COUNT_B;
     }
 
     public void resetPositionA(double position) {

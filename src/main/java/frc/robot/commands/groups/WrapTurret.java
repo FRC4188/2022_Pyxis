@@ -13,15 +13,13 @@ public class WrapTurret extends SequentialCommandGroup {
   public WrapTurret() {
     if (Math.abs(turret.getPosition() - Constants.turret.MIN_ANGLE) < Math.abs(turret.getPosition() - Constants.turret.MIN_ANGLE))
       addCommands(
-        new SetToAngle(Constants.turret.MIN_ANGLE + 180.0),
-        new Hunt(false),
-        new TrackTarget()
+        new SetToAngle(Constants.turret.MIN_ANGLE + 270.0),
+        new Hunt(false)
       );
     else
       addCommands(
-        new SetToAngle(Constants.turret.MAX_ANGLE - 180.0),
-        new Hunt(true),
-        new TrackTarget()
+        new SetToAngle(Constants.turret.MAX_ANGLE - 270.0),
+        new Hunt(true)
       );
   }
 }

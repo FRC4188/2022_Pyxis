@@ -188,5 +188,4 @@ public class Sensors extends SubsystemBase {
       return colorSensor.getColor() != -1;
     else return (DriverStation.getAlliance() == DriverStation.Alliance.Red ? colorSensor.getColor() != 1 : colorSensor.getColor() != -1);
   }
-
 }

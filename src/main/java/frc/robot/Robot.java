@@ -61,6 +61,11 @@ public class Robot extends TimedRobot {
     testChooser.addOption("Shooter Test", new ShooterTest());
 
     SmartDashboard.putData("Test Chooser", testChooser);
+
+    UsbCamera camera = CameraServer.startAutomaticCapture();
+    camera.setResolution(200, 200);
+    camera.setExposureAuto();
+    camera.setFPS(20);
   }
 
   /**
@@ -131,7 +136,7 @@ public class Robot extends TimedRobot {
     }
 
     new FindZeros().andThen(new ActivePosition(0.0)).schedule();
-    new FindHoodZeros().schedule();
+    //new FindHoodZeros().schedule();
 
     if (RobotController.getBatteryVoltage() < 12.7) DriverStation.reportWarning("Battery voltage too low; please change battery.", false);
     //m_robotContainer.resetRobot();

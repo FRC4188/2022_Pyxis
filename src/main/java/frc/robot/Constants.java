@@ -97,10 +97,10 @@ public class Constants {
         public static final Translation2d BackRightLocation = new Translation2d((Constants.robot.A_WIDTH / 2), (Constants.robot.A_LENGTH / 2));
 
         public static final class modules {
-            public static final double M1_ZERO = 174.287109375;
-            public static final double M2_ZERO = 117.0703125;
-            public static final double M3_ZERO = 44.47265625;
-            public static final double M4_ZERO = -166.201171875;
+            public static final double M1_ZERO = 173.408203125;
+            public static final double M2_ZERO = 117.158203125;
+            public static final double M3_ZERO = 132.71484375;
+            public static final double M4_ZERO = -165.9375;
         }
 
         public static final class anglemotor {
@@ -190,9 +190,9 @@ public class Constants {
     }
 
     public static final class turret {
-            public static final double TkP = 0.225;
+            public static final double TkP = 0.75;
             public static final double TkI = 0.0;
-            public static final double TkD = 0.003;
+            public static final double TkD = 0.03;
 
             public static final double PkP = 0.4;
             public static final double PkI = 0.0;

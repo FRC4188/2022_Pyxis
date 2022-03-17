@@ -60,26 +60,27 @@ public final class Trajectories {
             List.of(
                 new Pose2d(0.98, 0.0, Rotation2d.fromDegrees(-96.0)),
                 new Pose2d(0.86, -2.38, Rotation2d.fromDegrees(-90.0)),
-                new Pose2d(0.41, -5.74, Rotation2d.fromDegrees(-46.96))
+                new Pose2d(-0.1, -6.09, Rotation2d.fromDegrees(-46.96))
             ), autoConfig);
         
         public static final Trajectory terminal2 = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(0.26, -5.89, Rotation2d.fromDegrees(130.0)),
-                new Pose2d(0.01, -5.73, Rotation2d.fromDegrees(130.0))
-            ), new TrajectoryConfig(1.0, 1.75)
+                new Pose2d(0.1, -6.09, Rotation2d.fromDegrees(130.0)),
+                new Pose2d(-1.67, -4.18, Rotation2d.fromDegrees(-45.41 + 180.0))
+            ), new TrajectoryConfig(4.0, 1.0)
         );
         
         public static final Trajectory shoot2 = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(0.01, -5.73, Rotation2d.fromDegrees(130.0)),
-                new Pose2d(0.63, -3.53, Rotation2d.fromDegrees(119.9))
+                new Pose2d(-1.67, -4.18, Rotation2d.fromDegrees(54.18)),
+                new Pose2d(-1, -3.15, Rotation2d.fromDegrees(54.18)),
+                new Pose2d(-0.76, -2.86, Rotation2d.fromDegrees(53.45))
             ), autoConfig);
         
         public static final Trajectory shoot3 = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(0.63, -3.53, Rotation2d.fromDegrees(119.9)),
-                new Pose2d(0.08, -2.93, Rotation2d.fromDegrees(116.0))
+                new Pose2d(-1, -3.15, Rotation2d.fromDegrees(54.18)),
+                new Pose2d(-0.76, -2.86, Rotation2d.fromDegrees(53.45))
             ), autoConfig);
     }
 }

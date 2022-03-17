@@ -104,10 +104,10 @@ public class RobotContainer {
 
     turret.setDefaultCommand(new TrackTarget());
 
-    new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new SetToAngle(Constants.turret.MAX_ANGLE - 270.0).andThen(new Hunt(true)), false);
-    new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new SetToAngle(Constants.turret.MIN_ANGLE + 270.0).andThen(new Hunt(false)), false);
+    new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new SetToAngle(Constants.turret.MAX_ANGLE - 180.0).andThen(new Hunt(true)), false);
+    new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new SetToAngle(Constants.turret.MIN_ANGLE + 180.0).andThen(new Hunt(false)), false);
 
-
+/*
     new Trigger(() -> {
       boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
       lastSetShooter = SmartDashboard.getNumber("Shooter Set Velocity", 0.0);
@@ -119,7 +119,7 @@ public class RobotContainer {
       lastSetHood = SmartDashboard.getNumber("Hood Set Angle", 0.0);
       return changed;
     }).whenActive(new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));
-
+*/
   }
 
   /**
@@ -153,7 +153,8 @@ public class RobotContainer {
       .whenReleased(new InterruptSubsystem(turret, shooter, trigger, indexer));
     
     pilot.getLbButtonObj()
-      .whenPressed(new TogglePassive());
+      .whenPressed(new BlindShoot(10.5, 2500.0))
+      .whenReleased(new InterruptSubsystem(shooter, hood, turret, trigger));
 
     pilot.getDpadUpButtonObj()
       .whenPressed(new ActivePosition(Constants.climber.MAX_HEIGHT));

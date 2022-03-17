@@ -1,5 +1,6 @@
 package frc.robot.commands.auto;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -28,30 +29,33 @@ public class FiveBall extends SequentialCommandGroup {
    */
   public FiveBall() {
     addCommands(
-      new ResetPose(),
-      new ResetRotation(),
+      new ResetPose(new Pose2d()),
+      new ResetRotation(new Rotation2d()),
       new ParallelDeadlineGroup(
         new FollowTrajectory(Trajectories.twoball.toFirst, Rotation2d.fromDegrees(0.0)),
         new FindHoodZeros(),
         new AutoIntake()
       ),
-      new AutoShootQuantity(2, true).withTimeout(2.5),
-      new InstantCommand(() -> Intake.getInstance().raise(true)),
+      new AutoShootQuantity(2, true).withTimeout(3.0),
+      new InstantCommand(() -> {
+        Intake.getInstance().raise(true);
+        Intake.getInstance().setVoltage(0.0);
+      }, Intake.getInstance()),
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
           new FollowTrajectory(Trajectories.fiveball.terminal1, Rotation2d.fromDegrees(-50.0)),
           new FollowTrajectory(Trajectories.fiveball.terminal2, Rotation2d.fromDegrees(-50.0)),
-          new FollowTrajectory(Trajectories.fiveball.shoot2, Rotation2d.fromDegrees(119.9))
+          new FollowTrajectory(Trajectories.fiveball.shoot2, Rotation2d.fromDegrees(54.18))
         ),
         new WaitCommand(1.0).andThen(new AutoIntake()),
-        new SetToAngle(-180.0)
+        new SetToAngle(-270.0)
       ),
-      new AutoShootQuantity(1, false).withTimeout(1.25),
-      new ParallelDeadlineGroup(
-        new FollowTrajectory(Trajectories.fiveball.shoot3, Rotation2d.fromDegrees(116.0)),
+      new AutoShootQuantity(3, true).withTimeout(1.25),
+      /*new ParallelDeadlineGroup(
+        new FollowTrajectory(Trajectories.fiveball.shoot3, Rotation2d.fromDegrees(53.45)),
         new AutoIntake()
-      ),
-      new ResetRotation(Rotation2d.fromDegrees(26.0)),
+      ),*/
+      new ResetRotation(Rotation2d.fromDegrees(-36.6)),
       new AutoShoot(false)
     );
   }

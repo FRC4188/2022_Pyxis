@@ -4,6 +4,8 @@
 
 package frc.robot.commands.groups;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.climber.ActivePosition;
@@ -20,9 +22,11 @@ public class MonkeyBar extends SequentialCommandGroup {
   /** Creates a new AutoClimb. */
   public MonkeyBar() {
     addCommands(
-      new HoodAngle(()-> 0.0),
-      new SetToAngle(-180.0),
-      new ActivePosition(0.0),
+      new ParallelDeadlineGroup(
+        new ActivePosition(0.0),
+        new HoodAngle(()-> 0.0),
+        new SetToAngle(-180.0)
+      ),
       new ImpatientPassive(true),
       new ActivePosition(0.7),
       new PitchGreaterThanCommand(40.0),

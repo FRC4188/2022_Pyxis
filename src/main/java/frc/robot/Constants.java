@@ -99,7 +99,7 @@ public class Constants {
         public static final class modules {
             public static final double M1_ZERO = 173.408203125;
             public static final double M2_ZERO = 117.158203125;
-            public static final double M3_ZERO = 132.71484375;
+            public static final double M3_ZERO = 134.033203125;
             public static final double M4_ZERO = -165.9375;
         }
 

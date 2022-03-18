@@ -18,9 +18,11 @@ import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
+import frc.robot.commands.trigger.PushTrigger;
 import frc.robot.commands.turret.SetToAngle;
 import frc.robot.subsystems.drive.Trajectories;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.trigger.PreShooter;
 public class FiveBall extends SequentialCommandGroup {
   /**
    * Creates a new FiveBall command.
@@ -36,11 +38,15 @@ public class FiveBall extends SequentialCommandGroup {
         new FindHoodZeros(),
         new AutoIntake()
       ),
-      new AutoShootQuantity(2, true).withTimeout(3.0),
+      new SequentialCommandGroup(
+        new AutoShootQuantity(2, true).withTimeout(2.5),
+        new PushTrigger(12.0).withTimeout(0.5)
+      ),
       new InstantCommand(() -> {
         Intake.getInstance().raise(true);
         Intake.getInstance().setVoltage(0.0);
       }, Intake.getInstance()),
+      new InstantCommand(() -> PreShooter.getInstance().setVoltage(0.0)),
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
           new FollowTrajectory(Trajectories.fiveball.terminal1, Rotation2d.fromDegrees(-50.0)),

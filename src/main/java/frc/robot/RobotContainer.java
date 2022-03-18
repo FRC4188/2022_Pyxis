@@ -201,8 +201,7 @@ public class RobotContainer {
       .whenPressed(new SetToAngle(-270.0));
 
     copilot.getLbButtonObj()
-      .whenPressed(new RunCommand(() -> hood.setVolts(-2.0, false), hood))
-      .whenReleased(new RunCommand(() -> hood.setVolts(0.0), hood));
+      .whenPressed(new TogglePassive());
       
     copilot.getLbButtonObj()
         .whenPressed(new RunCommand(() -> hood.setVolts(2.0), hood))

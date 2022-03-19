@@ -150,7 +150,7 @@ public class Constants {
     }
 
     public static final class shooter {
-        public static final double ALPHA = 0.8;
+        public static final double ALPHA = 0.875;
 
         public static double kS = 0.7391;
         public static double kV = 0.09001;

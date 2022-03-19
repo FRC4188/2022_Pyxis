@@ -30,7 +30,7 @@ public class Hood extends SubsystemBase {
   
   private Hood() {
       motor.reset();
-      motor.setInverted(true);
+      motor.setInverted(false);
       motor.setBrake(false);
       motor.setRamp(0.0);
 

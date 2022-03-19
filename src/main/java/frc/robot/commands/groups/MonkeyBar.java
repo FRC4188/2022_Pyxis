@@ -28,7 +28,7 @@ public class MonkeyBar extends SequentialCommandGroup {
         new SetToAngle(-180.0)
       ),
       new ImpatientPassive(true),
-      new ActivePosition(0.7),
+      new ActivePosition(0.85),
       new PitchGreaterThanCommand(40.0),
       new ActivePosition(Constants.climber.MAX_HEIGHT),
       new ImpatientPassive(false),

@@ -20,15 +20,15 @@ public class PneumaticsTest extends SequentialCommandGroup {
     addCommands(
       new ParallelCommandGroup(
         new ToggleBrakes(),
-        new ToggleIntakePistons(),
-        new TogglePassive()
+        new ToggleIntakePistons()
       ),
+      new TogglePassive(),
       new WaitCommand(2.0),
       new ParallelCommandGroup(
         new ToggleBrakes(),
-        new ToggleIntakePistons(),
-        new TogglePassive()
-      )
+        new ToggleIntakePistons()
+      ),
+      new TogglePassive()
     );
   }
 }

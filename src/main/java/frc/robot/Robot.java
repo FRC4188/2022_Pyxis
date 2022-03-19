@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
     testChooser.setDefaultOption("Do nothing", new SequentialCommandGroup());
     testChooser.addOption("Swerve Test", new SwerveTest());
     testChooser.addOption("Ball Path Test", new BallTrackTest());
-    //testChooser.addOption("Pneumatics Test", new PneumaticsTest());
+    testChooser.addOption("Pneumatics Test", new PneumaticsTest());
     testChooser.addOption("Shooter Test", new ShooterTest());
 
     SmartDashboard.putData("Test Chooser", testChooser);

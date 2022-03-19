@@ -57,7 +57,6 @@ public class Module {
         angleMotor.setSelectedSensorPosition(0);
         angleMotor.clearStickyFaults();
 
-        encoder.configFactoryDefault();
         encoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
         encoder.setPosition(0.0);
         encoder.configSensorDirection(false);

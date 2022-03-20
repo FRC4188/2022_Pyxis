@@ -17,7 +17,6 @@ import frc.robot.commands.auto.GenericTwoBall;
 import frc.robot.commands.climber.ActivePosition;
 import frc.robot.commands.climber.ActiveVolts;
 import frc.robot.commands.climber.FindZeros;
-import frc.robot.commands.climber.SetBrake;
 import frc.robot.commands.climber.ToggleBrakes;
 import frc.robot.commands.climber.TogglePassive;
 import frc.robot.commands.groups.MonkeyBar;
@@ -104,10 +103,9 @@ public class RobotContainer {
 
     turret.setDefaultCommand(new TrackTarget());
 
-    new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new SetToAngle(Constants.turret.MAX_ANGLE - 180.0).andThen(new Hunt(true)), false);
-    new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new SetToAngle(Constants.turret.MIN_ANGLE + 180.0).andThen(new Hunt(false)), false);
+    new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new SetToAngle(Constants.turret.MAX_ANGLE - 360.0).andThen(new Hunt(true)), true);
+    new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new SetToAngle(Constants.turret.MIN_ANGLE + 3600.0).andThen(new Hunt(false)), true);
 
-/*
     new Trigger(() -> {
       boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
       lastSetShooter = SmartDashboard.getNumber("Shooter Set Velocity", 0.0);
@@ -119,7 +117,6 @@ public class RobotContainer {
       lastSetHood = SmartDashboard.getNumber("Hood Set Angle", 0.0);
       return changed;
     }).whenActive(new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));
-*/
   }
 
   /**

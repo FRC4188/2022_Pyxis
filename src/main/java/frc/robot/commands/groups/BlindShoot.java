@@ -10,6 +10,7 @@ import frc.robot.commands.indexer.LoadBalls;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.trigger.PushTrigger;
+import frc.robot.commands.turret.SetToAngle;
 import frc.robot.commands.turret.TrackTarget;
 import frc.robot.subsystems.intake.Intake;
 
@@ -22,7 +23,7 @@ public class BlindShoot extends ParallelCommandGroup {
     addCommands(
       new PushTrigger(12.0),
       new ShooterVelocity(() -> velocity),
-      new TrackTarget(),
+      new SetToAngle(-180.0),
       new HoodAngle(() -> angle),
       new LoadBalls()
     );

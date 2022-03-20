@@ -99,7 +99,7 @@ public class Constants {
         public static final class modules {
             public static final double M1_ZERO = 173.408203125;
             public static final double M2_ZERO = 117.158203125;
-            public static final double M3_ZERO = 134.033203125;
+            public static final double M3_ZERO = -66.357421875;
             public static final double M4_ZERO = -165.9375;
         }
 
@@ -150,7 +150,7 @@ public class Constants {
     }
 
     public static final class shooter {
-        public static final double ALPHA = 0.875;
+        public static final double ALPHA = 0.85;
 
         public static double kS = 0.7391;
         public static double kV = 0.09001;

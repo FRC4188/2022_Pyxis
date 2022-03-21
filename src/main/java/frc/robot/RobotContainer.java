@@ -103,8 +103,8 @@ public class RobotContainer {
 
     turret.setDefaultCommand(new TrackTarget());
 
-    new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new SetToAngle(Constants.turret.MAX_ANGLE - 360.0).andThen(new Hunt(true)), true);
-    new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new SetToAngle(Constants.turret.MIN_ANGLE + 3600.0).andThen(new Hunt(false)), true);
+    new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new SetToAngle(Constants.turret.MAX_ANGLE - 180.0).andThen(new Hunt(true)), true);
+    new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new SetToAngle(Constants.turret.MIN_ANGLE + 180.0).andThen(new Hunt(false)), true);
 
     new Trigger(() -> {
       boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;

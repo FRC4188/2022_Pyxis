@@ -20,6 +20,7 @@ import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.trigger.PushTrigger;
 import frc.robot.commands.turret.SetToAngle;
+import frc.robot.commands.turret.TrackTarget;
 import frc.robot.subsystems.drive.Trajectories;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.trigger.PreShooter;
@@ -31,16 +32,15 @@ public class FiveBall extends SequentialCommandGroup {
    */
   public FiveBall() {
     addCommands(
-      new ResetPose(new Pose2d()),
-      new ResetRotation(new Rotation2d()),
+      new ResetPose(new Pose2d(0, 0, Rotation2d.fromDegrees(-90.0))),
+      new ResetRotation(Rotation2d.fromDegrees(-90.0)),
       new ParallelDeadlineGroup(
-        new FollowTrajectory(Trajectories.twoball.toFirst, Rotation2d.fromDegrees(0.0)),
+        new FollowTrajectory(Trajectories.twoball.toFirst.relativeTo(new Pose2d(0, 0, Rotation2d.fromDegrees(90.0))), Rotation2d.fromDegrees(-90.0)),
         new FindHoodZeros(),
         new AutoIntake()
       ),
       new SequentialCommandGroup(
-        new AutoShootQuantity(2, true).withTimeout(2.5),
-        new PushTrigger(12.0).withTimeout(0.5)
+        new PresetShootQuantity(20.0, 2500.0, 2, true).withTimeout(2.5)//20 and 2500,
       ),
       new InstantCommand(() -> {
         Intake.getInstance().raise(true);
@@ -49,19 +49,18 @@ public class FiveBall extends SequentialCommandGroup {
       new InstantCommand(() -> PreShooter.getInstance().setVoltage(0.0)),
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
-          new FollowTrajectory(Trajectories.fiveball.terminal1, Rotation2d.fromDegrees(-50.0)),
-          new FollowTrajectory(Trajectories.fiveball.terminal2, Rotation2d.fromDegrees(-50.0)),
-          new FollowTrajectory(Trajectories.fiveball.shoot2, Rotation2d.fromDegrees(54.18))
+          new FollowTrajectory(Trajectories.fiveball.terminal1.relativeTo(new Pose2d(0, 0, Rotation2d.fromDegrees(90.0))), Rotation2d.fromDegrees(-140.0)),
+          new FollowTrajectory(Trajectories.fiveball.terminal2.relativeTo(new Pose2d(0, 0, Rotation2d.fromDegrees(90.0))), Rotation2d.fromDegrees(-140.0)),
+          new FollowTrajectory(Trajectories.fiveball.shoot2.relativeTo(new Pose2d(0, 0, Rotation2d.fromDegrees(90.0))), Rotation2d.fromDegrees(54.18-90.0))
         ),
         new WaitCommand(1.0).andThen(new AutoIntake()),
         new SetToAngle(-270.0)
       ),
-      new AutoShootQuantity(3, true).withTimeout(1.25),
+      new PresetShootQuantity(24.0, 2600.0, 3, true).withTimeout(2.5),//20 and 2500,
       /*new ParallelDeadlineGroup(
         new FollowTrajectory(Trajectories.fiveball.shoot3, Rotation2d.fromDegrees(53.45)),
         new AutoIntake()
       ),*/
-      new ResetRotation(Rotation2d.fromDegrees(-36.6)),
       new AutoShoot(false)
     );
   }

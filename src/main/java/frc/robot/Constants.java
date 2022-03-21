@@ -99,14 +99,14 @@ public class Constants {
         public static final class modules {
             public static final double M1_ZERO = 173.408203125;
             public static final double M2_ZERO = 117.158203125;
-            public static final double M3_ZERO = -66.357421875;
+            public static final double M3_ZERO = -160.3125;
             public static final double M4_ZERO = -165.9375;
         }
 
         public static final class anglemotor {
-            public static final double kP = -9e-3;
+            public static final double kP = -14e-3;
             public static final double kI = 0.0;
-            public static final double kD = 0.0;
+            public static final double kD = 20e-6;
         }
 
         public static final class speedmotor {
@@ -176,7 +176,7 @@ public class Constants {
             public static final double kD = 0.005;
             public static final double kCos = 0.53;
 
-            public static final double GEARING = 125.0 * (40.0/16.0);
+            public static final double GEARING = 125.0 * (/*40.0*/ 38.0/16.0);
             public static final double CONVERSION = 360.0 / (GEARING);
             public static final double OFFSET = 8.6;
             
@@ -225,7 +225,7 @@ public class Constants {
         /** Meters */
         public static final double PULL_POSITION = 0.0;
         /** Meters */
-        public static final double ACTIVE_TOLERANCE = 0.02;
+        public static final double ACTIVE_TOLERANCE = 0.025;
         /** Meters */
         public static final double PUSH_POSITION = 1.05;
         /** Meters */
@@ -235,9 +235,9 @@ public class Constants {
         public static final double METERS_PER_COUNT_A = 1.0 / 3105.3515625;
 
         /** Meters / Second */
-        public static final double MAX_VELOCITY = 0.7;
+        public static final double MAX_VELOCITY = 0.5;
         /** Meters / Second^2 */
-        public static final double MAX_ACCEL = 1.8;
+        public static final double MAX_ACCEL = 1.0;
         public static final double PITCH_TOLERANCE = 2.5;
 
         public static double kP = 96.0;

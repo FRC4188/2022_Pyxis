@@ -44,7 +44,7 @@ public class Turret extends SubsystemBase {
   private void initialize() {
     motor.reset();
 
-    motor.setBrake(true);
+    motor.setBrake(false);
 
     motor.setRamp(0.1);
 

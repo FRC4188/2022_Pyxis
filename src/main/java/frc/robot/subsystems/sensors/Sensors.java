@@ -138,14 +138,14 @@ public class Sensors extends SubsystemBase {
 */
   public double getFormulaRPM() {
     double distance = getDistance();
-    return (isRightColor()) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
-    //return getHasTarget() ? isRightColor() ? Constants.shooter.ALPHA * (2.96647 * Math.pow(distance, 2.0) + 144.938 * distance + 2519.71) : 1500 : 2000;
+    //return (isRightColor()) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
+    return isRightColor() ? 1787.69 * Math.pow(0.249199, 1.53841 * distance + 0.199996) + 216.565 * distance + 2046.46 : 1500.0;
   }
 
   public double getFormulaAngle() {
     double distance = getDistance();
-    return (isRightColor()) ? Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29 : 2.0;
-    //return getHasTarget() ? isRightColor() ? Constants.shooter.hood.ALPHA * (-0.679772 * Math.pow(distance, 2.0) + 9.03067 * distance - 1.95385) : 2.0 : 15.0;
+    //return (isRightColor()) ? Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29 : 2.0;
+    return isRightColor() ? -50.7709 * Math.pow(2.1949, -0.786134 * distance - 0.777002) + 1.71126 * distance + 21.2811 : 2.0;
   }
 
   public void setLEDMode(LedMode mode) {

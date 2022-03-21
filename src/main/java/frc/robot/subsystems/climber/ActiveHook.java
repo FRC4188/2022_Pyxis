@@ -48,8 +48,8 @@ public class ActiveHook {
      * @param position Position in meters.
      */
     public void setPosition(double position) {
-        setA(pidA.calculate(getPositionA(), Math.min(position, Constants.climber.MAX_HEIGHT)));
-        setB(pidB.calculate(getPositionB(), Math.min(position, Constants.climber.MAX_HEIGHT)));
+        setA(pidA.calculate(getPositionA(), position));
+        setB(pidB.calculate(getPositionB(), position));
     }
 
     public void motorBrakes(boolean engaged) {

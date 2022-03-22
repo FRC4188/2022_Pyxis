@@ -26,6 +26,8 @@ public class ColorSensor extends SubsystemBase{
 
     matchColor.addColorMatch(red);
     matchColor.addColorMatch(blue);
+
+    refresh();
   }
 
   /**
@@ -37,10 +39,14 @@ public class ColorSensor extends SubsystemBase{
     else return 0;
   }
 
-  @Override
-  public void periodic() {
+  public void refresh() {
     detectedColor = colorSensor.getColor();
     match = matchColor.matchClosestColor(detectedColor);
+  }
+
+  @Override
+  public void periodic() {
+    refresh();
     SmartDashboard.putNumber("Color Sensed", getColor());
   }
 }

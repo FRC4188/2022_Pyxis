@@ -104,9 +104,9 @@ public class Constants {
         }
 
         public static final class anglemotor {
-            public static final double kP = -14e-3;
+            public static final double kP = -10e-3;
             public static final double kI = 0.0;
-            public static final double kD = 20e-6;
+            public static final double kD = 15e-6;
         }
 
         public static final class speedmotor {
@@ -176,7 +176,7 @@ public class Constants {
             public static final double kD = 0.005;
             public static final double kCos = 0.53;
 
-            public static final double GEARING = 125.0 * (/*40.0*/ 38.0/16.0);
+            public static final double GEARING = 125.0 * (40.0/16.0);
             public static final double CONVERSION = 360.0 / (GEARING);
             public static final double OFFSET = 8.6;
             
@@ -225,24 +225,24 @@ public class Constants {
         /** Meters */
         public static final double PULL_POSITION = 0.0;
         /** Meters */
-        public static final double ACTIVE_TOLERANCE = 0.025;
+        public static final double ACTIVE_TOLERANCE = 0.015;
         /** Meters */
-        public static final double PUSH_POSITION = 1.05;
+        public static final double PUSH_POSITION = 0.878675;
         /** Meters */
-        public static final double MAX_HEIGHT = 1.05;
+        public static final double MAX_HEIGHT = 0.878675;
         /** Meters / Count */
-        public static final double METERS_PER_COUNT_B = 1.0 / 3105.3515625;
-        public static final double METERS_PER_COUNT_A = 1.0 / 3105.3515625;
+        public static final double METERS_PER_COUNT_B = 0.828675 / 136.28076171875;
+        public static final double METERS_PER_COUNT_A = 0.828675 / 134.2822265625;
 
         /** Meters / Second */
-        public static final double MAX_VELOCITY = 0.5;
+        public static final double MAX_VELOCITY = 0.75;
         /** Meters / Second^2 */
-        public static final double MAX_ACCEL = 1.0;
+        public static final double MAX_ACCEL = 1.5;
         public static final double PITCH_TOLERANCE = 2.5;
 
-        public static double kP = 96.0;
+        public static double kP = 80.0;
         public static double kI = 20.0;
-        public static double kD = 7.2;
+        public static double kD = 6.2;
 
     }
 }

@@ -46,7 +46,7 @@ public class CSP_Falcon extends WPI_TalonFX implements CSPMotor {
     }
 
     public void setEncoder(double position) {
-        super.setSelectedSensorPosition(position);
+        super.setSelectedSensorPosition(position / 2048.0);
     }
 
     public void setPID(double kP, double kI, double kD) {

@@ -13,6 +13,7 @@ import frc.robot.commands.climber.ImpatientPassive;
 import frc.robot.commands.sensors.PitchGreaterThanCommand;
 import frc.robot.commands.sensors.PitchLessThanCommand;
 import frc.robot.commands.shooter.HoodAngle;
+import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.turret.SetToAngle;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -24,17 +25,18 @@ public class MonkeyBar extends ParallelDeadlineGroup {
     super(new SequentialCommandGroup(
       new ActivePosition(0.0),
       new ImpatientPassive(true),
-      new ActivePosition(0.8),
-      new PitchGreaterThanCommand(36.5),
+      new ActivePosition(0.6),
+      new PitchGreaterThanCommand(40.0),
       new ActivePosition(Constants.climber.MAX_HEIGHT),
       new ImpatientPassive(false),
-      new PitchLessThanCommand(36.0),
+      new PitchLessThanCommand(38.0),
       new ActivePosition(0.1)
     ));
 
     addCommands(
         new HoodAngle(()-> 0.0),
-        new SetToAngle(-180.0)
+        new SetToAngle(-180.0),
+        new ShooterVelocity(() -> 0.0)
     );
   }
 }

@@ -104,9 +104,9 @@ public class Constants {
         }
 
         public static final class anglemotor {
-            public static final double kP = -10e-3;
+            public static final double kP = -6e-3;
             public static final double kI = 0.0;
-            public static final double kD = 15e-6;
+            public static final double kD = 0.0;
         }
 
         public static final class speedmotor {
@@ -116,33 +116,33 @@ public class Constants {
         }
 
         public static final class xPID {
-            public static final double kP = 4.8;
+            public static final double kP = 5.2;
             public static final double kI = 0.0;
-            public static final double kD = 0.0;
+            public static final double kD = 0.052;
             public static final PIDController xPID = new PIDController(kP, kI, kD);
         }
         
         public static final class yPID {
-            public static final double kP = 4.8;
+            public static final double kP = 5.2;
             public static final double kI = 0.0;
-            public static final double kD = 0.0;  
+            public static final double kD = 0.052;  
             public static final PIDController yPID = new PIDController(kP, kI, kD);
         }
 
         public static final class thetaPID {
-            public static final double kP = -12.25;
+            public static final double kP = -9.25;
             public static final double kI = 0.0;
-            public static final double kD = -0.05;  
-            public static final ProfiledPIDController thetaPID = new ProfiledPIDController(kP, kI, kD, new Constraints(Math.PI * 2.0, Math.PI / 2.0));
+            public static final double kD = -0.1;  
+            public static final ProfiledPIDController thetaPID = new ProfiledPIDController(kP, kI, kD, new Constraints(Math.PI * 3.0, Math.PI / 1.0));
         }
 
         public static final class auto {
             /** Meters / Second */
             public static final double MAX_VELOCITY = 5.0; // Maximum velocity allowed in the drivetrain.
             /** Meters / Second^2 */
-            public static final double MAX_ACCEL = 2.3; // Maximum acceleration of the drivetrain.
+            public static final double MAX_ACCEL = 2.5; // Maximum acceleration of the drivetrain.
             /** Meters / Second^2 */
-            public static final double MAX_CACCEL = 2.3; // Maximum centripital acceleration of the robot.
+            public static final double MAX_CACCEL = 2.15; // Maximum centripital acceleration of the robot.
 
             public static final TrajectoryConfig CONFIG = new TrajectoryConfig(MAX_VELOCITY, MAX_ACCEL)
                 .addConstraint(new CentripetalAccelerationConstraint(MAX_CACCEL)); 

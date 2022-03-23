@@ -60,13 +60,13 @@ public final class Trajectories {
             List.of(
                 new Pose2d(0.98, 0.0, Rotation2d.fromDegrees(-96.0)),
                 new Pose2d(0.86, -2.38, Rotation2d.fromDegrees(-90.0)),
-                new Pose2d(0.207, -5.7, Rotation2d.fromDegrees(-46.96))
+                new Pose2d(0.33, -6.05, Rotation2d.fromDegrees(-46.96))
             ), autoConfig
             );
         
         public static final Trajectory terminal2 = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(0.207, -5.7, Rotation2d.fromDegrees(130.0)),
+                new Pose2d(0.33, -6.05, Rotation2d.fromDegrees(130.0)),
                 new Pose2d(-1.67, -4.18, Rotation2d.fromDegrees(-45.41 + 180.0))
             ), new TrajectoryConfig(4.0, 1.0)
             );
@@ -75,7 +75,7 @@ public final class Trajectories {
             List.of(
                 new Pose2d(-1.67, -4.18, Rotation2d.fromDegrees(54.18)),
                 new Pose2d(-1, -3.15, Rotation2d.fromDegrees(54.18)),
-                new Pose2d(-0.56, -2.8, Rotation2d.fromDegrees(53.45))
+                new Pose2d(-0.45, -3.0, Rotation2d.fromDegrees(53.45))
             ), autoConfig
             );
 

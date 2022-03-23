@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -16,6 +17,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Limelight.CameraMode;
 import frc.robot.subsystems.sensors.Limelight.LedMode;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.turret.Turret;
 
 
@@ -55,6 +57,7 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putNumber("Pigeon Angle", pigeon.get().getDegrees());
     SmartDashboard.putNumber("Formula RPM", getFormulaRPM());
     SmartDashboard.putNumber("Pitch", getPitch());
+    SmartDashboard.putString("Target Vel Vector", getTargetVelocityVector().toString());
   }
 
   public void setLED(boolean on) {
@@ -125,7 +128,7 @@ public class Sensors extends SubsystemBase {
     double distance = getDistance();
     return -0.0408107 * Math.pow(distance, 2.0) + 0.327671 * distance + 0.292099;
     //return 0.00167838 * Math.pow(distance, 3.0) - 0.0141796 * Math.pow(distance, 2.0) + 0.0606332 * distance + 1.07604;
-  }
+  }*/
 
   private Translation2d getTargetVelocityVector() {
     ChassisSpeeds cSpeeds = Swerve.getInstance().getChassisSpeeds();
@@ -136,7 +139,7 @@ public class Sensors extends SubsystemBase {
 
     return new Translation2d(cSpeeds.vxMetersPerSecond, cSpeeds.vyMetersPerSecond).rotateBy(Rotation2d.fromDegrees(cAngle));
   }
-*/
+
   public double getFormulaRPM() {
     double distance = getDistance();
     return (isRightColor()) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
@@ -188,5 +191,28 @@ public class Sensors extends SubsystemBase {
     else if (alliance.equals("Blue"))
       return colorSensor.getColor() != -1;
     else return (DriverStation.getAlliance() == DriverStation.Alliance.Red ? colorSensor.getColor() != 1 : colorSensor.getColor() != -1);
+  }
+
+  public Translation2d getAdjustedMagnitude() {
+    Swerve drive = Swerve.getInstance();
+    Turret turret = Turret.getInstance();
+
+    Translation2d driveVector = new Translation2d(drive.getChassisSpeeds().vxMetersPerSecond, drive.getChassisSpeeds().vyMetersPerSecond);
+    Translation2d resultxVector = new Translation2d((getFormulaRPM() * 0.1016 * Math.PI * 0.575) / 60 * Math.sin(Math.toRadians(getFormulaAngle() + 8.6)), Rotation2d.fromDegrees(turret.getPosition() - getTX()));
+    Translation2d shooterxVector = resultxVector.minus(driveVector);
+
+    return new Translation2d(shooterxVector.getNorm(), Math.atan2(shooterxVector.getY(), shooterxVector.getX()));
+  }
+
+  public double getAdjustedRPM() {
+    Translation2d adjustedMagnitude = getAdjustedMagnitude();
+    double rpmMagnitude = Math.hypot(adjustedMagnitude.getNorm(), (getFormulaRPM() * 0.1016 * Math.PI * 0.575) / 60 * Math.cos(Math.toRadians(getFormulaAngle() + 8.6)));
+    rpmMagnitude *= 60.0;
+    rpmMagnitude /= 0.1016 * Math.PI * 0.575;
+    return rpmMagnitude;
+  }
+
+  public double getOffsetAngle() {
+    return Math.toDegrees(Math.atan2(getAdjustedMagnitude().getY(), getAdjustedMagnitude().getX()));
   }
 }

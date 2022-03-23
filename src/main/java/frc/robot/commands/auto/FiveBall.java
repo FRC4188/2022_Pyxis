@@ -11,6 +11,7 @@ import frc.robot.commands.drive.FollowTrajectory;
 import frc.robot.commands.groups.AutoIntake;
 import frc.robot.commands.groups.AutoShoot;
 import frc.robot.commands.groups.AutoShootQuantity;
+import frc.robot.commands.groups.PresetShoot;
 import frc.robot.commands.groups.PresetShootQuantity;
 import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.sensors.ResetPose;
@@ -40,7 +41,7 @@ public class FiveBall extends SequentialCommandGroup {
         new AutoIntake()
       ),
       new SequentialCommandGroup(
-        new PresetShootQuantity(20.0, 2500.0, 2, true).withTimeout(2.5)//20 and 2500,
+        new PresetShootQuantity(26.0, 2600.0, 2, true).withTimeout(2.5)//20 and 2500,
       ),
       new InstantCommand(() -> {
         Intake.getInstance().raise(true);
@@ -56,12 +57,11 @@ public class FiveBall extends SequentialCommandGroup {
         new WaitCommand(1.0).andThen(new AutoIntake()),
         new SetToAngle(-270.0)
       ),
-      new PresetShootQuantity(24.0, 2600.0, 3, true).withTimeout(2.5),//20 and 2500,
+      new PresetShootQuantity(32.0, 2800.0, 3, true)//20 and 2600,
       /*new ParallelDeadlineGroup(
         new FollowTrajectory(Trajectories.fiveball.shoot3, Rotation2d.fromDegrees(53.45)),
         new AutoIntake()
       ),*/
-      new AutoShoot(false)
     );
   }
 }

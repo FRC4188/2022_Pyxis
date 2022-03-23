@@ -19,6 +19,7 @@ import frc.robot.subsystems.sensors.Limelight.CameraMode;
 import frc.robot.subsystems.sensors.Limelight.LedMode;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.turret.Turret;
+import lib4188.data.DataHandler;
 
 
 public class Sensors extends SubsystemBase {
@@ -132,7 +133,7 @@ public class Sensors extends SubsystemBase {
 
   private Translation2d getTargetVelocityVector() {
     ChassisSpeeds cSpeeds = Swerve.getInstance().getChassisSpeeds();
-    double tAngle = Turret.getInstance().getPosition() + 180.0;
+    double tAngle = DataHandler.getDatum(Turret.Keys.POSITION).getDatum().doubleValue() + 180.0;
     double lAngle = getTX();
 
     double cAngle = lAngle-tAngle;
@@ -195,10 +196,9 @@ public class Sensors extends SubsystemBase {
 
   public Translation2d getAdjustedMagnitude() {
     Swerve drive = Swerve.getInstance();
-    Turret turret = Turret.getInstance();
 
     Translation2d driveVector = new Translation2d(drive.getChassisSpeeds().vxMetersPerSecond, drive.getChassisSpeeds().vyMetersPerSecond);
-    Translation2d resultxVector = new Translation2d((getFormulaRPM() * 0.1016 * Math.PI * 0.575) / 60 * Math.sin(Math.toRadians(getFormulaAngle() + 8.6)), Rotation2d.fromDegrees(turret.getPosition() - getTX()));
+    Translation2d resultxVector = new Translation2d((getFormulaRPM() * 0.1016 * Math.PI * 0.575) / 60 * Math.sin(Math.toRadians(getFormulaAngle() + 8.6)), Rotation2d.fromDegrees(DataHandler.getDatum(Turret.Keys.POSITION).getDatum().doubleValue() - getTX()));
     Translation2d shooterxVector = resultxVector.minus(driveVector);
 
     return new Translation2d(shooterxVector.getNorm(), Math.atan2(shooterxVector.getY(), shooterxVector.getX()));

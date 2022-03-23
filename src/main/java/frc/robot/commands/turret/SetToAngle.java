@@ -3,6 +3,7 @@ package frc.robot.commands.turret;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.turret.Turret;
+import lib4188.data.DataHandler;
 
 public class SetToAngle extends CommandBase {
   private Turret turret = Turret.getInstance();
@@ -34,6 +35,6 @@ public class SetToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(turret.getPosition() - angle) < Constants.turret.ANGLE_TOLERANCE;
+    return Math.abs(DataHandler.getDatum(Turret.Keys.POSITION).getDatum().doubleValue() - angle) < Constants.turret.ANGLE_TOLERANCE;
   }
 }

@@ -21,7 +21,6 @@ import frc.robot.commands.climber.ToggleBrakes;
 import frc.robot.commands.climber.TogglePassive;
 import frc.robot.commands.groups.MonkeyBar;
 import frc.robot.commands.groups.PresetShoot;
-import frc.robot.commands.groups.WrapTurret;
 import frc.robot.commands.indexer.SpinIndexer;
 import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.intake.ToggleIntakePistons;
@@ -51,6 +50,7 @@ import frc.robot.subsystems.turret.Turret;
 import frc.robot.utils.ButtonBox;
 import frc.robot.utils.CSPController;
 import frc.robot.utils.CSPController.Scaling;
+import lib4188.data.DataHandler;
 
 /**
  * Controls the robot, holding commands, button bindings, and auto routines.
@@ -103,8 +103,8 @@ public class RobotContainer {
 
     turret.setDefaultCommand(new TrackTarget());
 
-    new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new SetToAngle(Constants.turret.MAX_ANGLE - 180.0).andThen(new Hunt(true)), true);
-    new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new SetToAngle(Constants.turret.MIN_ANGLE + 180.0).andThen(new Hunt(false)), true);
+    new Trigger(() -> DataHandler.getDatum(Turret.Keys.POSITION).getDatum().doubleValue() >= Constants.turret.MAX_ANGLE).whenActive(new SetToAngle(Constants.turret.MAX_ANGLE - 180.0).andThen(new Hunt(true)), true);
+    new Trigger(() -> DataHandler.getDatum(Turret.Keys.POSITION).getDatum().doubleValue() <= Constants.turret.MIN_ANGLE).whenActive(new SetToAngle(Constants.turret.MIN_ANGLE + 180.0).andThen(new Hunt(false)), true);
 
     new Trigger(() -> {
       boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;

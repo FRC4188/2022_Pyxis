@@ -16,8 +16,12 @@ import frc.robot.Constants;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.utils.motors.CSPMotor;
+import lib4188.data.Data;
+import lib4188.data.DataHandler;
+import lib4188.data.Data.Key;
+import lib4188.subsystem.CSPSubsystem;
 
-public class Turret extends SubsystemBase {
+public class Turret extends CSPSubsystem {
   private static Turret instance;
 
   public static synchronized Turret getInstance() {
@@ -30,35 +34,42 @@ public class Turret extends SubsystemBase {
   private PIDController targetPID = new PIDController(Constants.turret.TkP, Constants.turret.TkI, Constants.turret.TkD);
   private PIDController positionPID = new PIDController(Constants.turret.PkP, Constants.turret.PkI, Constants.turret.PkD/*, new Constraints(Constants.turret.MAX_VEL, Constants.turret.MAX_ACCEL)*/);
 
-  Notifier notifier = new Notifier(() -> updateShuffleboard());
-
-  /** Creates a new Turret. */
-  public Turret() {
-    CommandScheduler.getInstance().registerSubsystem(this);
-
-    initialize();
-
-    startNotifier();
+  public enum Keys implements Key {
+    POSITION,
+    TEMPERATURE,
+    /**1 for true, 0 for false. */
+    AIMED
   }
 
-  private void initialize() {
+  private Turret() {
+    super();
+  }
+
+  @Override
+  public void startup() {
     motor.reset();
-
     motor.setBrake(false);
-
     motor.setRamp(0.1);
-
     motor.set(0.0);
   }
 
-  private void startNotifier() {
-    notifier.startPeriodic(1.0);
+  @Override
+  public void updateDashboard() {
+    Data datum = DataHandler.getDatum(Keys.POSITION);
+    SmartDashboard.putNumber(datum.getLabel(), datum.getDatum().doubleValue());
+    datum = DataHandler.getDatum(Keys.TEMPERATURE);
+    SmartDashboard.putNumber(datum.getLabel(), datum.getDatum().doubleValue());
+    datum = DataHandler.getDatum(Keys.AIMED);
+    SmartDashboard.putBoolean(datum.getLabel(), datum.getDatum().intValue() == 1);
   }
 
-  private void updateShuffleboard() {
-    SmartDashboard.putNumber("Turret Motor Temp", getTemperature());
-    SmartDashboard.putNumber("Turret Position", getPosition());
+  @Override
+  public void updateData() {
+    DataHandler.addDatum(Keys.POSITION, new Data("Turret position", getPosition()));
+    DataHandler.addDatum(Keys.TEMPERATURE, new Data("Turret temperature", getTemperature()));
+    DataHandler.addDatum(Keys.AIMED, new Data("Turret is aimed", getIsAimed() ? 1 : 0));
   }
+
 
   public void set(double percent) {
     if (getPosition() < Constants.turret.MIN_ANGLE && percent < 0.0 || 
@@ -82,15 +93,15 @@ public class Turret extends SubsystemBase {
     else set(0.0);
   }
 
-  public double getPosition() {
+  private double getPosition() {
     return motor.getPosition() * Constants.turret.ENCODER_TO_DEGREES;
   }
 
-  public double getTemperature() {
+  private double getTemperature() {
     return motor.getTemperature();
   }
 
-  public boolean getIsAimed() {
+  private boolean getIsAimed() {
     double angle = Sensors.getInstance().getTX();
     boolean aimed = (Math.abs(angle) < Constants.turret.ANGLE_TOLERANCE) && Sensors.getInstance().getHasTarget();
     return aimed;

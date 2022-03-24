@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import frc.robot.Constants;
 
 public final class Trajectories {
@@ -86,5 +87,71 @@ public final class Trajectories {
                 new Pose2d(-0.26, -2.71, Rotation2d.fromDegrees(53.45))
             ), autoConfig);
 
+    }
+
+    public static final class fiveballplus {
+        public static final Trajectory first = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(-90.0)),
+                new Pose2d(0.0, -0.925, Rotation2d.fromDegrees(-90.0))
+            ), autoConfig
+        );
+        public static final Trajectory second = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(0.0, -0.925, Rotation2d.fromDegrees(90.0)),
+                new Pose2d(-1.97, -0.1, Rotation2d.fromDegrees(-181.0))
+            ), autoConfig
+        );
+        public static final Trajectory third = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(-1.97, -0.1, Rotation2d.fromDegrees(-181.0)),
+                new Pose2d(-6.18, -0.68, new Rotation2d(-2.45))
+            ), autoConfig
+        );
+        public static final Trajectory fourth = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(-6.18, -0.68, new Rotation2d(0.35)),
+                new Pose2d(-4.33, 0.91, new Rotation2d(0.35))
+            ), new TrajectoryConfig(5.0, 1.75).addConstraint(new CentripetalAccelerationConstraint(2.15)).setEndVelocity(2.0)
+        );
+        public static final Trajectory fifth = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(-4.33, 0.91, new Rotation2d(0.35)),
+                new Pose2d(-3.09, 3.56, new Rotation2d(0.83))
+            ), autoConfig.setStartVelocity(2.0)
+        );
+    }
+    
+    public static final class sixball {
+        public static final Trajectory first = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(-90.0)),
+                new Pose2d(0.0, -0.91, Rotation2d.fromDegrees(-90.0))
+            ), autoConfig
+        );
+        public static final Trajectory second = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(0.0, -0.91, Rotation2d.fromDegrees(90.0)),
+                new Pose2d(-1.97, -0.1, Rotation2d.fromDegrees(-181.0))
+            ), autoConfig
+        );
+        public static final Trajectory third = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(-1.97, -0.1, Rotation2d.fromDegrees(-181.0)),
+                new Pose2d(-6.18, -0.68, new Rotation2d(-2.45))
+            ), autoConfig
+        );
+        public static final Trajectory fourth = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(-6.18, -0.68, new Rotation2d(0.35)),
+                new Pose2d(-4.33, 0.91, new Rotation2d(0.35))
+            ), new TrajectoryConfig(5.0, 1.75).addConstraint(new CentripetalAccelerationConstraint(2.15)).setEndVelocity(2.0)
+        );
+        public static final Trajectory fifth = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(-4.33, 0.91, new Rotation2d(0.35)),
+                new Pose2d(-3.09, 3.56, new Rotation2d(0.83))
+            ), autoConfig.setStartVelocity(2.0)
+        );
     }
 }

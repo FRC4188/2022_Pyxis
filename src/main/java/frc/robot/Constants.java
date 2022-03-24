@@ -132,17 +132,17 @@ public class Constants {
         public static final class thetaPID {
             public static final double kP = -9.25;
             public static final double kI = 0.0;
-            public static final double kD = -0.1;  
+            public static final double kD = -0.15;  
             public static final ProfiledPIDController thetaPID = new ProfiledPIDController(kP, kI, kD, new Constraints(Math.PI * 3.0, Math.PI / 1.0));
         }
 
         public static final class auto {
             /** Meters / Second */
-            public static final double MAX_VELOCITY = 5.0; // Maximum velocity allowed in the drivetrain.
+            public static final double MAX_VELOCITY = 4.75; // Maximum velocity allowed in the drivetrain.
             /** Meters / Second^2 */
-            public static final double MAX_ACCEL = 2.5; // Maximum acceleration of the drivetrain.
+            public static final double MAX_ACCEL = 2.25; // Maximum acceleration of the drivetrain.
             /** Meters / Second^2 */
-            public static final double MAX_CACCEL = 2.15; // Maximum centripital acceleration of the robot.
+            public static final double MAX_CACCEL = 2.2; // Maximum centripital acceleration of the robot.
 
             public static final TrajectoryConfig CONFIG = new TrajectoryConfig(MAX_VELOCITY, MAX_ACCEL)
                 .addConstraint(new CentripetalAccelerationConstraint(MAX_CACCEL)); 

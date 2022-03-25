@@ -154,4 +154,20 @@ public final class Trajectories {
             ), autoConfig.setStartVelocity(2.0)
         );
     }
+
+    public static final class steal {
+        public static final Trajectory first = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(6.728, 5.891, new Rotation2d(-0.911, 1.901)),
+                new Pose2d(6.166, 7.049, new Rotation2d(-0.416, 0.787))
+            ), new TrajectoryConfig(2.0, 1.5).addConstraint(new CentripetalAccelerationConstraint(1.5))
+        );
+        public static final Trajectory second = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(6.168, 6.969, new Rotation2d(-0.569, -1.669)),
+                new Pose2d(7.439, 6.703, new Rotation2d(0.0, 1.043)),
+                new Pose2d(7.439, 7.557, new Rotation2d(0.0, 1.669))
+            ), new TrajectoryConfig(2.0, 1.5).addConstraint(new CentripetalAccelerationConstraint(1.5))
+        );
+    }
 }

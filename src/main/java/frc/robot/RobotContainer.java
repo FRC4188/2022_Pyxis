@@ -15,6 +15,7 @@ import frc.robot.commands.auto.FiveBall;
 import frc.robot.commands.auto.FiveBallPlus;
 import frc.robot.commands.auto.FourBall;
 import frc.robot.commands.auto.GenericTwoBall;
+import frc.robot.commands.auto.StealAuto;
 import frc.robot.commands.auto.The1771Auto;
 import frc.robot.commands.climber.ActivePosition;
 import frc.robot.commands.climber.ActiveVolts;
@@ -103,7 +104,7 @@ public class RobotContainer {
       swerve)
     );
 
-    turret.setDefaultCommand(new TrackTarget());
+    //turret.setDefaultCommand(new TrackTarget());
 
     new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new SetToAngle(Constants.turret.MAX_ANGLE - 180.0).andThen(new Hunt(true)), true);
     new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new SetToAngle(Constants.turret.MIN_ANGLE + 180.0).andThen(new Hunt(false)), true);
@@ -223,6 +224,7 @@ public class RobotContainer {
     autoChooser.addOption("Generic Two Ball Auto", new GenericTwoBall());
     autoChooser.addOption("Five Ball Plus Auto", new FiveBallPlus());
     autoChooser.addOption("1771 Auto", new The1771Auto());
+    autoChooser.addOption("Steal Auto", new StealAuto());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }

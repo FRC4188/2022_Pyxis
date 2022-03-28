@@ -190,20 +190,20 @@ public class Constants {
     }
 
     public static final class turret {
-            public static final double TkP = 0.75;
+            public static final double TkP = 0.05;
             public static final double TkI = 0.0;
-            public static final double TkD = 0.03;
+            public static final double TkD = 0.0;
 
-            public static final double PkP = 0.4;
+            public static final double PkP = 0.1;
             public static final double PkI = 0.0;
-            public static final double PkD = 0.01;
+            public static final double PkD = 0.0;
             public static final double MAX_VEL = 180.0;
             public static final double MAX_ACCEL = 180.0;
 
             public static final double MIN_ANGLE = -400.0;
             public static final double MAX_ANGLE = 55.0;
 
-            public static final double GEAR_RATIO = 35.0 * 14.0;
+            public static final double GEAR_RATIO = 3.0 * 14.0;
             public static final double ENCODER_TO_DEGREES = 360.0 / GEAR_RATIO;
 
             public static final double ANGLE_TOLERANCE = 4.5;

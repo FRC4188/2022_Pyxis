@@ -34,6 +34,9 @@ public class Swerve extends SubsystemBase {
 
   private PIDController rotationPID = new PIDController(0.11, 0.0, 0.03);
 
+  private PIDController pitchCorrection = new PIDController(-0.1, 0.0, 0.0);
+  private PIDController rollCorrection = new PIDController(0.1, 0.0, 0.0);
+
   private Odometry odometry = new Odometry(new Pose2d());
 
   private Notifier dashboard = new Notifier(() -> smartDashboard());
@@ -84,7 +87,10 @@ public class Swerve extends SubsystemBase {
       }
     }
 
-    setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(yInput, xInput, rotInput, sensors.getRotation()));
+    double pitch = sensors.getPitch();
+    double roll = sensors.getRoll();
+
+    setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(yInput, xInput + pitchCorrection.calculate(pitch, 0.0), rotInput + rollCorrection.calculate(roll, 0.0), sensors.getRotation()));
   }
 
   public void zeroPower() {

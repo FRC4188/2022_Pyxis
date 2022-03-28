@@ -11,6 +11,7 @@ import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.trigger.PushTrigger;
 import frc.robot.commands.turret.SetToAngle;
+import frc.robot.commands.turret.TurretAngleWait;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -22,7 +23,7 @@ public class LowerPortShot extends ParallelCommandGroup {
       new SetToAngle(-180.0),
       new ShooterVelocity(() -> 1200.0),
       new HoodAngle(() -> 45.0),
-      new WaitCommand(0.75).andThen(new PushTrigger(12.0)),
+      new TurretAngleWait(-180.0).andThen(new PushTrigger(12.0)),
       new LoadBalls()
     );
   }

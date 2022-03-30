@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.estimator.UnscentedKalmanFilter;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -46,6 +47,8 @@ public class Sensors extends SubsystemBase {
   private SendableChooser<String> alliance = new SendableChooser<>();
 
   private Odometry goalPoseEstimator = new Odometry(new Pose2d());
+
+  private LinearFilter txFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
 
   /** Creates a new Sensors. */
   private Sensors() {
@@ -97,7 +100,7 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getTX() {
-    return limelight.getTX();
+    return txFilter.calculate(limelight.getTX());
   }
 
   public double getTY() {

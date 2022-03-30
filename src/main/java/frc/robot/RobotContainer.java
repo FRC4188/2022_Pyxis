@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.shooter;
@@ -39,6 +40,7 @@ import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.trigger.PushTrigger;
 import frc.robot.commands.turret.SetToAngle;
 import frc.robot.commands.turret.TrackTarget;
+import frc.robot.commands.turret.TurretAngleWait;
 import frc.robot.commands.turret.Hunt;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Swerve;
@@ -98,18 +100,27 @@ public class RobotContainer {
     swerve.setDefaultCommand(new RunCommand(() -> swerve.drive(
       pilot.getLeftY(Scaling.CUBED),
       pilot.getLeftX(Scaling.CUBED),
-      pilot.getRightX(Scaling.
-      CUBED)),
+      pilot.getRightX(Scaling.CUBED),
+      pilot.getRbButtonObj().get()),
       swerve)
     );
 
     //turret.setDefaultCommand(new TrackTarget());
 
-    new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new RunCommand(() -> turret.setVolts(8.0)).withTimeout(0.5).andThen(new Hunt(true)), true);
-    new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new RunCommand(() -> turret.setVolts(-8.0)).withTimeout(0.5).andThen(new Hunt(false)), true);
-    new Trigger(() -> !Sensors.getInstance().getHasTarget()).whenActive(new SetToAngle(0.0));
+    new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new ParallelDeadlineGroup(
+      new TurretAngleWait(turret.getPosition() - 180.0).withTimeout(0.45),
+      new RunCommand(() -> turret.setVolts(-12.0))
+    ).andThen(new Hunt(true)));
 
-    new Trigger(() -> {
+    new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new ParallelDeadlineGroup(
+      new TurretAngleWait(turret.getPosition() + 180.0).withTimeout(0.45),
+      new RunCommand(() -> turret.setVolts(12.0))
+    ).andThen(new Hunt(false)));
+
+    new Trigger(() -> Sensors.getInstance().getHasTarget()).whenActive(new AutoShoot(true));
+    //new Trigger(() -> !Sensors.getInstance().getHasTarget()).whenActive(new SetToAngle(-180.0));
+
+    /*new Trigger(() -> {
       boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
       lastSetShooter = SmartDashboard.getNumber("Shooter Set Velocity", 0.0);
       return changed;
@@ -119,7 +130,7 @@ public class RobotContainer {
       boolean changed = SmartDashboard.getNumber("Hood Set Angle", 0.0) != lastSetHood;
       lastSetHood = SmartDashboard.getNumber("Hood Set Angle", 0.0);
       return changed;
-    }).whenActive(new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));
+    }).whenActive(new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));*/
   }
 
   /**
@@ -133,8 +144,8 @@ public class RobotContainer {
     SmartDashboard.putData("Toggle Climber Brakes", new ToggleBrakes());
 
     pilot.getBButtonObj()
-      .whileHeld(new AutoIntake())
-      .whenReleased(new InterruptSubsystem(indexer, intake));
+      .whileHeld(new SpinIntake(12.0))
+      .whenReleased(new InterruptSubsystem(intake));
     
     pilot.getAButtonObj()
       .whileHeld(new TrackTarget())
@@ -148,6 +159,7 @@ public class RobotContainer {
       .whenPressed(new ParallelCommandGroup(new PushTrigger(-8.0), new SpinIndexer(-8.0), new SpinIntake(-12.0, true)))
       .whenReleased(new InterruptSubsystem(indexer, trigger, intake));
     
+    /*
     pilot.getRbButtonObj()
       .whenPressed(new LowerPortShot())
       .whenReleased(new InterruptSubsystem(turret, shooter, trigger, indexer));
@@ -155,6 +167,7 @@ public class RobotContainer {
     pilot.getLbButtonObj()
       .whenPressed(new BlindShoot(10.5, 2500.0))
       .whenReleased(new InterruptSubsystem(shooter, hood, turret, trigger));
+      */
 
     pilot.getDpadUpButtonObj()
       .whenPressed(new ActivePosition(Constants.climber.MAX_HEIGHT));

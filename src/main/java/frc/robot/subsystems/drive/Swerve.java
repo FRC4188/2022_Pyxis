@@ -32,10 +32,10 @@ public class Swerve extends SubsystemBase {
 
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(Constants.drive.FrontLeftLocation, Constants.drive.FrontRightLocation, Constants.drive.BackLeftLocation, Constants.drive.BackRightLocation);
 
-  private PIDController rotationPID = new PIDController(0.11, 0.0, 0.03);
+  private PIDController rotationPID = new PIDController(0.05, 0.0, 0.0);
 
   private PIDController pitchCorrection = new PIDController(-0.1, 0.0, 0.0);
-  private PIDController rollCorrection = new PIDController(0.1, 0.0, 0.0);
+  private PIDController rollCorrection = new PIDController(-0.075, 0.0, 0.01);
 
   private Odometry odometry = new Odometry(new Pose2d());
 
@@ -73,7 +73,7 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Falcon 8 Temp", rightRear.getSpeedTemp());
   }
 
-  public void drive(double yInput, double xInput, double rotInput) {
+  public void drive(double yInput, double xInput, double rotInput, boolean robotOriented) {
     yInput *= Constants.drive.MAX_VELOCITY;
     xInput *= -Constants.drive.MAX_VELOCITY;
     rotInput *= 4.0 * Math.PI;
@@ -87,10 +87,17 @@ public class Swerve extends SubsystemBase {
       }
     }
 
-    double pitch = sensors.getPitch();
-    double roll = sensors.getRoll();
+    double pitch = Math.abs(sensors.getPitch()) < 1.5 ? 0.0 : sensors.getPitch();
+    double roll = Math.abs(sensors.getRoll()) < 1.5 ? 0.0 : sensors.getRoll();
 
-    setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(yInput, xInput + pitchCorrection.calculate(pitch, 0.0), rotInput + rollCorrection.calculate(roll, 0.0), sensors.getRotation()));
+    ChassisSpeeds result;
+
+    if (!robotOriented)
+      result = ChassisSpeeds.fromFieldRelativeSpeeds(yInput, xInput, rotInput, sensors.getRotation());
+    else result = new ChassisSpeeds(yInput, xInput, rotInput);
+
+    result = new ChassisSpeeds(result.vxMetersPerSecond - pitchCorrection.calculate(pitch, 0.0), result.vyMetersPerSecond + rollCorrection.calculate(roll, 0.0), result.omegaRadiansPerSecond);
+    setChassisSpeeds(result);
   }
 
   public void zeroPower() {
@@ -149,4 +156,8 @@ public class Swerve extends SubsystemBase {
   public SwerveDriveKinematics getKinematics() {
     return kinematics;
   }
+
+public double getSpeed() {
+    return Math.hypot(getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
+}
 }

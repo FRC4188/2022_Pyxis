@@ -5,6 +5,7 @@
 package frc.robot.commands.trigger;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.subsystems.shooter.Shooter;
@@ -28,7 +29,7 @@ public class AutoFire extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.isReady() && hood.isReady()) trigger.setVoltage(12.0);
+    if (shooter.isReady() && hood.isReady()/* && Swerve.getInstance().getSpeed() > 3.0*/) trigger.setVoltage(12.0);
     else if (!Sensors.getInstance().isRightColor()) trigger.setVoltage(12.0);
     else trigger.set(0.0);
   }

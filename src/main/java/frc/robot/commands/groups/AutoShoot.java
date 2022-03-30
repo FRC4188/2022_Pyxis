@@ -20,9 +20,7 @@ public class AutoShoot extends ParallelCommandGroup {
       new AutoFire(),
       new TrackTarget(),
       new HoodAngle(() -> Sensors.getInstance().getFormulaAngle()),
-      new LoadBalls(),
-      new RunCommand(() -> Intake.getInstance().raise(raised)),
-      new SpinIntake(raised ? 0.0 : 12.0)
+      new LoadBalls()
     );
   }
 }

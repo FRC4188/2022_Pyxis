@@ -86,7 +86,7 @@ public class Hood extends SubsystemBase {
   }
 
   public boolean isReady(double angle) {
-    return Math.abs(getPosition() - angle) < 0.75;
+    return Math.abs(getPosition() - angle) < 1.25;
   }
 
   public boolean isReady() {

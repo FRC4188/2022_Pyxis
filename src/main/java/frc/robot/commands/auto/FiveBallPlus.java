@@ -41,21 +41,21 @@ public class FiveBallPlus extends SequentialCommandGroup {
           new FollowTrajectory(Trajectories.fiveballplus.second, Rotation2d.fromDegrees(180.0))
         ),
         new FindHoodZeros(),
-        new AutoIntake(),
+        new SpinIntake(12.0),
         new SetToAngle(-30.0)
       ),
-      new PresetShootQuantity(26.0, 2600.0, 2, true),
-      new PresetShootQuantity(26.0, 2600.0, 1, true).withTimeout(1.25),
+      /*new PresetShootQuantity(26.0, 2600.0, 2, true),
+      new PresetShootQuantity(26.0, 2600.0, 1, true).withTimeout(1.25),*/
       new InstantCommand(() -> PreShooter.getInstance().setVoltage(0.0)),
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
           new FollowTrajectory(Trajectories.fiveballplus.third, new Rotation2d(-2.45)),
           new FollowTrajectory(Trajectories.fiveballplus.fourth, new Rotation2d(-2.47))
         ),
-        new AutoIntake(),
+        new SpinIntake(12.0),
         new SetToAngle(30.0)
-      ),
-      new PresetShoot(34.0, 2900.0)
+      )
+      //new PresetShoot(34.0, 2900.0)
     );
   }
 }

@@ -33,6 +33,6 @@ public class TurretAngleWait extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(turret.getPosition() - desired) <= Constants.turret.ANGLE_TOLERANCE;
+    return Math.abs(desired - turret.getPosition()) <= 10.0;
   }
 }

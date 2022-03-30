@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
@@ -32,6 +34,9 @@ public class Turret extends SubsystemBase {
 
   Notifier notifier = new Notifier(() -> updateShuffleboard());
 
+  private double lastP = Constants.turret.TkP;
+  private double lastD = Constants.turret.TkD;
+
   /** Creates a new Turret. */
   public Turret() {
     CommandScheduler.getInstance().registerSubsystem(this);
@@ -49,6 +54,20 @@ public class Turret extends SubsystemBase {
     motor.setRamp(0.1);
 
     motor.set(0.0);
+
+    SmartDashboard.putNumber("Target kP", 0.0);
+    new Trigger(() -> {
+      boolean changed = SmartDashboard.getNumber("Target kP", 0.0) != lastP;
+      lastP = SmartDashboard.getNumber("Target kP", 0.0);
+      return changed;
+    }).whenActive(new InstantCommand(() -> targetPID.setP(lastP)));
+
+    SmartDashboard.putNumber("Target kD", 0.0);
+    new Trigger(() -> {
+      boolean changed = SmartDashboard.getNumber("Target kD", 0.0) != lastD;
+      lastD = SmartDashboard.getNumber("Target kD", 0.0);
+      return changed;
+    }).whenActive(new InstantCommand(() -> targetPID.setD(lastD)));
   }
 
   private void startNotifier() {
@@ -78,7 +97,7 @@ public class Turret extends SubsystemBase {
   }
 
   public void trackTarget() {
-    if (Sensors.getInstance().getHasTarget()) setVolts(targetPID.calculate(0.0, Sensors.getInstance().getTX()/* + Sensors.getInstance().getOffsetAngle()*/) + -Swerve.getInstance().getChassisSpeeds().omegaRadiansPerSecond * 6.0);
+    if (Sensors.getInstance().getHasTarget()) setVolts(targetPID.calculate(0.0, Sensors.getInstance().getTargetAngle()) + -Swerve.getInstance().getChassisSpeeds().omegaRadiansPerSecond * 2.5);
     else set(0.0);
   }
 
@@ -91,8 +110,12 @@ public class Turret extends SubsystemBase {
   }
 
   public boolean getIsAimed() {
-    double angle = Sensors.getInstance().getTX();
+    double angle = Sensors.getInstance().getTargetAngle();
     boolean aimed = (Math.abs(angle) < Constants.turret.ANGLE_TOLERANCE) && Sensors.getInstance().getHasTarget();
     return aimed;
   }
+
+public double getVelocity() {
+  return motor.getVelocity() * Constants.turret.ENCODER_TO_DEGREES;
+}
 }

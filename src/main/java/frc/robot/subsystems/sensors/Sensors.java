@@ -57,6 +57,7 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putNumber("Pigeon Angle", pigeon.get().getDegrees());
     SmartDashboard.putNumber("Formula RPM", getFormulaRPM());
     SmartDashboard.putNumber("Pitch", getPitch());
+    SmartDashboard.putNumber("Roll", getRoll());
     SmartDashboard.putString("Target Vel Vector", getTargetVelocityVector().toString());
   }
 
@@ -81,17 +82,17 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getTX() {
-    return limelight.getTX() - 3.0;
+    return limelight.getTX();
   }
-/*
   public double getTargetAngle() {
-    Translation2d tVel = getTargetVelocityVector();
-    double tX = -getTimeOfFlight() * tVel.getX();
-    double tY = getDistance() - getTimeOfFlight() * tVel.getY();
-    double adjust = Math.toDegrees(Math.atan2(tY, tX)) % 180.0 - 90.0;
+    double tX = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getX();
+    double tY = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getY();
+    double adjust = Math.toDegrees(Math.atan2(tY, getDistance() + tX));
 
-    return Math.abs(adjust) > 20.0 ? getTX() : getTX() + adjust;
-  }*/
+    SmartDashboard.putNumber("Angle Adjust Val", adjust);
+
+    return getTX() + adjust;
+  }
 
   public double getTY() {
     return limelight.getTY();
@@ -141,17 +142,17 @@ public class Sensors extends SubsystemBase {
 
     double cAngle = lAngle-tAngle;
 
-    return new Translation2d(cSpeeds.vxMetersPerSecond, cSpeeds.vyMetersPerSecond).rotateBy(Rotation2d.fromDegrees(cAngle));
+    return new Translation2d(cSpeeds.vxMetersPerSecond, -cSpeeds.vyMetersPerSecond).rotateBy(Rotation2d.fromDegrees(cAngle));
   }
 
   public double getFormulaRPM() {
-    double distance = getDistance();
-    return (isRightColor()) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
+    double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
+    return (isRightColor() && getDistance() < 5.5) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
     //return isRightColor() ? 1787.69 * Math.pow(0.249199, 1.53841 * distance + 0.199996) + 216.565 * distance + 2046.46 : 1500.0;
   }
 
   public double getFormulaAngle() {
-    double distance = getDistance();
+    double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
     return (isRightColor()) ? Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29 : 2.0;
     //return isRightColor() ? -50.7709 * Math.pow(2.1949, -0.786134 * distance - 0.777002) + 1.71126 * distance + 21.2811 : 2.0;
   }

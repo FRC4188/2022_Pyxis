@@ -23,7 +23,7 @@ import frc.robot.utils.motors.CSP_Falcon;
 public class Constants {
 
     public static final class devices {
-        public static final CSPMotor turretMotor = new CSP_CANSparkMax(9);
+        public static final CSPMotor turretMotor = new CSP_Falcon(9);
         public static final CSPMotor preshooterMotor = new CSP_CANSparkMax(11);
         public static final CSPMotor shooterLeader = new CSP_Falcon(14);
         public static final CSPMotor shooterFollower = new CSP_Falcon(13);
@@ -150,7 +150,7 @@ public class Constants {
     }
 
     public static final class shooter {
-        public static final double ALPHA = 0.85;
+        public static final double ALPHA = 0.95;
 
         public static double kS = 0.7391;
         public static double kV = 0.09001;
@@ -169,11 +169,11 @@ public class Constants {
         public static final double MAX_JERK = 5000.0;
 
         public static final class hood {
-            public static final double ALPHA = 1.0;
+            public static final double ALPHA = 1.15;
 
-            public static final double kP = 0.35;
+            public static final double kP = 0.75;
             public static final double kI = 0.0;
-            public static final double kD = 0.005;
+            public static final double kD = 0.02;
             public static final double kCos = 0.53;
 
             public static final double GEARING = 125.0 * (40.0/16.0);
@@ -190,23 +190,23 @@ public class Constants {
     }
 
     public static final class turret {
-            public static final double TkP = 0.05;
+            public static final double TkP = 0.7;
             public static final double TkI = 0.0;
-            public static final double TkD = 0.0;
+            public static final double TkD = 0.025;
 
-            public static final double PkP = 0.1;
+            public static final double PkP = 0.5;
             public static final double PkI = 0.0;
             public static final double PkD = 0.0;
-            public static final double MAX_VEL = 180.0;
-            public static final double MAX_ACCEL = 180.0;
+            public static final double MAX_VEL = 720.0;
+            public static final double MAX_ACCEL = 1440.0;
 
             public static final double MIN_ANGLE = -400.0;
-            public static final double MAX_ANGLE = 55.0;
+            public static final double MAX_ANGLE = 45.0;
 
-            public static final double GEAR_RATIO = 3.0 * 14.0;
+            public static final double GEAR_RATIO = 3.0 * 3.0 * 14.0;
             public static final double ENCODER_TO_DEGREES = 360.0 / GEAR_RATIO;
 
-            public static final double ANGLE_TOLERANCE = 4.5;
+            public static final double ANGLE_TOLERANCE = 2.0;
             
         public static final double LIMELIGHT_HEIGHT = Units.inchesToMeters(43.6);
         public static final double MOUNTING_ANGLE = 27.5;

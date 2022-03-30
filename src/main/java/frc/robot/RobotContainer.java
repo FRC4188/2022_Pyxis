@@ -25,6 +25,7 @@ import frc.robot.commands.climber.ToggleBrakes;
 import frc.robot.commands.climber.TogglePassive;
 import frc.robot.commands.groups.MonkeyBar;
 import frc.robot.commands.groups.PresetShoot;
+import frc.robot.commands.indexer.LoadBalls;
 import frc.robot.commands.indexer.SpinIndexer;
 import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.intake.ToggleIntakePistons;
@@ -37,6 +38,7 @@ import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
+import frc.robot.commands.trigger.AutoFire;
 import frc.robot.commands.trigger.PushTrigger;
 import frc.robot.commands.turret.SetToAngle;
 import frc.robot.commands.turret.TrackTarget;
@@ -83,10 +85,6 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-
-    CommandScheduler.getInstance().registerSubsystem(swerve, Sensors.getInstance());
-    SmartDashboard.putNumber("trigger voltage", 0.0);
-    SmartDashboard.putNumber("indexer voltage", 0.0);
     setDefaultCommands();
     configureButtonBindings();
     addChooser();
@@ -104,33 +102,18 @@ public class RobotContainer {
       pilot.getRbButtonObj().get()),
       swerve)
     );
-
-    //turret.setDefaultCommand(new TrackTarget());
-
-    new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new ParallelDeadlineGroup(
-      new TurretAngleWait(turret.getPosition() - 180.0).withTimeout(0.45),
-      new RunCommand(() -> turret.setVolts(-12.0))
-    ).andThen(new Hunt(true)));
-
-    new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new ParallelDeadlineGroup(
-      new TurretAngleWait(turret.getPosition() + 180.0).withTimeout(0.45),
-      new RunCommand(() -> turret.setVolts(12.0))
-    ).andThen(new Hunt(false)));
-
-    new Trigger(() -> Sensors.getInstance().getHasTarget()).whenActive(new AutoShoot(true));
-    //new Trigger(() -> !Sensors.getInstance().getHasTarget()).whenActive(new SetToAngle(-180.0));
-
-    /*new Trigger(() -> {
-      boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
-      lastSetShooter = SmartDashboard.getNumber("Shooter Set Velocity", 0.0);
-      return changed;
-    }).whenActive(new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0)));
-
-    new Trigger(() -> {
-      boolean changed = SmartDashboard.getNumber("Hood Set Angle", 0.0) != lastSetHood;
-      lastSetHood = SmartDashboard.getNumber("Hood Set Angle", 0.0);
-      return changed;
-    }).whenActive(new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));*/
+    turret.setDefaultCommand(new RunCommand(() -> {
+      double current = turret.getPosition();
+      double required = -(Sensors.getInstance().getTargetAngle() + 180.0);
+      double set = current + (required - (current + 180.0) % 360.0 - 180.0);
+      turret.setAngle(set);
+    }, turret));
+    shooter.setDefaultCommand(new ShooterVelocity(() -> Sensors.getInstance().getFormulaRPM()));
+    hood.setDefaultCommand(new HoodAngle(() -> Sensors.getInstance().getFormulaAngle()));
+    trigger.setDefaultCommand(new AutoFire());
+    indexer.setDefaultCommand(new LoadBalls());
+    climber.setDefaultCommand(new RunCommand(() -> climber.setActiveVolts(0.0), climber));
+    intake.setDefaultCommand(new RunCommand(() -> intake.setVoltage(0.0), intake));
   }
 
   /**
@@ -142,6 +125,18 @@ public class RobotContainer {
     SmartDashboard.putData("Find Hood Zero", new FindHoodZeros());
     SmartDashboard.putData("Zero Climber", new FindZeros().andThen(new ActivePosition(0.0)));
     SmartDashboard.putData("Toggle Climber Brakes", new ToggleBrakes());
+
+    new Trigger(() -> {
+      boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
+      lastSetShooter = SmartDashboard.getNumber("Shooter Set Velocity", 0.0);
+      return changed;
+    }).whenActive(new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0)));
+
+    new Trigger(() -> {
+      boolean changed = SmartDashboard.getNumber("Hood Set Angle", 0.0) != lastSetHood;
+      lastSetHood = SmartDashboard.getNumber("Hood Set Angle", 0.0);
+      return changed;
+    }).whenActive(new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));
 
     pilot.getBButtonObj()
       .whileHeld(new SpinIntake(12.0))

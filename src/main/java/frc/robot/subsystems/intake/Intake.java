@@ -31,7 +31,7 @@ public class Intake extends SubsystemBase {
     intakeMotor.reset();
     intakeMotor.setRamp(0.125);
 
-    shuffle.startPeriodic(0.1);
+    shuffle.startPeriodic(2.0);
     intakeMotor.setInverted(true);
 
     raise(true);

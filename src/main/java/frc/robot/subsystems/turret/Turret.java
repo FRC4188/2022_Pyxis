@@ -4,17 +4,19 @@
 
 package frc.robot.subsystems.turret;
 
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.commands.turret.Hunt;
+import frc.robot.commands.turret.TurretAngleWait;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.utils.motors.CSPMotor;
@@ -34,9 +36,6 @@ public class Turret extends SubsystemBase {
 
   Notifier notifier = new Notifier(() -> updateShuffleboard());
 
-  private double lastP = Constants.turret.TkP;
-  private double lastD = Constants.turret.TkD;
-
   /** Creates a new Turret. */
   public Turret() {
     CommandScheduler.getInstance().registerSubsystem(this);
@@ -55,23 +54,19 @@ public class Turret extends SubsystemBase {
 
     motor.set(0.0);
 
-    SmartDashboard.putNumber("Target kP", 0.0);
-    new Trigger(() -> {
-      boolean changed = SmartDashboard.getNumber("Target kP", 0.0) != lastP;
-      lastP = SmartDashboard.getNumber("Target kP", 0.0);
-      return changed;
-    }).whenActive(new InstantCommand(() -> targetPID.setP(lastP)));
+    new Trigger(() -> getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new ParallelDeadlineGroup(
+      new TurretAngleWait(getPosition() - 180.0).withTimeout(0.45),
+      new RunCommand(() -> setVolts(-12.0))
+    ).andThen(new Hunt(true)));
 
-    SmartDashboard.putNumber("Target kD", 0.0);
-    new Trigger(() -> {
-      boolean changed = SmartDashboard.getNumber("Target kD", 0.0) != lastD;
-      lastD = SmartDashboard.getNumber("Target kD", 0.0);
-      return changed;
-    }).whenActive(new InstantCommand(() -> targetPID.setD(lastD)));
+    new Trigger(() -> getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new ParallelDeadlineGroup(
+      new TurretAngleWait(getPosition() + 180.0).withTimeout(0.45),
+      new RunCommand(() -> setVolts(12.0))
+    ).andThen(new Hunt(false)));
   }
 
   private void startNotifier() {
-    notifier.startPeriodic(1.0);
+    notifier.startPeriodic(0.2);
   }
 
   private void updateShuffleboard() {

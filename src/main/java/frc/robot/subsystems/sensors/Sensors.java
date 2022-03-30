@@ -2,6 +2,8 @@ package frc.robot.subsystems.sensors;
 
 import java.util.Arrays;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.estimator.UnscentedKalmanFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -12,8 +14,12 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.subsystems.drive.Odometry;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Limelight.CameraMode;
 import frc.robot.subsystems.sensors.Limelight.LedMode;
@@ -39,6 +45,8 @@ public class Sensors extends SubsystemBase {
 
   private SendableChooser<String> alliance = new SendableChooser<>();
 
+  private Odometry goalPoseEstimator = new Odometry(new Pose2d());
+
   /** Creates a new Sensors. */
   private Sensors() {
     CommandScheduler.getInstance().registerSubsystem(this);
@@ -48,17 +56,24 @@ public class Sensors extends SubsystemBase {
     alliance.setDefaultOption("FMS", "FMS");
     alliance.addOption("Blue", "Blue");
     alliance.addOption("Red", "Red");
+    alliance.addOption("All", "All");
 
     SmartDashboard.putData("Alliance Color", alliance);
+
+    new Trigger(() -> getHasTarget())
+      .whileActiveContinuous(new InstantCommand(() -> setGoalPose(calculateGoalPose())))
+      .whenInactive(new RunCommand(() -> updateGoalPose()).withInterrupt(() -> getHasTarget()));
   }
 
   private void updateShuffleboard() {
-    SmartDashboard.putNumber("Limelight Distance", getDistance());
-    SmartDashboard.putNumber("Pigeon Angle", pigeon.get().getDegrees());
-    SmartDashboard.putNumber("Formula RPM", getFormulaRPM());
+    SmartDashboard.putNumber("Distance to Goal", getDistance());
+    SmartDashboard.putNumber("Yaw", pigeon.get().getDegrees());
     SmartDashboard.putNumber("Pitch", getPitch());
     SmartDashboard.putNumber("Roll", getRoll());
     SmartDashboard.putString("Target Vel Vector", getTargetVelocityVector().toString());
+    SmartDashboard.putString("Hub Position", getGoalPose().toString());
+    SmartDashboard.putNumber("LL TX", getTX());
+    SmartDashboard.putNumber("OTF Angle Adjustment", getOffsetAngle());
   }
 
   public void setLED(boolean on) {
@@ -66,7 +81,7 @@ public class Sensors extends SubsystemBase {
   }
 
   private void startNotifier() {
-    notifier.startPeriodic(0.1);
+    notifier.startPeriodic(0.2);
   }
 
   public boolean getHasTarget() {
@@ -84,15 +99,6 @@ public class Sensors extends SubsystemBase {
   public double getTX() {
     return limelight.getTX();
   }
-  public double getTargetAngle() {
-    double tX = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getX();
-    double tY = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getY();
-    double adjust = Math.toDegrees(Math.atan2(tY, getDistance() + tX));
-
-    SmartDashboard.putNumber("Angle Adjust Val", adjust);
-
-    return getTX() + adjust;
-  }
 
   public double getTY() {
     return limelight.getTY();
@@ -103,15 +109,6 @@ public class Sensors extends SubsystemBase {
         / Math.tan(Math.toRadians(getTY() + Constants.turret.MOUNTING_ANGLE));
   }
 
-  /*
-  public double getTargetDistance() {
-    Translation2d tVel = getTargetVelocityVector();
-    double tX = -getTimeOfFlight() * tVel.getX();
-    double tY = getDistance() - getTimeOfFlight() * tVel.getY();
-
-    return Math.hypot(tX, tY);
-  }
-*/
   public void setPigeonAngle(double angle) {
     pigeon.set(angle);
   }
@@ -120,41 +117,14 @@ public class Sensors extends SubsystemBase {
     return pigeon.get();
   }
 
-  public Pose2d getPosition() {
-    try {
-      return new Pose2d(limelight.getPose2d().getTranslation(), getRotation());
-    } catch (Exception e) {
-      return new Pose2d();
-    }
-  }
-
-  /*
-  public double getTimeOfFlight() {
-    double distance = getDistance();
-    return -0.0408107 * Math.pow(distance, 2.0) + 0.327671 * distance + 0.292099;
-    //return 0.00167838 * Math.pow(distance, 3.0) - 0.0141796 * Math.pow(distance, 2.0) + 0.0606332 * distance + 1.07604;
-  }*/
-
-  private Translation2d getTargetVelocityVector() {
-    ChassisSpeeds cSpeeds = Swerve.getInstance().getChassisSpeeds();
-    double tAngle = Turret.getInstance().getPosition() + 180.0;
-    double lAngle = getTX();
-
-    double cAngle = lAngle-tAngle;
-
-    return new Translation2d(cSpeeds.vxMetersPerSecond, -cSpeeds.vyMetersPerSecond).rotateBy(Rotation2d.fromDegrees(cAngle));
-  }
-
   public double getFormulaRPM() {
     double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
     return (isRightColor() && getDistance() < 5.5) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
-    //return isRightColor() ? 1787.69 * Math.pow(0.249199, 1.53841 * distance + 0.199996) + 216.565 * distance + 2046.46 : 1500.0;
   }
 
   public double getFormulaAngle() {
     double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
     return (isRightColor()) ? Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29 : 2.0;
-    //return isRightColor() ? -50.7709 * Math.pow(2.1949, -0.786134 * distance - 0.777002) + 1.71126 * distance + 21.2811 : 2.0;
   }
 
   public void setLEDMode(LedMode mode) {
@@ -195,29 +165,61 @@ public class Sensors extends SubsystemBase {
       return colorSensor.getColor() != 1;
     else if (alliance.equals("Blue"))
       return colorSensor.getColor() != -1;
+    else if (alliance.equals("All"))
+      return true;
     else return (DriverStation.getAlliance() == DriverStation.Alliance.Red ? colorSensor.getColor() != 1 : colorSensor.getColor() != -1);
   }
 
-  public Translation2d getAdjustedMagnitude() {
-    Swerve drive = Swerve.getInstance();
-    Turret turret = Turret.getInstance();
+  private Translation2d getTargetVelocityVector() {
+    ChassisSpeeds cSpeeds = Swerve.getInstance().getChassisSpeeds();
+    double tAngle = Turret.getInstance().getPosition() + 180.0;
+    double lAngle = getTX();
 
-    Translation2d driveVector = new Translation2d(drive.getChassisSpeeds().vxMetersPerSecond, drive.getChassisSpeeds().vyMetersPerSecond);
-    Translation2d resultxVector = new Translation2d((getFormulaRPM() * 0.1016 * Math.PI * 0.575) / 60 * Math.sin(Math.toRadians(getFormulaAngle() + 8.6)), Rotation2d.fromDegrees(turret.getPosition() - getTX()));
-    Translation2d shooterxVector = resultxVector.minus(driveVector);
+    double cAngle = lAngle-tAngle;
 
-    return new Translation2d(shooterxVector.getNorm(), Math.atan2(shooterxVector.getY(), shooterxVector.getX()));
-  }
-
-  public double getAdjustedRPM() {
-    Translation2d adjustedMagnitude = getAdjustedMagnitude();
-    double rpmMagnitude = Math.hypot(adjustedMagnitude.getNorm(), (getFormulaRPM() * 0.1016 * Math.PI * 0.575) / 60 * Math.cos(Math.toRadians(getFormulaAngle() + 8.6)));
-    rpmMagnitude *= 60.0;
-    rpmMagnitude /= 0.1016 * Math.PI * 0.575;
-    return rpmMagnitude;
+    return new Translation2d(cSpeeds.vxMetersPerSecond, -cSpeeds.vyMetersPerSecond).rotateBy(Rotation2d.fromDegrees(cAngle));
   }
 
   public double getOffsetAngle() {
-    return Math.toDegrees(Math.atan2(getAdjustedMagnitude().getY(), getAdjustedMagnitude().getX()));
+    double tX = -0.9 * getTargetVelocityVector().getX();
+    double tY = -0.9 * getTargetVelocityVector().getY();
+    return Math.toDegrees(Math.atan2(tY, getDistance() + tX));
+  }
+
+  public double getTargetAngle() {
+    Translation2d goalPose = getGoalPose();
+    return Math.toDegrees(Math.atan2(goalPose.getY(), goalPose.getX())) + getOffsetAngle();
+  }
+
+  public void setGoalPose(Translation2d pose) {
+    goalPoseEstimator.setPose(new Pose2d(pose, new Rotation2d()));
+  }
+
+  public Translation2d getGoalPose() {
+    return goalPoseEstimator.getPose().getTranslation();
+  }
+
+  public void updateGoalPose() {
+    ChassisSpeeds speeds = Swerve.getInstance().getChassisSpeeds();
+    double rps = speeds.omegaRadiansPerSecond / (2.0 * Math.PI);
+    double circumference = getDistance() * 2.0 * Math.PI;
+    double rotVel = circumference * -rps;
+
+    Translation2d prevPose = getGoalPose();
+
+    goalPoseEstimator.update(new ChassisSpeeds(
+      -speeds.vxMetersPerSecond + Math.sin(Math.atan2(prevPose.getY(), prevPose.getX())) * rotVel,
+      -speeds.vyMetersPerSecond + Math.cos(Math.atan2(prevPose.getY(), prevPose.getX())) * rotVel,
+      0.0
+    ), new Rotation2d());
+  }
+
+  public Translation2d calculateGoalPose() {
+    double tAngle = -Turret.getInstance().getPosition() - 180.0;
+    double lAngle = getTX();
+    double angle = tAngle + lAngle;
+    double distance = getDistance();
+
+    return new Translation2d(Math.cos(Math.toRadians(angle)) * distance, Math.sin(Math.toRadians(angle)) * distance);
   }
 }

@@ -26,7 +26,7 @@ public class PreShooter extends SubsystemBase {
   private PreShooter() {
     motor.reset();
     motor.setRamp(0.25);
-    dashboard.startPeriodic(0.1);
+    dashboard.startPeriodic(0.35);
   }
 
   private void updateDashboard() {

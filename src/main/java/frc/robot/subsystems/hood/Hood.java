@@ -35,7 +35,7 @@ public class Hood extends SubsystemBase {
       motor.setRamp(0.0);
 
       shuffle = new Notifier(() -> updateDashboard());
-      shuffle.startPeriodic(0.1);
+      shuffle.startPeriodic(0.2);
   }
 
   @Override

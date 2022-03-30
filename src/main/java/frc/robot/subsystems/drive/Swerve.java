@@ -47,7 +47,7 @@ public class Swerve extends SubsystemBase {
     rotationPID.enableContinuousInput(-180, 180);
     rotationPID.setTolerance(1.0);
 
-    dashboard.startPeriodic(0.1);
+    dashboard.startPeriodic(0.25);
   }
 
   @Override

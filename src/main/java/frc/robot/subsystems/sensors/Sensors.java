@@ -121,12 +121,12 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getFormulaRPM() {
-    double distance = getDistance() + -1.15 * getTargetVelocityVector().getX();
+    double distance = getDistance() + -0.85 * getTargetVelocityVector().getX();
     return (isRightColor() && getDistance() < 5.5) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
   }
 
   public double getFormulaAngle() {
-    double distance = getDistance() + -1.15 * getTargetVelocityVector().getX();
+    double distance = getDistance() + -0.85 * getTargetVelocityVector().getX();
     return (isRightColor()) ? Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29 : 2.0;
   }
 
@@ -184,8 +184,8 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getOffsetAngle() {
-    double tX = -1.2 * getTargetVelocityVector().getX();
-    double tY = -1.2 * getTargetVelocityVector().getY();
+    double tX = (Math.sqrt(getDistance()) * 0.075 + 0.5) * -getTargetVelocityVector().getX();
+    double tY = (Math.sqrt(getDistance()) * 0.075 + 0.5) * -getTargetVelocityVector().getY();
     return Math.toDegrees(Math.atan2(tY, getDistance() + tX));
   }
 
@@ -205,7 +205,7 @@ public class Sensors extends SubsystemBase {
   public void updateGoalPose() {
     ChassisSpeeds speeds = Swerve.getInstance().getChassisSpeeds();
     double rps = speeds.omegaRadiansPerSecond / (2.0 * Math.PI);
-    double circumference = getDistance() * 2.0 * Math.PI;
+    double circumference = getDistance() * 2.25 * Math.PI;
     double rotVel = circumference * -rps;
 
     Translation2d prevPose = getGoalPose();

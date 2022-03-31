@@ -18,6 +18,7 @@ public class HoodAngle extends CommandBase {
   /** Creates a new HoodAngle. */
   public HoodAngle(DoubleSupplier angle) {
     this.angle = angle;
+    addRequirements(hood);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

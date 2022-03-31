@@ -56,4 +56,6 @@ public class CSP_PWMSparkMax extends PWMSparkMax implements CSPMotor {
     public double getPosition() {return 0.0;}
 
     public double getTemperature() {return 0.0;}
+
+    public double getCurrent() {return 0.0;}
 }

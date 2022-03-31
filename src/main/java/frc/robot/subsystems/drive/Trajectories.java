@@ -112,13 +112,13 @@ public final class Trajectories {
             List.of(
                 new Pose2d(-6.18, -0.68, new Rotation2d(0.35)),
                 new Pose2d(-4.33, 0.91, new Rotation2d(0.35))
-            ), new TrajectoryConfig(5.0, 1.75).addConstraint(new CentripetalAccelerationConstraint(2.15)).setEndVelocity(2.0)
+            ), autoConfig.setEndVelocity(1.0)
         );
         public static final Trajectory fifth = TrajectoryGenerator.generateTrajectory(
             List.of(
                 new Pose2d(-4.33, 0.91, new Rotation2d(0.35)),
-                new Pose2d(-3.09, 3.56, new Rotation2d(0.83))
-            ), autoConfig.setStartVelocity(2.0)
+                new Pose2d(-2.67, 2.52, new Rotation2d(0.35))
+            ), autoConfig.setStartVelocity(1.0)
         );
     }
     

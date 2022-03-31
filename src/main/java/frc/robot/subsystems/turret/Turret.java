@@ -34,7 +34,7 @@ public class Turret extends SubsystemBase {
   private PIDController targetPID = new PIDController(Constants.turret.TkP, Constants.turret.TkI, Constants.turret.TkD);
   private PIDController positionPID = new PIDController(Constants.turret.PkP, Constants.turret.PkI, Constants.turret.PkD/*, new Constraints(Constants.turret.MAX_VEL, Constants.turret.MAX_ACCEL)*/);
 
-  Notifier notifier = new Notifier(() -> updateShuffleboard());
+  //Notifier notifier = new Notifier(() -> updateShuffleboard());
 
   /** Creates a new Turret. */
   public Turret() {
@@ -53,20 +53,10 @@ public class Turret extends SubsystemBase {
     motor.setRamp(0.1);
 
     motor.set(0.0);
-
-    new Trigger(() -> getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new ParallelDeadlineGroup(
-      new TurretAngleWait(getPosition() - 180.0).withTimeout(0.45),
-      new RunCommand(() -> setVolts(-12.0))
-    ).andThen(new Hunt(true)));
-
-    new Trigger(() -> getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new ParallelDeadlineGroup(
-      new TurretAngleWait(getPosition() + 180.0).withTimeout(0.45),
-      new RunCommand(() -> setVolts(12.0))
-    ).andThen(new Hunt(false)));
   }
 
   private void startNotifier() {
-    notifier.startPeriodic(0.2);
+    //notifier.startPeriodic(0.2);
   }
 
   private void updateShuffleboard() {
@@ -92,7 +82,7 @@ public class Turret extends SubsystemBase {
   }
 
   public void trackTarget() {
-    if (Sensors.getInstance().getHasTarget()) setVolts(targetPID.calculate(0.0, Sensors.getInstance().getTargetAngle()) + -Swerve.getInstance().getChassisSpeeds().omegaRadiansPerSecond * 2.5);
+    if (Sensors.getInstance().getHasTarget()) setVolts(targetPID.calculate(0.0, Sensors.getInstance().getTX() + Sensors.getInstance().getOffsetAngle()) + -Swerve.getInstance().getChassisSpeeds().omegaRadiansPerSecond * 3.0);
     else set(0.0);
   }
 

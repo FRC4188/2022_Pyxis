@@ -35,7 +35,7 @@ public class Hood extends SubsystemBase {
       motor.setRamp(0.0);
 
       shuffle = new Notifier(() -> updateDashboard());
-      shuffle.startPeriodic(0.2);
+      shuffle.startPeriodic(0.05);
   }
 
   @Override
@@ -46,6 +46,7 @@ public class Hood extends SubsystemBase {
   private void updateDashboard() {
     SmartDashboard.putNumber("Hood Angle", getPosition());
     SmartDashboard.putNumber("Hood Temperature", getTemp());
+    SmartDashboard.putNumber("Hood Current", motor.getCurrent());
     SmartDashboard.putBoolean("Hood is ready", isReady());
   }
 

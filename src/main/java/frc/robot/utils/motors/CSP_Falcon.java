@@ -82,4 +82,8 @@ public class CSP_Falcon extends WPI_TalonFX implements CSPMotor {
     public double getTemperature() {
         return super.getTemperature();
     }
+
+    public double getCurrent() {
+        return super.getStatorCurrent();
+    }
 }

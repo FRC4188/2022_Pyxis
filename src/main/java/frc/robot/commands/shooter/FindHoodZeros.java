@@ -37,7 +37,7 @@ public class FindHoodZeros extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    hood.setVolts(-0.5);
+    hood.setVolts(-1.0);
     hood.resetPosition();
   }
 

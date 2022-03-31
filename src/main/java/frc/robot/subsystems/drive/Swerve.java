@@ -32,7 +32,7 @@ public class Swerve extends SubsystemBase {
 
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(Constants.drive.FrontLeftLocation, Constants.drive.FrontRightLocation, Constants.drive.BackLeftLocation, Constants.drive.BackRightLocation);
 
-  private PIDController rotationPID = new PIDController(0.05, 0.0, 0.0);
+  private PIDController rotationPID = new PIDController(0.1, 0.0, 0.0);
 
   private PIDController pitchCorrection = new PIDController(-0.1, 0.0, 0.0);
   private PIDController rollCorrection = new PIDController(-0.075, 0.0, 0.01);

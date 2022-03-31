@@ -37,7 +37,7 @@ public class Constants {
         public static final CANCoder encoderB = new CANCoder(26, "Pyxis CANivore");
 
         public static final Pigeon pigeon = new Pigeon(30);
-        public static final Limelight limelight = new Limelight("limelight-swervex");
+        public static final Limelight limelight = new Limelight("limelight");
         public static final BallDetector ballDetector = new BallDetector("Ball Detector");
         public static final ColorSensor colorSensor = new ColorSensor(I2C.Port.kOnboard);
         public static final DigitalInput top = new DigitalInput(1);
@@ -130,19 +130,19 @@ public class Constants {
         }
 
         public static final class thetaPID {
-            public static final double kP = -9.25;
+            public static final double kP = -8.75;
             public static final double kI = 0.0;
             public static final double kD = -0.15;  
-            public static final ProfiledPIDController thetaPID = new ProfiledPIDController(kP, kI, kD, new Constraints(Math.PI * 3.0, Math.PI / 1.0));
+            public static final ProfiledPIDController thetaPID = new ProfiledPIDController(kP, kI, kD, new Constraints(Math.PI * 2.0, Math.PI / 2.0));
         }
 
         public static final class auto {
             /** Meters / Second */
-            public static final double MAX_VELOCITY = 4.75; // Maximum velocity allowed in the drivetrain.
+            public static final double MAX_VELOCITY = 2.0; // Maximum velocity allowed in the drivetrain.
             /** Meters / Second^2 */
-            public static final double MAX_ACCEL = 2.25; // Maximum acceleration of the drivetrain.
+            public static final double MAX_ACCEL = 1.0; // Maximum acceleration of the drivetrain.
             /** Meters / Second^2 */
-            public static final double MAX_CACCEL = 2.2; // Maximum centripital acceleration of the robot.
+            public static final double MAX_CACCEL = 1.0; // Maximum centripital acceleration of the robot.
 
             public static final TrajectoryConfig CONFIG = new TrajectoryConfig(MAX_VELOCITY, MAX_ACCEL)
                 .addConstraint(new CentripetalAccelerationConstraint(MAX_CACCEL)); 
@@ -150,7 +150,7 @@ public class Constants {
     }
 
     public static final class shooter {
-        public static final double ALPHA = 0.95;
+        public static final double ALPHA = 0.9;
 
         public static double kS = 0.7391;
         public static double kV = 0.09001;
@@ -169,14 +169,14 @@ public class Constants {
         public static final double MAX_JERK = 5000.0;
 
         public static final class hood {
-            public static final double ALPHA = 1.15;
+            public static final double ALPHA = 1.3;
 
-            public static final double kP = 0.75;
+            public static final double kP = 0.65;
             public static final double kI = 0.0;
-            public static final double kD = 0.02;
+            public static final double kD = 0.01;
             public static final double kCos = 0.53;
 
-            public static final double GEARING = 125.0 * (40.0/16.0);
+            public static final double GEARING = 5.0 * 5.0 * 7.0 * (40.0/16.0);
             public static final double CONVERSION = 360.0 / (GEARING);
             public static final double OFFSET = 8.6;
             
@@ -190,9 +190,9 @@ public class Constants {
     }
 
     public static final class turret {
-            public static final double TkP = 0.7;
+            public static final double TkP = 0.4;
             public static final double TkI = 0.0;
-            public static final double TkD = 0.025;
+            public static final double TkD = 0.02;
 
             public static final double PkP = 0.5;
             public static final double PkI = 0.0;

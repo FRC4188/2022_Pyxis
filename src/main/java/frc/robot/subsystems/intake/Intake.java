@@ -24,14 +24,14 @@ public class Intake extends SubsystemBase {
   private CSPMotor intakeMotor = Constants.devices.intakeMotor;
   private DoubleSolenoid piston = Constants.devices.intakePiston;
 
-  Notifier shuffle = new Notifier(() -> updateSuffleboard());
+  //Notifier shuffle = new Notifier(() -> updateSuffleboard());
 
   public Intake(){
     CommandScheduler.getInstance().registerSubsystem(this);
     intakeMotor.reset();
     intakeMotor.setRamp(0.125);
 
-    shuffle.startPeriodic(2.0);
+    //shuffle.startPeriodic(2.0);
     intakeMotor.setInverted(true);
 
     raise(true);

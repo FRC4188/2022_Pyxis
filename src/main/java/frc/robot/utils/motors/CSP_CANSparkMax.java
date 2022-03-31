@@ -87,4 +87,8 @@ public class CSP_CANSparkMax extends CANSparkMax implements CSPMotor {
     public double getTemperature() {
         return super.getMotorTemperature();
     }
+
+    public double getCurrent() {
+        return super.getOutputCurrent();
+    }
 }

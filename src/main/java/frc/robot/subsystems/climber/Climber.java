@@ -24,13 +24,13 @@ public class Climber extends SubsystemBase {
 
   private DoubleSolenoid brake = new DoubleSolenoid(4, 5);
 
-  private Notifier dashboardLoop = new Notifier(() -> updateDashboard());
+  //private Notifier dashboardLoop = new Notifier(() -> updateDashboard());
 
   /** Creates a new Climber. */
   private Climber() {
     CommandScheduler.getInstance().registerSubsystem(this);
 
-    dashboardLoop.startPeriodic(0.1);
+    //dashboardLoop.startPeriodic(0.1);
 
     SmartDashboard.putNumber("Climber Set Voltage", 0.0);
     setBrake(true);

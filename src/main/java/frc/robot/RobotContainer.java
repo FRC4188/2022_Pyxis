@@ -102,18 +102,31 @@ public class RobotContainer {
       pilot.getRbButtonObj().get()),
       swerve)
     );
-    turret.setDefaultCommand(new RunCommand(() -> {
+    turret.setDefaultCommand(
+      /*new RunCommand(() -> {
       double current = turret.getPosition();
       double required = -(Sensors.getInstance().getTargetAngle() + 180.0);
       double set = current + (required - (current + 180.0) % 360.0 - 180.0);
       turret.setAngle(set);
-    }, turret));
+    }, turret)*/
+    new TrackTarget());
     shooter.setDefaultCommand(new ShooterVelocity(() -> Sensors.getInstance().getFormulaRPM()));
     hood.setDefaultCommand(new HoodAngle(() -> Sensors.getInstance().getFormulaAngle()));
     trigger.setDefaultCommand(new AutoFire());
     indexer.setDefaultCommand(new LoadBalls());
     climber.setDefaultCommand(new RunCommand(() -> climber.setActiveVolts(0.0), climber));
     intake.setDefaultCommand(new RunCommand(() -> intake.setVoltage(0.0), intake));
+
+    
+    new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new ParallelDeadlineGroup(
+      new TurretAngleWait(turret.getPosition() - 180.0).withTimeout(0.45),
+      new RunCommand(() -> turret.setVolts(-12.0))
+    ).andThen(new Hunt(true)));
+
+    new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new ParallelDeadlineGroup(
+      new TurretAngleWait(turret.getPosition() + 180.0).withTimeout(0.45),
+      new RunCommand(() -> turret.setVolts(12.0))
+    ).andThen(new Hunt(false)));
   }
 
   /**

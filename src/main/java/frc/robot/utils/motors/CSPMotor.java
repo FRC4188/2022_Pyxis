@@ -31,4 +31,6 @@ public interface CSPMotor {
     public double getPosition();
 
     public double getTemperature();
+
+    public double getCurrent();
 }

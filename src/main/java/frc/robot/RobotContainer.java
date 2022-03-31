@@ -117,6 +117,8 @@ public class RobotContainer {
     climber.setDefaultCommand(new RunCommand(() -> climber.setActiveVolts(0.0), climber));
     intake.setDefaultCommand(new RunCommand(() -> intake.setVoltage(0.0), intake));
 
+    new Trigger(() -> Sensors.getInstance().getHasTarget())
+      .whenActive(new Hunt(false));
     
     new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new ParallelDeadlineGroup(
       new TurretAngleWait(turret.getPosition() - 180.0).withTimeout(0.45),

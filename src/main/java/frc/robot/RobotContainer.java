@@ -103,7 +103,8 @@ public class RobotContainer {
       swerve)
     );
     turret.setDefaultCommand(
-      /*new RunCommand(() -> {
+      /*
+      new RunCommand(() -> {
       double current = turret.getPosition();
       double required = -(Sensors.getInstance().getTargetAngle() + 180.0);
       double set = current + (required - (current + 180.0) % 360.0 - 180.0);
@@ -123,12 +124,12 @@ public class RobotContainer {
     new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new ParallelDeadlineGroup(
       new TurretAngleWait(turret.getPosition() - 180.0).withTimeout(0.45),
       new RunCommand(() -> turret.setVolts(-12.0))
-    ).andThen(new Hunt(true)));
+    ).andThen(new Hunt(true)), false);
 
     new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE).whenActive(new ParallelDeadlineGroup(
       new TurretAngleWait(turret.getPosition() + 180.0).withTimeout(0.45),
       new RunCommand(() -> turret.setVolts(12.0))
-    ).andThen(new Hunt(false)));
+    ).andThen(new Hunt(false)), false);
   }
 
   /**

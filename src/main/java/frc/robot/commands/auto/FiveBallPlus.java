@@ -35,6 +35,7 @@ public class FiveBallPlus extends SequentialCommandGroup {
     addCommands(
       new ResetPose(new Pose2d(0, 0, Rotation2d.fromDegrees(-90.0))),
       new ResetRotation(Rotation2d.fromDegrees(-90.0)),
+      //new InstantCommand(() -> new SetToAngle(-360.0).schedule(false)),
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
           new FollowTrajectory(Trajectories.fiveballplus.first, Rotation2d.fromDegrees(-90.0)),

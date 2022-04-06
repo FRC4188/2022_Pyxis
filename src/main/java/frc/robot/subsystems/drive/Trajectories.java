@@ -99,26 +99,29 @@ public final class Trajectories {
         );
         public static final Trajectory second = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(0.0, -0.925, Rotation2d.fromDegrees(90.0)),
-                new Pose2d(-1.97, -0.1, Rotation2d.fromDegrees(-181.0))
+                new Pose2d(0.0, -0.91, Rotation2d.fromDegrees(90.0)),
+                new Pose2d(-1.97, -0.1, Rotation2d.fromDegrees(-181.0)),
+                new Pose2d(-2.25, 0.1, Rotation2d.fromDegrees(-180.0))
             ), autoConfig
         );
         public static final Trajectory third = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(-1.97, -0.1, Rotation2d.fromDegrees(-181.0)),
-                new Pose2d(-6.24, -0.2, new Rotation2d(-2.45))
-            ), autoConfig
+                new Pose2d(-2.25, 0.1, Rotation2d.fromDegrees(-181.0)),
+                new Pose2d(-5.975, -0.6, new Rotation2d(-2.45))
+            ), new TrajectoryConfig(1.5, 1.75)
         );
         public static final Trajectory fourth = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(-6.24, -0.2, new Rotation2d(0.35)),
-                new Pose2d(-2.67, 2.52, new Rotation2d(0.35)))
+                new Pose2d(-5.975, -0.6, new Rotation2d(-6.6)),
+                new Pose2d(-4.66, 0.38, new Rotation2d(-6.6)))
             , autoConfig.setEndVelocity(0.5)
         );
+
+
         public static final Trajectory fifth = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(-4.33, 0.91, new Rotation2d(0.35)),
-                new Pose2d(-2.67, 2.52, new Rotation2d(0.35))
+                new Pose2d(-4.66, 0.38, new Rotation2d(-6.6)),
+                new Pose2d(0.0, -0.83, new Rotation2d(0.0))
             ), autoConfig.setStartVelocity(0.5)
         );
     }

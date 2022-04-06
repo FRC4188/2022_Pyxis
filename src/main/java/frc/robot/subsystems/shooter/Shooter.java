@@ -34,6 +34,8 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Leader Temp", wheel.getLeaderTemp());
     SmartDashboard.putNumber("Follower Temp", wheel.getFollowerTemp());
     SmartDashboard.putBoolean("Shooter is ready", isReady());
+    SmartDashboard.putBoolean("Limelight Component", Math.abs(sensors.getTX() + sensors.getOffsetAngle()) < 2.5);
+    SmartDashboard.putBoolean("RPM Component", Math.abs(getVelocity()-sensors.getFormulaRPM()) < 250.0);
   }
 
   public void setVolts(double volts) {
@@ -54,7 +56,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isReady(double rpm) {
-    return Math.abs(sensors.getTX() + sensors.getOffsetAngle()) < 3.0 && Math.abs(getVelocity()-rpm) < 200.0 && sensors.getHasTarget() && sensors.getDistance() < 5.5;
+    return Math.abs(sensors.getTX() + sensors.getOffsetAngle()) < 2.5 && Math.abs(getVelocity()-rpm) < 250.0 && sensors.getHasTarget() && sensors.getDistance() < 6.5;
   }
 
   public boolean isReady() {

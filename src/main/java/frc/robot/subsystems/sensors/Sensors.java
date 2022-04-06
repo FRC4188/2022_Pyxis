@@ -48,7 +48,7 @@ public class Sensors extends SubsystemBase {
 
   private Odometry goalPoseEstimator = new Odometry(new Pose2d());
 
-  private LinearFilter txFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
+  private LinearFilter dFilter = LinearFilter.singlePoleIIR(0.05, 0.02);
 
   /** Creates a new Sensors. */
   private Sensors() {
@@ -100,7 +100,7 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getTX() {
-    return txFilter.calculate(limelight.getTX());
+    return limelight.getTX();
   }
 
   public double getTY() {
@@ -108,8 +108,8 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getDistance() {
-    return (Constants.field.GOAL_HEIGHT - Constants.turret.LIMELIGHT_HEIGHT)
-        / Math.tan(Math.toRadians(getTY() + Constants.turret.MOUNTING_ANGLE));
+    return dFilter.calculate((Constants.field.GOAL_HEIGHT - Constants.turret.LIMELIGHT_HEIGHT)
+        / Math.tan(Math.toRadians(getTY() + Constants.turret.MOUNTING_ANGLE)));
   }
 
   public void setPigeonAngle(double angle) {
@@ -122,7 +122,7 @@ public class Sensors extends SubsystemBase {
 
   public double getFormulaRPM() {
     double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
-    return (isRightColor() && getDistance() < 5.5) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
+    return (isRightColor() && getDistance() < 6.5) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
   }
 
   public double getFormulaAngle() {
@@ -140,6 +140,10 @@ public class Sensors extends SubsystemBase {
 
   public void setPipeline(int index) {
     limelight.setPipeline(index);
+  }
+
+  public void setPower(boolean power) {
+    limelight.power(power);
   }
 
   public CameraMode getCameraMode() throws Exception {

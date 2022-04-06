@@ -33,8 +33,8 @@ public class FindZeros extends CommandBase {
     bFilter = LinearFilter.movingAverage(10);
     aFilter.calculate(-1.0);
     bFilter.calculate(-1.0);
-    aVolts = -4.0;
-    bVolts = -4.0;
+    aVolts = -2.0;
+    bVolts = -2.0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,11 +43,11 @@ public class FindZeros extends CommandBase {
     double aVel = aFilter.calculate(climber.getActiveVelocityA());
     double bVel = bFilter.calculate(climber.getActiveVelocityB());
 
-    if (Math.abs(aVel) < 0.005) {
+    if (Math.abs(aVel) < 0.01) {
       climber.resetActiveA(0.0);
       aVolts = 0.0;
     }
-    if (Math.abs(bVel) < 0.005) {
+    if (Math.abs(bVel) < 0.01) {
       climber.resetActiveB(0.0);
       bVolts = 0.0;
     }

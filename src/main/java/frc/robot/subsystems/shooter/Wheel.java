@@ -26,8 +26,8 @@ public class Wheel {
     follower.setInverted(true);
 
     leader.setBrake(false);
-    leader.setRamp(Constants.shooter.RAMP);
-    leader.setRamp(Constants.shooter.RAMP);
+    leader.setRamp(0.0);
+    follower.setRamp(0.0);
   }
 
   public void set(double percentage) {

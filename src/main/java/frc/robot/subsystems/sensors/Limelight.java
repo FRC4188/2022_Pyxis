@@ -5,6 +5,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.robot.Constants;
 
 
@@ -12,6 +14,7 @@ public class Limelight {
   private NetworkTable limeTable = null;
 
   private Pose2d goalPose = new Pose2d();
+  //private PowerDistribution pdh = new PowerDistribution(0, ModuleType.kRev);
 
   /** Enum to control camera mode. */
   public enum CameraMode {
@@ -49,6 +52,7 @@ public class Limelight {
 
   public Limelight(String tableName) {
     limeTable = NetworkTableInstance.getDefault().getTable(tableName);
+    power(true);
   }
 
   public void setPipeline(int pipeline) {
@@ -168,5 +172,9 @@ public class Limelight {
 
   public int getPipeline() {
     return (int) Math.round(limeTable.getEntry("pipeline").getDouble(-1.0));
+  }
+
+  public void power(boolean on) {
+    //pdh.setSwitchableChannel(on);
   }
 }

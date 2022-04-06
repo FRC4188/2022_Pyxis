@@ -13,6 +13,7 @@ import frc.robot.commands.groups.AutoShoot;
 import frc.robot.commands.groups.AutoShootQuantity;
 import frc.robot.commands.groups.PresetShoot;
 import frc.robot.commands.groups.PresetShootQuantity;
+import frc.robot.commands.groups.WrapTurret;
 import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
@@ -40,9 +41,10 @@ public class FiveBallPlus extends SequentialCommandGroup {
         new SequentialCommandGroup(
           new FollowTrajectory(Trajectories.fiveballplus.first, Rotation2d.fromDegrees(-90.0)),
           new FollowTrajectory(Trajectories.fiveballplus.second, Rotation2d.fromDegrees(180.0)),
-          new WaitCommand(0.75),
+          new WaitCommand(0.5),
           new FollowTrajectory(Trajectories.fiveballplus.third, new Rotation2d(-2.45)),
-          new FollowTrajectory(Trajectories.fiveballplus.fourth, new Rotation2d(-2.47))
+          new FollowTrajectory(Trajectories.fiveballplus.fourth, new Rotation2d(-2.45)),
+          new FollowTrajectory(Trajectories.fiveballplus.fifth, new Rotation2d())
         ),
         new SpinIntake(12.0)
       )

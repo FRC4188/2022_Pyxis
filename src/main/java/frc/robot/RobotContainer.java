@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.shooter;
 import frc.robot.Constants.turret;
 import frc.robot.commands.InterruptSubsystem;
@@ -120,7 +121,7 @@ public class RobotContainer {
 
     new Trigger(() -> !Sensors.getInstance().getHasTarget())
       .whenActive(new Hunt(false));
-    
+
     new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new ParallelDeadlineGroup(
       new TurretAngleWait(turret.getPosition() - 180.0).withTimeout(0.45),
       new RunCommand(() -> turret.setVolts(-12.0))
@@ -226,6 +227,15 @@ public class RobotContainer {
 
     copilot.getLbButtonObj()
       .whenPressed(new TogglePassive());
+
+    copilot.getBackButtonObj()
+    .whenPressed(
+      new SequentialCommandGroup(
+        new InstantCommand(() -> Sensors.getInstance().setPower(false)),
+        new WaitCommand(5.0),
+        new InstantCommand(() -> Sensors.getInstance().setPower(true))
+      )
+    );
       
     copilot.getLbButtonObj()
         .whenPressed(new RunCommand(() -> hood.setVolts(2.0), hood))

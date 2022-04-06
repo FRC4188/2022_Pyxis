@@ -6,13 +6,16 @@ package frc.robot.subsystems.hood;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.utils.motors.CSPMotor;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Hood extends SubsystemBase {
 
@@ -27,6 +30,8 @@ public class Hood extends SubsystemBase {
   ArmFeedforward ff = new ArmFeedforward(0.0, Constants.shooter.hood.kCos, 0.0);
   private double position = 0.0;
   Notifier shuffle;
+
+  DigitalInput limit = new DigitalInput(4);
   
   private Hood() {
       motor.reset();
@@ -36,6 +41,8 @@ public class Hood extends SubsystemBase {
 
       shuffle = new Notifier(() -> updateDashboard());
       shuffle.startPeriodic(0.05);
+
+      new Trigger(() -> !limit.get()).whenActive(new InstantCommand(() -> resetPosition()));
   }
 
   @Override
@@ -87,10 +94,14 @@ public class Hood extends SubsystemBase {
   }
 
   public boolean isReady(double angle) {
-    return Math.abs(getPosition() - angle) < 1.25;
+    return Math.abs(getPosition() - angle) < 1.35;
   }
 
   public boolean isReady() {
     return isReady(Sensors.getInstance().getFormulaAngle());
   }
+
+public boolean atZero() {
+    return !limit.get();
+}
 }

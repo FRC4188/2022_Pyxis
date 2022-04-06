@@ -136,7 +136,7 @@ public class Robot extends TimedRobot {
     }
 
     new FindZeros().andThen(new ActivePosition(0.0)).schedule();
-    //new FindHoodZeros().schedule();
+    new FindHoodZeros().schedule();
 
     if (RobotController.getBatteryVoltage() < 12.3) DriverStation.reportWarning("Battery voltage too low; please change battery.", false);
     //m_robotContainer.resetRobot();

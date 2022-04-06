@@ -12,10 +12,6 @@ public class FindHoodZeros extends CommandBase {
 
   Hood hood = Hood.getInstance();
 
-  LinearFilter aFilter;
-
-  double aVolts = 0.0;
-
   /** Creates a new FindZeros. */
   public FindHoodZeros() {
     addRequirements(hood);
@@ -24,26 +20,23 @@ public class FindHoodZeros extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    aFilter = LinearFilter.movingAverage(20);
-    aFilter.calculate(-1.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    hood.setVolts(-1.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    hood.setVolts(-1.0);
-    hood.resetPosition();
+    hood.setVolts(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(aFilter.calculate(hood.getVelocity())) < 0.05;
+    return !hood.atZero();
   }
 }

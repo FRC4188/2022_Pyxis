@@ -116,23 +116,23 @@ public class Constants {
         }
 
         public static final class xPID {
-            public static final double kP = 5.2;
+            public static final double kP = 3.0;
             public static final double kI = 0.0;
-            public static final double kD = 0.052;
+            public static final double kD = 0.0;//0.052;
             public static final PIDController xPID = new PIDController(kP, kI, kD);
         }
         
         public static final class yPID {
-            public static final double kP = 5.2;
+            public static final double kP = 3.0;
             public static final double kI = 0.0;
-            public static final double kD = 0.052;  
+            public static final double kD = 0.0;//0.052;  
             public static final PIDController yPID = new PIDController(kP, kI, kD);
         }
 
         public static final class thetaPID {
-            public static final double kP = -8.25;
+            public static final double kP = -4.0;//-8.25;
             public static final double kI = 0.0;
-            public static final double kD = -0.15;  
+            public static final double kD = 0.0;//-0.25;  
             public static final ProfiledPIDController thetaPID = new ProfiledPIDController(kP, kI, kD, new Constraints(Math.PI * 2.0, Math.PI / 2.0));
         }
 
@@ -169,18 +169,18 @@ public class Constants {
         public static final double MAX_JERK = 5000.0;
 
         public static final class hood {
-            public static final double ALPHA = 1.3;
+            public static final double ALPHA = 1.0;
 
-            public static final double kP = 0.65;
+            public static final double kP = 0.85;
             public static final double kI = 0.0;
-            public static final double kD = 0.01;
+            public static final double kD = 0.02;
             public static final double kCos = 0.53;
 
             public static final double GEARING = 5.0 * 5.0 * 7.0 * (40.0/16.0);
             public static final double CONVERSION = 360.0 / (GEARING);
             public static final double OFFSET = 8.6;
             
-            public static final double MAX = 50.0;
+            public static final double MAX = 47.0;
             public static final double MIN = 0.0;
         }
     }
@@ -190,9 +190,9 @@ public class Constants {
     }
 
     public static final class turret {
-            public static final double TkP = 0.4;
+            public static final double TkP = 0.5;
             public static final double TkI = 0.0;
-            public static final double TkD = 0.03;
+            public static final double TkD = 0.01;
 
             public static final double PkP = 0.5;
             public static final double PkI = 0.0;

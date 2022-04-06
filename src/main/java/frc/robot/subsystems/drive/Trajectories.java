@@ -107,14 +107,14 @@ public final class Trajectories {
         public static final Trajectory third = TrajectoryGenerator.generateTrajectory(
             List.of(
                 new Pose2d(-2.25, 0.1, Rotation2d.fromDegrees(-181.0)),
-                new Pose2d(-5.975, -0.6, new Rotation2d(-2.45))
+                new Pose2d(-6.02, -0.7, new Rotation2d(-2.45))
             ), new TrajectoryConfig(1.5, 1.75)
         );
         public static final Trajectory fourth = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(-5.975, -0.6, new Rotation2d(-6.6)),
+                new Pose2d(-6.02, -0.7,  Rotation2d.fromDegrees(45.0)),
                 new Pose2d(-4.66, 0.38, new Rotation2d(-6.6)))
-            , autoConfig.setEndVelocity(0.5)
+            , new TrajectoryConfig(3.0, 2.0).setEndVelocity(1.0)
         );
 
 
@@ -122,7 +122,7 @@ public final class Trajectories {
             List.of(
                 new Pose2d(-4.66, 0.38, new Rotation2d(-6.6)),
                 new Pose2d(0.0, -0.83, new Rotation2d(0.0))
-            ), autoConfig.setStartVelocity(0.5)
+            ), autoConfig.setStartVelocity(1.0)
         );
     }
     
@@ -172,6 +172,33 @@ public final class Trajectories {
                 new Pose2d(7.439, 6.703, new Rotation2d(0.0, 1.043)),
                 new Pose2d(7.439, 7.557, new Rotation2d(0.0, 1.669))
             ), new TrajectoryConfig(2.0, 1.5).addConstraint(new CentripetalAccelerationConstraint(1.5))
+        );
+    }
+
+    public static final class hoard {
+        public static final Trajectory first = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(0.0, 0.0, new Rotation2d(2.37)),
+                new Pose2d(-0.69, 0.5, new Rotation2d(2.37))
+            ), new TrajectoryConfig(2.0, 2.0).addConstraint(new CentripetalAccelerationConstraint(2.0))
+        );
+        public static final Trajectory second = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(-0.89, 0.4, new Rotation2d(-1.81)),
+                new Pose2d(-1.56, -1.48, new Rotation2d(-1.59))
+            ), new TrajectoryConfig(1.75, 1.5).addConstraint(new CentripetalAccelerationConstraint(2.0))
+        );
+        public static final Trajectory third = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(-1.56, -1.48, new Rotation2d(1.2)),
+                new Pose2d(0.0, 1.76, new Rotation2d(1.42))
+            ), new TrajectoryConfig(2.0, 2.0).addConstraint(new CentripetalAccelerationConstraint(2.0))
+        );
+        public static final Trajectory fourth = TrajectoryGenerator.generateTrajectory(
+            List.of(
+                new Pose2d(0.0, 1.76, new Rotation2d(-1.6)),
+                new Pose2d(-2.42, 0.89, new Rotation2d(2.88))
+            ), new TrajectoryConfig(2.0, 2.0).addConstraint(new CentripetalAccelerationConstraint(2.0))
         );
     }
 }

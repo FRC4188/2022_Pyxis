@@ -130,7 +130,7 @@ public class Constants {
         }
 
         public static final class thetaPID {
-            public static final double kP = -4.0;//-8.25;
+            public static final double kP = -4.25;//-8.25;
             public static final double kI = 0.0;
             public static final double kD = 0.0;//-0.25;  
             public static final ProfiledPIDController thetaPID = new ProfiledPIDController(kP, kI, kD, new Constraints(Math.PI * 2.0, Math.PI / 2.0));
@@ -150,7 +150,7 @@ public class Constants {
     }
 
     public static final class shooter {
-        public static final double ALPHA = 0.9;
+        public static final double ALPHA = 0.925;
 
         public static double kS = 0.7391;
         public static double kV = 0.09001;
@@ -169,7 +169,7 @@ public class Constants {
         public static final double MAX_JERK = 5000.0;
 
         public static final class hood {
-            public static final double ALPHA = 1.0;
+            public static final double BETA = 1.15;
 
             public static final double kP = 0.85;
             public static final double kI = 0.0;
@@ -201,7 +201,7 @@ public class Constants {
             public static final double MAX_ACCEL = 1440.0;
 
             public static final double MIN_ANGLE = -400.0;
-            public static final double MAX_ANGLE = 45.0;
+            public static final double MAX_ANGLE = 55.0;
 
             public static final double GEAR_RATIO = 3.0 * 3.0 * 14.0;
             public static final double ENCODER_TO_DEGREES = 360.0 / GEAR_RATIO;

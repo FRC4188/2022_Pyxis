@@ -17,6 +17,7 @@ import frc.robot.commands.auto.FiveBall;
 import frc.robot.commands.auto.FiveBallPlus;
 import frc.robot.commands.auto.FourBall;
 import frc.robot.commands.auto.GenericTwoBall;
+import frc.robot.commands.auto.HoardingAuto;
 import frc.robot.commands.auto.StealAuto;
 import frc.robot.commands.auto.The1771Auto;
 import frc.robot.commands.climber.ActivePosition;
@@ -24,6 +25,7 @@ import frc.robot.commands.climber.ActiveVolts;
 import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.climber.ToggleBrakes;
 import frc.robot.commands.climber.TogglePassive;
+import frc.robot.commands.drive.CrabSet;
 import frc.robot.commands.groups.MonkeyBar;
 import frc.robot.commands.groups.PresetShoot;
 import frc.robot.commands.indexer.LoadBalls;
@@ -119,8 +121,8 @@ public class RobotContainer {
     climber.setDefaultCommand(new RunCommand(() -> climber.setActiveVolts(0.0), climber));
     intake.setDefaultCommand(new RunCommand(() -> intake.setVoltage(0.0), intake));
 
-    new Trigger(() -> !Sensors.getInstance().getHasTarget())
-      .whenActive(new Hunt(false));
+    /*new Trigger(() -> !Sensors.getInstance().getHasTarget())
+      .whenActive(new Hunt(false));*/
 
     new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new ParallelDeadlineGroup(
       new TurretAngleWait(turret.getPosition() - 180.0).withTimeout(0.45),
@@ -188,7 +190,17 @@ public class RobotContainer {
     .whenPressed(new ActivePosition(0.0));
     
     pilot.getStartButtonObj()
-      .whenPressed(new MonkeyBar());
+      .whenPressed(new MonkeyBar().andThen(
+        new ParallelCommandGroup(
+          new HoodAngle(()-> 0.0),
+          new SetToAngle(-180.0),
+          new ShooterVelocity(() -> 0.0),
+          new SpinIntake(0.0, true),
+          new SpinIndexer(0.0),
+          new PushTrigger(0.0),
+          new CrabSet(0.0, 0.0)
+        )
+      ));
 
     pilot.getBackButtonObj()
       .whenPressed(new ResetPose());
@@ -258,6 +270,7 @@ public class RobotContainer {
     autoChooser.addOption("Five Ball Plus Auto", new FiveBallPlus());
     autoChooser.addOption("1771 Auto", new The1771Auto());
     autoChooser.addOption("Steal Auto", new StealAuto());
+    autoChooser.addOption("Hoard Auto", new HoardingAuto());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }

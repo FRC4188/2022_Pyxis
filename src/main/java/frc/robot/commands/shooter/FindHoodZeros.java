@@ -37,6 +37,6 @@ public class FindHoodZeros extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !hood.atZero();
+    return hood.atZero();
   }
 }

@@ -115,7 +115,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
 
-    Sensors.getInstance().setLED(true);
+    //Sensors.getInstance().setLED(true);
   }
 
   /**
@@ -141,7 +141,7 @@ public class Robot extends TimedRobot {
     if (RobotController.getBatteryVoltage() < 12.3) DriverStation.reportWarning("Battery voltage too low; please change battery.", false);
     //m_robotContainer.resetRobot();
 
-    Sensors.getInstance().setLED(true);
+    //Sensors.getInstance().setLED(true);
   }
 
   /**

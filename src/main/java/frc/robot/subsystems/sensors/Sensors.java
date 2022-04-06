@@ -66,6 +66,8 @@ public class Sensors extends SubsystemBase {
     new Trigger(() -> getHasTarget())
       .whileActiveContinuous(new InstantCommand(() -> setGoalPose(calculateGoalPose())))
       .whenInactive(new RunCommand(() -> updateGoalPose()).withInterrupt(() -> getHasTarget()));
+
+    //setPower(true);
   }
 
   private void updateShuffleboard() {
@@ -80,7 +82,7 @@ public class Sensors extends SubsystemBase {
   }
 
   public void setLED(boolean on) {
-    limelight.setLEDMode(on ? LedMode.ON : LedMode.OFF);
+    //limelight.setLEDMode(on ? LedMode.ON : LedMode.OFF);
   }
 
   private void startNotifier() {
@@ -127,11 +129,11 @@ public class Sensors extends SubsystemBase {
 
   public double getFormulaAngle() {
     double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
-    return (isRightColor()) ? Constants.shooter.hood.ALPHA * 7.18 * distance + 4.29 : 2.0;
+    return (isRightColor()) ? Constants.shooter.hood.BETA * 7.18 * distance + 4.29 : 2.0;
   }
 
   public void setLEDMode(LedMode mode) {
-    limelight.setLEDMode(mode);
+    //limelight.setLEDMode(mode);
   }
 
   public void setCameraMode(CameraMode mode) {
@@ -188,8 +190,8 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getOffsetAngle() {
-    double tX = (Math.sqrt(getDistance()) * 0.1 + 0.5) * -getTargetVelocityVector().getX();
-    double tY = (Math.sqrt(getDistance()) * 0.1 + 0.5) * -getTargetVelocityVector().getY();
+    double tX = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getX();
+    double tY = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getY();
     return Math.toDegrees(Math.atan2(tY, getDistance() + tX));
   }
 

@@ -2,30 +2,14 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.drive.FollowTrajectory;
-import frc.robot.commands.groups.AutoIntake;
-import frc.robot.commands.groups.AutoShoot;
-import frc.robot.commands.groups.AutoShootQuantity;
-import frc.robot.commands.groups.PresetShoot;
-import frc.robot.commands.groups.PresetShootQuantity;
-import frc.robot.commands.groups.WrapTurret;
 import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
-import frc.robot.commands.shooter.FindHoodZeros;
-import frc.robot.commands.shooter.HoodAngle;
-import frc.robot.commands.shooter.ShooterVelocity;
-import frc.robot.commands.trigger.PushTrigger;
-import frc.robot.commands.turret.SetToAngle;
-import frc.robot.commands.turret.TrackTarget;
 import frc.robot.subsystems.drive.Trajectories;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.trigger.PreShooter;
 public class FiveBallPlus extends SequentialCommandGroup {
   /**
    * Creates a new FiveBall command.
@@ -41,10 +25,11 @@ public class FiveBallPlus extends SequentialCommandGroup {
         new SequentialCommandGroup(
           new FollowTrajectory(Trajectories.fiveballplus.first, Rotation2d.fromDegrees(-90.0)),
           new FollowTrajectory(Trajectories.fiveballplus.second, Rotation2d.fromDegrees(180.0)),
-          new WaitCommand(0.5),
+          new WaitCommand(1.0),
           new FollowTrajectory(Trajectories.fiveballplus.third, new Rotation2d(-2.45)),
+          new WaitCommand(0.5),
           new FollowTrajectory(Trajectories.fiveballplus.fourth, new Rotation2d(-2.45)),
-          new FollowTrajectory(Trajectories.fiveballplus.fifth, new Rotation2d())
+          new FollowTrajectory(Trajectories.fiveballplus.fifth, new Rotation2d(Math.PI))
         ),
         new SpinIntake(12.0)
       )

@@ -14,7 +14,7 @@ public class Limelight {
   private NetworkTable limeTable = null;
 
   private Pose2d goalPose = new Pose2d();
-  //private PowerDistribution pdh = new PowerDistribution(0, ModuleType.kRev);
+  //private PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
   /** Enum to control camera mode. */
   public enum CameraMode {
@@ -52,7 +52,7 @@ public class Limelight {
 
   public Limelight(String tableName) {
     limeTable = NetworkTableInstance.getDefault().getTable(tableName);
-    power(true);
+    //setLEDMode(LedMode.ON);
   }
 
   public void setPipeline(int pipeline) {

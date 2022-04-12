@@ -1,8 +1,11 @@
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -37,7 +40,13 @@ public class Swerve extends SubsystemBase {
   private PIDController pitchCorrection = new PIDController(-0.1, 0.0, 0.0);
   private PIDController rollCorrection = new PIDController(-0.075, 0.0, 0.01);
 
-  private Odometry odometry = new Odometry(new Pose2d());
+  //private Odometry odometry = new Odometry(new Pose2d());
+
+  private SwerveDrivePoseEstimator odometry = new SwerveDrivePoseEstimator(sensors.getRotation(), new Pose2d(-1.0, 1.0, new Rotation2d()), kinematics,
+    VecBuilder.fill(2.0 , 2.0, 6.0),
+    VecBuilder.fill(0.001),
+    VecBuilder.fill(1.0, 1.0, 0.001)
+  );
 
   private Notifier dashboard = new Notifier(() -> smartDashboard());
 
@@ -52,7 +61,8 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
-    odometry.update(getChassisSpeeds(), sensors.getRotation());
+    odometry.update(sensors.getRotation(), getModuleStates());
+    if (sensors.getHasTarget()) odometry.addVisionMeasurement(sensors.getVisionPose(), 0.02);
   }
 
   private void smartDashboard() {
@@ -61,7 +71,7 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("M3 (LR) Angle", leftRear.getAbsoluteAngle());
     SmartDashboard.putNumber("M4 (RR) Angle", rightRear.getAbsoluteAngle());
     SmartDashboard.putString("Chassis Speeds", getChassisSpeeds().toString());
-    SmartDashboard.putString("Odometry", odometry.getPose().toString());
+    SmartDashboard.putString("Odometry", odometry.getEstimatedPosition().toString());
 
     SmartDashboard.putNumber("Falcon 1 Temp", leftFront.getAngleTemp());
     SmartDashboard.putNumber("Falcon 2 Temp", leftFront.getSpeedTemp());
@@ -146,11 +156,11 @@ public class Swerve extends SubsystemBase {
   }
 
   public void setPose(Pose2d pose) {
-    odometry.setPose(pose);
+    odometry.resetPosition(pose, pose.getRotation());
   }
 
   public Pose2d getPose() {
-    return odometry.getPose();
+    return odometry.getEstimatedPosition();
   }
 
   public SwerveDriveKinematics getKinematics() {

@@ -46,8 +46,6 @@ public class Sensors extends SubsystemBase {
 
   private SendableChooser<String> alliance = new SendableChooser<>();
 
-  private Odometry goalPoseEstimator = new Odometry(new Pose2d());
-
   private LinearFilter dFilter = LinearFilter.singlePoleIIR(0.05, 0.02);
 
   /** Creates a new Sensors. */
@@ -63,10 +61,6 @@ public class Sensors extends SubsystemBase {
 
     SmartDashboard.putData("Alliance Color", alliance);
 
-    new Trigger(() -> getHasTarget())
-      .whileActiveContinuous(new InstantCommand(() -> setGoalPose(calculateGoalPose())))
-      .whenInactive(new RunCommand(() -> updateGoalPose()).withInterrupt(() -> getHasTarget()));
-
     //setPower(true);
   }
 
@@ -76,7 +70,6 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putNumber("Pitch", getPitch());
     SmartDashboard.putNumber("Roll", getRoll());
     SmartDashboard.putString("Target Vel Vector", getTargetVelocityVector().toString());
-    SmartDashboard.putString("Hub Position", getGoalPose().toString());
     SmartDashboard.putNumber("LL TX", getTX());
     SmartDashboard.putNumber("OTF Angle Adjustment", getOffsetAngle());
   }
@@ -196,39 +189,21 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getTargetAngle() {
-    Translation2d goalPose = getGoalPose();
+    Pose2d goalPose = Swerve.getInstance().getPose();
     return Math.toDegrees(Math.atan2(goalPose.getY(), goalPose.getX())) + getOffsetAngle();
   }
 
-  public void setGoalPose(Translation2d pose) {
-    goalPoseEstimator.setPose(new Pose2d(pose, new Rotation2d()));
-  }
+  public Pose2d getVisionPose() {
+    double pAngle = getRotation().getRadians();
+    double tAngle = Math.toRadians(-Turret.getInstance().getPosition() - 180.0);
+    double lAngle = Math.toRadians(getTX());
 
-  public Translation2d getGoalPose() {
-    return goalPoseEstimator.getPose().getTranslation();
-  }
+    double targetToZero = tAngle + pAngle + lAngle;
 
-  public void updateGoalPose() {
-    ChassisSpeeds speeds = Swerve.getInstance().getChassisSpeeds();
-    double rps = speeds.omegaRadiansPerSecond / (2.0 * Math.PI);
-    double circumference = getDistance() * 2.25 * Math.PI;
-    double rotVel = circumference * -rps;
+    double dist = getDistance() + Units.feetToMeters(2.0);
+    double x = -Math.cos(targetToZero) * dist;
+    double y = -Math.sin(targetToZero) * dist;
 
-    Translation2d prevPose = getGoalPose();
-
-    goalPoseEstimator.update(new ChassisSpeeds(
-      -speeds.vxMetersPerSecond + Math.sin(Math.atan2(prevPose.getY(), prevPose.getX())) * rotVel,
-      -speeds.vyMetersPerSecond + Math.cos(Math.atan2(prevPose.getY(), prevPose.getX())) * rotVel,
-      0.0
-    ), new Rotation2d());
-  }
-
-  public Translation2d calculateGoalPose() {
-    double tAngle = -Turret.getInstance().getPosition() - 180.0;
-    double lAngle = getTX();
-    double angle = tAngle + lAngle;
-    double distance = getDistance();
-
-    return new Translation2d(Math.cos(Math.toRadians(angle)) * distance, Math.sin(Math.toRadians(angle)) * distance);
+    return new Pose2d(x, y, getRotation());
   }
 }

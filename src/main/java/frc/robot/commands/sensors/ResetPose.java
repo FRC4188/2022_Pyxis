@@ -19,7 +19,7 @@ public class ResetPose extends InstantCommand {
     addRequirements(Swerve.getInstance());
   }
 
-  @Override
+@Override
   public void initialize() {
     Sensors.getInstance().setPigeonAngle(pose.getRotation().getDegrees());
     Swerve.getInstance().setPose(pose);

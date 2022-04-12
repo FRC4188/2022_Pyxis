@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -203,7 +205,7 @@ public class RobotContainer {
       ));
 
     pilot.getBackButtonObj()
-      .whenPressed(new ResetPose());
+      .whenPressed(new ResetPose(new Pose2d(-1.0, 1.0, new Rotation2d())));
 
     pilot.getDpadRightButtonObj()
       .whenPressed(new RunCommand(() -> turret.setVolts(3.0), turret))

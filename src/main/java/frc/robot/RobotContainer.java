@@ -21,6 +21,7 @@ import frc.robot.commands.auto.FourBall;
 import frc.robot.commands.auto.GenericTwoBall;
 import frc.robot.commands.auto.HoardingAuto;
 import frc.robot.commands.auto.StealAuto;
+import frc.robot.commands.auto.TestOTFRadial;
 import frc.robot.commands.auto.The1771Auto;
 import frc.robot.commands.climber.ActivePosition;
 import frc.robot.commands.climber.ActiveVolts;
@@ -28,6 +29,7 @@ import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.climber.ToggleBrakes;
 import frc.robot.commands.climber.TogglePassive;
 import frc.robot.commands.drive.CrabSet;
+import frc.robot.commands.drive.TrackBalls;
 import frc.robot.commands.groups.MonkeyBar;
 import frc.robot.commands.groups.PresetShoot;
 import frc.robot.commands.indexer.LoadBalls;
@@ -103,9 +105,12 @@ public class RobotContainer {
     swerve.setDefaultCommand(new RunCommand(() -> swerve.drive(
       pilot.getLeftY(Scaling.CUBED),
       pilot.getLeftX(Scaling.CUBED),
-      pilot.getRightX(Scaling.CUBED),
+      pilot.getRightX(Scaling.SQUARED),
+      Math.toDegrees(Math.atan2(pilot.getRightX(Scaling.LINEAR), pilot.getRightY(Scaling.LINEAR))),
+      pilot.getLbButtonObj().get(),
       pilot.getRbButtonObj().get()),
       swerve)
+      //new CrabSet(0.0, 0.0)
     );
     turret.setDefaultCommand(
       /*
@@ -143,7 +148,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     SmartDashboard.putData("Reset Position", new ResetPose());
     SmartDashboard.putData("Reset Rotation", new ResetRotation());
-    SmartDashboard.putData("Find Hood Zero", new FindHoodZeros());
+    SmartDashboard.putData("Find Hood Zeros", new FindHoodZeros());
     SmartDashboard.putData("Zero Climber", new FindZeros().andThen(new ActivePosition(0.0)));
     SmartDashboard.putData("Toggle Climber Brakes", new ToggleBrakes());
 
@@ -214,6 +219,10 @@ public class RobotContainer {
     pilot.getDpadLeftButtonObj()
       .whenPressed(new RunCommand(() -> turret.setVolts(-3.0), turret))
       .whenReleased(new InstantCommand(() -> turret.set(0.0), turret));
+    
+    pilot.getRbButtonObj()
+      .whenPressed(new TrackBalls(() -> pilot.getLeftX(Scaling.CUBED), () -> pilot.getLeftY(Scaling.CUBED)))
+      .whenReleased(new InterruptSubsystem(swerve));
 
     copilot.getAButtonObj()
       .whenPressed(new SpinIntake(12.0, false))
@@ -273,6 +282,7 @@ public class RobotContainer {
     autoChooser.addOption("1771 Auto", new The1771Auto());
     autoChooser.addOption("Steal Auto", new StealAuto());
     autoChooser.addOption("Hoard Auto", new HoardingAuto());
+    autoChooser.addOption("TEST OTF RADIAL", new TestOTFRadial());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }

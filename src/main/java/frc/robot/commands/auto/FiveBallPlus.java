@@ -25,9 +25,9 @@ public class FiveBallPlus extends SequentialCommandGroup {
         new SequentialCommandGroup(
           new FollowTrajectory(Trajectories.fiveballplus.first, Rotation2d.fromDegrees(-90.0)),
           new FollowTrajectory(Trajectories.fiveballplus.second, Rotation2d.fromDegrees(180.0)),
-          new WaitCommand(1.0),
-          new FollowTrajectory(Trajectories.fiveballplus.third, new Rotation2d(-2.45)),
           new WaitCommand(0.5),
+          new FollowTrajectory(Trajectories.fiveballplus.third, new Rotation2d(-2.45)),
+          new WaitCommand(1.0),
           new FollowTrajectory(Trajectories.fiveballplus.fourth, new Rotation2d(-2.45)),
           new FollowTrajectory(Trajectories.fiveballplus.fifth, new Rotation2d(Math.PI))
         ),

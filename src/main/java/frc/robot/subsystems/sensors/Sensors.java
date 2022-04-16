@@ -72,6 +72,7 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putString("Target Vel Vector", getTargetVelocityVector().toString());
     SmartDashboard.putNumber("LL TX", getTX());
     SmartDashboard.putNumber("OTF Angle Adjustment", getOffsetAngle());
+    SmartDashboard.putNumber("Closest Ball Angle", getClosestBallAngle());
   }
 
   public void setLED(boolean on) {
@@ -95,7 +96,7 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getTX() {
-    return limelight.getTX();
+    return limelight.getTX() - 1.25;
   }
 
   public double getTY() {
@@ -116,13 +117,15 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getFormulaRPM() {
-    double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
+    // double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
+    double distance = getDistance() -(getDistance() * 0.125 + 0.55) * getTargetVelocityVector().getX();
     return (isRightColor() && getDistance() < 6.5) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
   }
 
   public double getFormulaAngle() {
-    double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
-    return (isRightColor()) ? Constants.shooter.hood.BETA * 7.18 * distance + 4.29 : 2.0;
+    // double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
+    double distance = getDistance() -(getDistance() * 0.125 + 0.55) * getTargetVelocityVector().getX();
+    return (isRightColor()) ? Constants.shooter.hood.BETA * 7.18 * distance + 6.29 : 2.0;
   }
 
   public void setLEDMode(LedMode mode) {
@@ -153,14 +156,6 @@ public class Sensors extends SubsystemBase {
     return limelight.getPipeline();
   }
 
-  public double[] getClosestInfo() {
-    return ballDetector.getClosestInfo(DriverStation.getAlliance());
-  }
-
-  public double getClosestTX() {
-    return ballDetector.xPixelToAngle(getClosestInfo()[0]);
-  }
-
   public boolean isRightColor() {
     String alliance = this.alliance.getSelected();
     if (alliance.equals("Red"))
@@ -170,6 +165,28 @@ public class Sensors extends SubsystemBase {
     else if (alliance.equals("All"))
       return true;
     else return (DriverStation.getAlliance() == DriverStation.Alliance.Red ? colorSensor.getColor() != 1 : colorSensor.getColor() != -1);
+  }
+
+  public double getClosestBallAngle() {
+    double cameraFOV = 29.4;
+    double frameWidth = 640;
+    double centerXtoAngle = cameraFOV / (frameWidth / 2);
+
+    double biggestRedAngle = ballDetector.getCenterX((int) ballDetector.getClosestsIndexes()[0][0]) * centerXtoAngle;
+    double biggestBlueAngle = ballDetector.getCenterX((int) ballDetector.getClosestsIndexes()[1][0]) * centerXtoAngle;
+
+    String alliance = this.alliance.getSelected();
+    if (alliance.equals("Red")) {
+      return biggestRedAngle;
+    } else if (alliance.equals("Blue")) {
+      return biggestBlueAngle;
+    } else if (alliance.equals("All")) {
+      double biggestRedSize = ballDetector.getClosestsIndexes()[0][1];
+      double biggestBlueSize = ballDetector.getClosestsIndexes()[1][1];
+      return (biggestRedSize > biggestBlueSize) ?  biggestRedAngle : biggestBlueAngle;
+    } else {
+      return (DriverStation.getAlliance() == DriverStation.Alliance.Red) ? biggestRedAngle : biggestBlueAngle;
+    }
   }
 
   private Translation2d getTargetVelocityVector() {
@@ -183,8 +200,10 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getOffsetAngle() {
-    double tX = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getX();
-    double tY = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getY();
+    // double tX = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getX();
+    // double tY = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getY();
+    double tX = getDistance() -(getDistance() * 0.125 + 0.55) * getTargetVelocityVector().getX();
+    double tY = getDistance() -(getDistance() * 0.125 + 0.55) * getTargetVelocityVector().getY();
     return Math.toDegrees(Math.atan2(tY, getDistance() + tX));
   }
 

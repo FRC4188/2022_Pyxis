@@ -37,16 +37,18 @@ public class Swerve extends SubsystemBase {
 
   private PIDController rotationPID = new PIDController(0.1, 0.0, 0.0);
 
-  private PIDController pitchCorrection = new PIDController(-0.1, 0.0, 0.0);
+  private PIDController pitchCorrection = new PIDController(-0.1, 0.0, 0.01);
   private PIDController rollCorrection = new PIDController(-0.075, 0.0, 0.01);
 
-  //private Odometry odometry = new Odometry(new Pose2d());
+  private Odometry odometry = new Odometry(new Pose2d());
 
+  /*
   private SwerveDrivePoseEstimator odometry = new SwerveDrivePoseEstimator(sensors.getRotation(), new Pose2d(-1.0, 1.0, new Rotation2d()), kinematics,
-    VecBuilder.fill(2.0 , 2.0, 6.0),
+    VecBuilder.fill(1.0 , 1.0, 0.5),
     VecBuilder.fill(0.001),
-    VecBuilder.fill(1.0, 1.0, 0.001)
+    VecBuilder.fill(0.35, 0.35, 0.001)
   );
+  */
 
   private Notifier dashboard = new Notifier(() -> smartDashboard());
 
@@ -61,8 +63,11 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
+    /*
     odometry.update(sensors.getRotation(), getModuleStates());
     if (sensors.getHasTarget()) odometry.addVisionMeasurement(sensors.getVisionPose(), 0.02);
+    */
+    odometry.update(getChassisSpeeds(), sensors.getRotation());
   }
 
   private void smartDashboard() {
@@ -71,7 +76,7 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("M3 (LR) Angle", leftRear.getAbsoluteAngle());
     SmartDashboard.putNumber("M4 (RR) Angle", rightRear.getAbsoluteAngle());
     SmartDashboard.putString("Chassis Speeds", getChassisSpeeds().toString());
-    SmartDashboard.putString("Odometry", odometry.getEstimatedPosition().toString());
+    SmartDashboard.putString("Odometry", odometry.getPose().toString());
 
     SmartDashboard.putNumber("Falcon 1 Temp", leftFront.getAngleTemp());
     SmartDashboard.putNumber("Falcon 2 Temp", leftFront.getSpeedTemp());
@@ -83,18 +88,24 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Falcon 8 Temp", rightRear.getSpeedTemp());
   }
 
-  public void drive(double yInput, double xInput, double rotInput, boolean robotOriented) {
+  public void drive(double yInput, double xInput, double rotInput, double angleInput, boolean absoluteAngle, boolean robotOriented) {
     yInput *= Constants.drive.MAX_VELOCITY;
     xInput *= -Constants.drive.MAX_VELOCITY;
-    rotInput *= 4.0 * Math.PI;
+    rotInput *= 2.0 * Math.PI;
 
-    if (rotInput != 0.0) {
-      setRotSetpoint(-sensors.getRotation().getDegrees());
-    } else {
-      if (yInput != 0 || xInput != 0) {
-        double correction = rotationPID.calculate(-sensors.getRotation().getDegrees());// * dropoff;
-        rotInput = rotationPID.atSetpoint() ? 0.0 : correction;
+    if (!absoluteAngle) {
+      if (rotInput != 0.0) {
+        setRotSetpoint(-sensors.getRotation().getDegrees());
+      } else {
+        if (yInput != 0 || xInput != 0) {
+          double correction = rotationPID.calculate(-sensors.getRotation().getDegrees());// * dropoff;
+          rotInput = rotationPID.atSetpoint() ? 0.0 : correction;
+        }
       }
+    } else {
+      setRotSetpoint(angleInput);
+      double correction = rotationPID.calculate(-sensors.getRotation().getDegrees());// * dropoff;
+      rotInput = rotationPID.atSetpoint() ? 0.0 : correction;
     }
 
     double pitch = Math.abs(sensors.getPitch()) < 1.5 ? 0.0 : sensors.getPitch();
@@ -156,11 +167,11 @@ public class Swerve extends SubsystemBase {
   }
 
   public void setPose(Pose2d pose) {
-    odometry.resetPosition(pose, pose.getRotation());
+    odometry.setPose(pose);
   }
 
   public Pose2d getPose() {
-    return odometry.getEstimatedPosition();
+    return odometry.getPose();
   }
 
   public SwerveDriveKinematics getKinematics() {

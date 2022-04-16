@@ -32,6 +32,8 @@ public class Hood extends SubsystemBase {
   Notifier shuffle;
 
   DigitalInput limit = new DigitalInput(4);
+
+  boolean servoing = true;
   
   private Hood() {
       motor.reset();
@@ -47,7 +49,7 @@ public class Hood extends SubsystemBase {
 
   @Override
   public void periodic() {
-      setVolts(pid.calculate(getPosition(), position) + ff.calculate(Math.toRadians(position + 9.8), 0.0));
+      if (servoing) setVolts(pid.calculate(getPosition(), position) + ff.calculate(Math.toRadians(position + 9.8), 0.0));
   }
 
   private void updateDashboard() {
@@ -58,6 +60,7 @@ public class Hood extends SubsystemBase {
   }
 
   public void setPosition(double position) {
+      servoing = true;
       if (position > Constants.shooter.hood.MAX) position = Constants.shooter.hood.MAX;
       else if (position < Constants.shooter.hood.MIN) position = Constants.shooter.hood.MIN;
       this.position = position;
@@ -65,6 +68,10 @@ public class Hood extends SubsystemBase {
 
   public void resetPosition() {
       motor.reset();
+  }
+
+  public void setServoing(boolean servoing) {
+      this.servoing = servoing;
   }
 
   public void setVolts(double volts) {

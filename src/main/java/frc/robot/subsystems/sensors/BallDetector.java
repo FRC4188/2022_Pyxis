@@ -19,23 +19,33 @@ public class BallDetector extends SubsystemBase {
   }
 
   public double[] getCenterXs() {
-    return ballDetectorTable.getEntry("center x's").getDoubleArray(new double[0]);
+    double[] table = ballDetectorTable.getEntry("center x's").getDoubleArray(new double[0]);
+    if (table.length == 0) table = new double[] {0.0};
+    return table;
   }
 
   public double[] getCenterYs() {
-    return ballDetectorTable.getEntry("center y's").getDoubleArray(new double[0]);
+    double[] table = ballDetectorTable.getEntry("center y's").getDoubleArray(new double[0]);
+    if (table.length == 0) table = new double[] {0.0};
+    return table;
   }
 
   public double[] getSizes() {
-    return ballDetectorTable.getEntry("sizes").getDoubleArray(new double[0]);
+    double[] table = ballDetectorTable.getEntry("sizes").getDoubleArray(new double[0]);
+    if (table.length == 0) table = new double[] {0.0};
+    return table;
   }
 
-  public double[] getIDs() {
-    return ballDetectorTable.getEntry("ids").getDoubleArray(new double[0]);
+  public String[] getNames() {
+    String[] table = ballDetectorTable.getEntry("names").getStringArray(new String[0]);
+    if (table.length == 0) table = new String[] {""};
+    return table;
   }
 
   public double[] getConfidences() {
-    return ballDetectorTable.getEntry("confidences").getDoubleArray(new double[0]);
+    double[] table = ballDetectorTable.getEntry("confidences").getDoubleArray(new double[0]);
+    if (table.length == 0) table = new double[] {0.0};
+    return table;
   }
 
   public double getCenterX(int i) {
@@ -50,51 +60,30 @@ public class BallDetector extends SubsystemBase {
     return getSizes()[i];
   }
 
-  public double getID(int i) {
-    return getIDs()[i];
+  public String getName(int i) {
+    return getNames()[i];
   }
 
   public double getConfidence(int i) {
     return getConfidences()[i];
   }
 
-  public double[] getClosestInfo(DriverStation.Alliance alliance)  {
-    double[] ids = getIDs();
-    ArrayList<Integer> redIndexes = new ArrayList<Integer>();
-    ArrayList<Integer> blueIndexes = new ArrayList<Integer>();
+  public double[][] getClosestsIndexes() {
+    double[] biggestRed = new double[] {0.0, 0.0};
+    double[] biggestBlue = new double[] {0.0, 0.0};
 
-    if (alliance == DriverStation.Alliance.Red || alliance == DriverStation.Alliance.Blue) {
-      for (int i = 0; i < ids.length; i++) {
-        if (ids[i] == 0.0 && alliance == DriverStation.Alliance.Red) {
-          redIndexes.add(i);
-        } else if (ids[i] == 1.0 && alliance == DriverStation.Alliance.Blue) {
-          blueIndexes.add(i);
-        }
+    double[][] biggests = {biggestRed, biggestBlue};
+
+    for (int i = 0; i < getSizes().length; i++) {
+      if (getName(i).equals("red ball") && getSize(i) > biggestRed[1]) {
+        biggestRed[0] = i;
+        biggestRed[1] = getSize(i);
       }
-    } 
-
-    ArrayList<Integer> processIndexes = (redIndexes.size() > 0) ? redIndexes : blueIndexes;
-    int closestIndex = getClosestIndex(processIndexes);
-
-    double[] closest = {getCenterX(closestIndex), getCenterY(closestIndex), getSize(closestIndex), getID(closestIndex), getConfidence(closestIndex)};
-
-    return closest;
-  }
-
-  public double xPixelToAngle(double xPixel) {
-    return 0.0890625 * xPixel;
-  }
-
-  private int getClosestIndex(ArrayList<Integer> processList) {
-    double max = 0.0;
-    int maxIndex = 0;
-
-    for (int i = 0; i < processList.size(); i++) {
-      if (processList.get(i) > max) {
-        max = processList.get(i);
-        maxIndex = i;
+      if (getName(i).equals("blue ball") && getSize(i) > biggestBlue[1]) {
+        biggestBlue[0] = i;
+        biggestBlue[1] = getSize(i);
       }
     }
-    return maxIndex;
+    return biggests;
   }
 }

@@ -9,6 +9,8 @@ import frc.robot.commands.drive.FollowTrajectory;
 import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
+import frc.robot.commands.shooter.FindHoodZeros;
+import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.subsystems.drive.Trajectories;
 public class FiveBallPlus extends SequentialCommandGroup {
   /**
@@ -31,7 +33,8 @@ public class FiveBallPlus extends SequentialCommandGroup {
           new FollowTrajectory(Trajectories.fiveballplus.fourth, new Rotation2d(-2.45)),
           new FollowTrajectory(Trajectories.fiveballplus.fifth, new Rotation2d(Math.PI))
         ),
-        new SpinIntake(12.0)
+        //new HoodAngle(() -> 10.0).withTimeout(0.1).andThen(new FindHoodZeros()),
+        new SpinIntake(8.5)
       )
       //new PresetShoot(34.0, 2900.0)
     );

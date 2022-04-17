@@ -31,10 +31,10 @@ public class MonkeyBar extends ParallelDeadlineGroup {
       new ImpatientPassive(true),
       new ActivePosition(0.6),
       new PitchGreaterThanCommand(40.0),
-      new ActivePosition(Constants.climber.MAX_HEIGHT),
+      new ActivePosition(Constants.climber.MAX_HEIGHT + 0.03),
       new ImpatientPassive(false),
       new PitchLessThanCommand(38.0),
-      new ActivePosition(0.1)
+      new ActivePosition(0.3)
     ));
 
     addCommands(

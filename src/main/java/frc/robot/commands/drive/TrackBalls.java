@@ -7,6 +7,8 @@ package frc.robot.commands.drive;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
@@ -14,25 +16,31 @@ import frc.robot.subsystems.sensors.Sensors;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TrackBalls extends PIDCommand {
+public class TrackBalls extends CommandBase {
 
-  static Swerve drive = Swerve.getInstance();
-  static Sensors sensors = Sensors.getInstance();
+  Swerve drive = Swerve.getInstance();
+  Sensors sensors = Sensors.getInstance();
+
+  DoubleSupplier xVel, yVel;
+
+  PIDController pid = new PIDController(-0.15, 0.0, 0.0);
 
   /** Creates a new TrackBalls. */
   public TrackBalls(DoubleSupplier xVel, DoubleSupplier yVel) {
-    super(
-        // The controller that the command will use
-        new PIDController(-0.0025, 0, 0),
-        // This should return the measurement
-        () -> sensors.getClosestBallAngle(),
-        // This should return the setpoint (can also be a constant)
-        () -> 0.0,
-        // This uses the output
-        output -> {
-          drive.drive(yVel.getAsDouble(), xVel.getAsDouble(), output, 0.0, false, false);
-        });
+    this.xVel = xVel;
+    this.yVel = yVel;
+
     addRequirements(drive);
+  }
+
+  @Override
+  public void initialize() {
+
+  }
+
+  public void execute() {
+    double rotCorrection = pid.calculate(sensors.getClosestBallAngle(), 0.0);
+    drive.setChassisSpeeds(new ChassisSpeeds(xVel.getAsDouble() * 2.0, yVel.getAsDouble() * 2.0, rotCorrection));
   }
 
   // Returns true when the command should end.

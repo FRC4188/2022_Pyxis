@@ -1,15 +1,19 @@
 package frc.robot.commands.auto;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.drive.FollowTrajectory;
 import frc.robot.commands.groups.AutoIntake;
 import frc.robot.commands.groups.PresetShootQuantity;
+import frc.robot.commands.indexer.LoadBalls;
+import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
+import frc.robot.commands.trigger.PushTrigger;
 import frc.robot.commands.turret.SetToAngle;
 import frc.robot.subsystems.drive.Trajectories;
 
@@ -21,27 +25,20 @@ public class GenericTwoBall extends SequentialCommandGroup {
    */
   public GenericTwoBall() {
     addCommands(
-      new ResetPose(),
-      new ResetRotation(),
-      new ParallelDeadlineGroup(
-        new FollowTrajectory(Trajectories.twoball.toFirst, Rotation2d.fromDegrees(0.0)),
-        new AutoIntake(),
-        new HoodAngle(()->21.0),
-        new ShooterVelocity(()->2730.0)
-      ),
-      new PresetShootQuantity(22.8, 2650.0, 2, true),
+      new ResetPose(new Pose2d(0.0, 0.0, new Rotation2d(2.37))),
+
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
-          new FollowTrajectory(Trajectories.fiveball.terminal1, Rotation2d.fromDegrees(-50.0)),
-          new FollowTrajectory(Trajectories.fiveball.terminal2, Rotation2d.fromDegrees(-50.0)),
-          new FollowTrajectory(Trajectories.fiveball.shoot2, Rotation2d.fromDegrees(119.9))
+          new FollowTrajectory(Trajectories.hoard.first, new Rotation2d(2.37))
         ),
-        new AutoIntake(),
-        new SetToAngle(-180.0)
+        new SpinIntake(8.5),
+        new LoadBalls(),
+        new ShooterVelocity(() -> 0.0),
+        new HoodAngle(() -> 0.0),
+        new PushTrigger(0.0)
       ),
-      new PresetShootQuantity(37.5, 3050.0, 1, true).withTimeout(1.5),
-      new FollowTrajectory(Trajectories.fiveball.shoot3, Rotation2d.fromDegrees(116.0)),
-      new PresetShootQuantity(34.5, 3050.0, 2, true)
+
+      new PresetShootQuantity(23.0, 2700.0, 2, true)
     );
   }
 }

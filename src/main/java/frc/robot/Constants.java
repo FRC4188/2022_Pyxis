@@ -130,7 +130,7 @@ public class Constants {
         }
 
         public static final class thetaPID {
-            public static final double kP = -4.25;//-8.25;
+            public static final double kP = -5.25;//-8.25;
             public static final double kI = 0.0;
             public static final double kD = 0.0;//-0.25;  
             public static final ProfiledPIDController thetaPID = new ProfiledPIDController(kP, kI, kD, new Constraints(Math.PI * 2.0, Math.PI / 2.0));
@@ -150,7 +150,7 @@ public class Constants {
     }
 
     public static final class shooter {
-        public static final double ALPHA = 0.925;
+        public static final double ALPHA = 0.98;
 
         public static double kS = 0.7391;
         public static double kV = 0.09001;
@@ -169,18 +169,18 @@ public class Constants {
         public static final double MAX_JERK = 5000.0;
 
         public static final class hood {
-            public static final double BETA = 1.15;
+            public static final double BETA = 1.175;
 
-            public static final double kP = 0.85;
+            public static final double kP = 1.0;
             public static final double kI = 0.0;
-            public static final double kD = 0.02;
+            public static final double kD = 0.025;
             public static final double kCos = 0.53;
 
             public static final double GEARING = 5.0 * 5.0 * 7.0 * (40.0/16.0);
             public static final double CONVERSION = 360.0 / (GEARING);
             public static final double OFFSET = 8.6;
             
-            public static final double MAX = 47.0;
+            public static final double MAX = 45.0;
             public static final double MIN = 0.0;
         }
     }
@@ -190,9 +190,9 @@ public class Constants {
     }
 
     public static final class turret {
-            public static final double TkP = 0.5;
+            public static final double TkP = 0.55;
             public static final double TkI = 0.0;
-            public static final double TkD = 0.01;
+            public static final double TkD = 0.0125;
 
             public static final double PkP = 0.5;
             public static final double PkI = 0.0;
@@ -225,7 +225,7 @@ public class Constants {
         /** Meters */
         public static final double PULL_POSITION = 0.0;
         /** Meters */
-        public static final double ACTIVE_TOLERANCE = 0.015;
+        public static final double ACTIVE_TOLERANCE = 0.02;
         /** Meters */
         public static final double PUSH_POSITION = 0.878675;
         /** Meters */

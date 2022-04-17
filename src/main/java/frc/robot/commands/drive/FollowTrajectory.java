@@ -41,6 +41,7 @@ public class FollowTrajectory extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
+    swerve.setRotSetpoint(-rotation.getDegrees());
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.climber.ActivePosition;
 import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.shooter.FindHoodZeros;
+import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.tests.BallTrackTest;
 import frc.robot.commands.tests.PneumaticsTest;
 import frc.robot.commands.tests.ShooterTest;
@@ -62,10 +63,11 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putData("Test Chooser", testChooser);
 
+
     UsbCamera camera = CameraServer.startAutomaticCapture();
-    camera.setResolution(150, 150);
+    camera.setFPS(20);
+    camera.setResolution(320, 240);
     camera.setExposureAuto();
-    camera.setFPS(15);
   }
 
   /**
@@ -136,7 +138,7 @@ public class Robot extends TimedRobot {
     }
 
     new FindZeros().andThen(new ActivePosition(0.0)).schedule();
-    new FindHoodZeros().schedule();
+    new HoodAngle(() -> 10.0).withTimeout(0.1).andThen(new FindHoodZeros()).schedule();
 
     if (RobotController.getBatteryVoltage() < 12.3) DriverStation.reportWarning("Battery voltage too low; please change battery.", false);
     //m_robotContainer.resetRobot();

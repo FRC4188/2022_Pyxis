@@ -179,20 +179,20 @@ public final class Trajectories {
         public static final Trajectory first = TrajectoryGenerator.generateTrajectory(
             List.of(
                 new Pose2d(0.0, 0.0, new Rotation2d(2.37)),
-                new Pose2d(-0.69, 0.5, new Rotation2d(2.37))
-            ), new TrajectoryConfig(2.0, 2.0).addConstraint(new CentripetalAccelerationConstraint(2.0))
+                new Pose2d(-0.79, 0.6, new Rotation2d(2.37))
+            ), new TrajectoryConfig(1.5, 2.0).addConstraint(new CentripetalAccelerationConstraint(2.0))
         );
         public static final Trajectory second = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(-0.89, 0.4, new Rotation2d(-1.81)),
+                new Pose2d(-0.79, 0.6, new Rotation2d(-1.81)),
                 new Pose2d(-1.56, -1.48, new Rotation2d(-1.59))
-            ), new TrajectoryConfig(1.75, 1.5).addConstraint(new CentripetalAccelerationConstraint(2.0))
+            ), new TrajectoryConfig(2.5, 1.5).addConstraint(new CentripetalAccelerationConstraint(2.0))
         );
         public static final Trajectory third = TrajectoryGenerator.generateTrajectory(
             List.of(
                 new Pose2d(-1.56, -1.48, new Rotation2d(1.2)),
                 new Pose2d(0.0, 1.76, new Rotation2d(1.42))
-            ), new TrajectoryConfig(2.0, 2.0).addConstraint(new CentripetalAccelerationConstraint(2.0))
+            ), new TrajectoryConfig(2.5, 2.0).addConstraint(new CentripetalAccelerationConstraint(2.0))
         );
         public static final Trajectory fourth = TrajectoryGenerator.generateTrajectory(
             List.of(

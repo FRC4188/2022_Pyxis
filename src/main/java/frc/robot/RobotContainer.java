@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -75,7 +76,6 @@ public class RobotContainer {
 
   private CSPController pilot = new CSPController(0);
   private CSPController copilot = new CSPController(1);
-  private ButtonBox buttonBox = new ButtonBox(2);
 
   private Swerve swerve = Swerve.getInstance();
   private Climber climber = Climber.getInstance();
@@ -88,6 +88,8 @@ public class RobotContainer {
 
   private double lastSetHood = 0.0;
   private double lastSetShooter = 0.0;
+
+  private Notifier shuffleUpdater = new Notifier(() -> updateShuffle());
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -95,8 +97,15 @@ public class RobotContainer {
     setDefaultCommands();
     configureButtonBindings();
     addChooser();
+    shuffleUpdater.startPeriodic(0.1);
   }
 
+  public void updateShuffle() {
+    swerve.smartDashboard();
+    hood.updateDashboard();
+    shooter.updateDashboard();
+    Sensors.getInstance().updateDashboard();
+  }
 
   /**
    * Method which assigns default commands to different subsystems.
@@ -165,12 +174,8 @@ public class RobotContainer {
     }).whenActive(new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));
 
     pilot.getBButtonObj()
-      .whileHeld(new SpinIntake(12.0))
+      .whileHeld(new SpinIntake(8.5))
       .whenReleased(new InterruptSubsystem(intake));
-    
-    pilot.getAButtonObj()
-      .whileHeld(new TrackTarget())
-      .whenReleased(new InterruptSubsystem(turret));
     
     pilot.getYButtonObj()
       .whenPressed(new AutoShoot(true))
@@ -191,38 +196,28 @@ public class RobotContainer {
       */
 
     pilot.getDpadUpButtonObj()
-      .whenPressed(new ActivePosition(Constants.climber.MAX_HEIGHT));
+      .whenPressed(new ActivePosition(Constants.climber.MAX_HEIGHT + 0.03));
 
     pilot.getDpadDownButtonObj()
     .whenPressed(new ActivePosition(0.0));
     
     pilot.getStartButtonObj()
-      .whenPressed(new MonkeyBar().andThen(
-        new ParallelCommandGroup(
-          new HoodAngle(()-> 0.0),
-          new SetToAngle(-180.0),
-          new ShooterVelocity(() -> 0.0),
-          new SpinIntake(0.0, true),
-          new SpinIndexer(0.0),
-          new PushTrigger(0.0),
-          new CrabSet(0.0, 0.0)
-        )
-      ));
+      .whenPressed(new MonkeyBar());
 
     pilot.getBackButtonObj()
       .whenPressed(new ResetPose(new Pose2d(-1.0, 1.0, new Rotation2d())));
 
     pilot.getDpadRightButtonObj()
-      .whenPressed(new RunCommand(() -> turret.setVolts(3.0), turret))
-      .whenReleased(new InstantCommand(() -> turret.set(0.0), turret));
+      .whenPressed(new SetToAngle(-180.0));
+
     
     pilot.getDpadLeftButtonObj()
-      .whenPressed(new RunCommand(() -> turret.setVolts(-3.0), turret))
-      .whenReleased(new InstantCommand(() -> turret.set(0.0), turret));
+      .whenPressed(new SetToAngle(0.0));
+
     
-    pilot.getRbButtonObj()
-      .whenPressed(new TrackBalls(() -> pilot.getLeftX(Scaling.CUBED), () -> pilot.getLeftY(Scaling.CUBED)))
-      .whenReleased(new InterruptSubsystem(swerve));
+    // pilot.getRbButtonObj()
+    //   .whenPressed(new TrackBalls(() -> pilot.getLeftX(Scaling.CUBED), () -> pilot.getLeftY(Scaling.CUBED)))
+    //   .whenReleased(new InterruptSubsystem(swerve));
 
     copilot.getAButtonObj()
       .whenPressed(new SpinIntake(12.0, false))
@@ -263,14 +258,6 @@ public class RobotContainer {
     copilot.getLbButtonObj()
         .whenPressed(new RunCommand(() -> hood.setVolts(2.0), hood))
         .whenReleased(new RunCommand(() -> hood.setVolts(0.0), hood));
-    
-    buttonBox.getButton1Obj()
-      .whenPressed(new BlindShoot(10.5, 2500.0))
-      .whenReleased(new InterruptSubsystem(shooter, hood, turret, trigger));
-
-    buttonBox.getButton2Obj()
-      .whenPressed(new PresetShoot(16.6, 2630.0))
-      .whenReleased(new InterruptSubsystem(shooter, hood, turret, trigger));
   }
 
   private void addChooser() {

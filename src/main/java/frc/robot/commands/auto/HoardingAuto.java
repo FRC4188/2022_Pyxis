@@ -46,14 +46,14 @@ public class HoardingAuto extends SequentialCommandGroup {
         new SequentialCommandGroup(
           new FollowTrajectory(Trajectories.hoard.first, new Rotation2d(2.37))
         ),
-        new SpinIntake(12.0),
+        new SpinIntake(8.5),
         new LoadBalls(),
         new ShooterVelocity(() -> 0.0),
         new HoodAngle(() -> 0.0),
         new PushTrigger(0.0)
       ),
 
-      new PresetShootQuantity(25.0, 2700.0, 2, true),
+      new PresetShootQuantity(23.0, 2700.0, 2, true),
       
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(
@@ -61,14 +61,14 @@ public class HoardingAuto extends SequentialCommandGroup {
           new FollowTrajectory(Trajectories.hoard.third, new Rotation2d(1.42)),
           new FollowTrajectory(Trajectories.hoard.fourth, new Rotation2d(2.66))
         ),
-        new SpinIntake(12.0),
+        new SpinIntake(8.5),
         new LoadBalls(),
-        new ShooterVelocity(() -> 0.0),
-        new HoodAngle(() -> 0.0),
+        new ShooterVelocity(() -> 2700.0),
+        new HoodAngle(() -> 23.0),
         new PushTrigger(0.0)
       ),
 
-      new ParallelCommandGroup(new PushTrigger(-8.0), new SpinIndexer(-8.0), new SpinIntake(-12.0, true))
+      new ParallelCommandGroup(new PushTrigger(-8.0), new SpinIndexer(-8.0), new SpinIntake(-6.0, true))
     );
   }
 }

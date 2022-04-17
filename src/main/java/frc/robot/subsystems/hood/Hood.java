@@ -6,6 +6,8 @@ package frc.robot.subsystems.hood;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -14,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.sensors.Sensors;
+import frc.robot.utils.math.Derivative;
 import frc.robot.utils.motors.CSPMotor;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -29,20 +32,20 @@ public class Hood extends SubsystemBase {
   PIDController pid = new PIDController(Constants.shooter.hood.kP, Constants.shooter.hood.kI, Constants.shooter.hood.kD);
   ArmFeedforward ff = new ArmFeedforward(0.0, Constants.shooter.hood.kCos, 0.0);
   private double position = 0.0;
-  Notifier shuffle;
 
   DigitalInput limit = new DigitalInput(4);
 
   boolean servoing = true;
+
+  private Debouncer readyFilter = new Debouncer(0.05, DebounceType.kBoth);
+
+  private Derivative readyError = new Derivative(0.0);
   
   private Hood() {
       motor.reset();
       motor.setInverted(false);
       motor.setBrake(false);
       motor.setRamp(0.0);
-
-      shuffle = new Notifier(() -> updateDashboard());
-      shuffle.startPeriodic(0.05);
 
       new Trigger(() -> !limit.get()).whenActive(new InstantCommand(() -> resetPosition()));
   }
@@ -52,7 +55,7 @@ public class Hood extends SubsystemBase {
       if (servoing) setVolts(pid.calculate(getPosition(), position) + ff.calculate(Math.toRadians(position + 9.8), 0.0));
   }
 
-  private void updateDashboard() {
+  public void updateDashboard() {
     SmartDashboard.putNumber("Hood Angle", getPosition());
     SmartDashboard.putNumber("Hood Temperature", getTemp());
     SmartDashboard.putNumber("Hood Current", motor.getCurrent());
@@ -101,7 +104,7 @@ public class Hood extends SubsystemBase {
   }
 
   public boolean isReady(double angle) {
-    return Math.abs(getPosition() - angle) < 1.35;
+    return readyFilter.calculate(Math.abs(getPosition() - angle) < 1.0);
   }
 
   public boolean isReady() {

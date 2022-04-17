@@ -4,7 +4,9 @@ import java.util.Arrays;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.estimator.UnscentedKalmanFilter;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -42,18 +44,16 @@ public class Sensors extends SubsystemBase {
   private BallDetector ballDetector = Constants.devices.ballDetector;
   private ColorSensor colorSensor = Constants.devices.colorSensor;
 
-  private Notifier notifier = new Notifier(() -> updateShuffleboard());
-
   private SendableChooser<String> alliance = new SendableChooser<>();
 
   private LinearFilter dFilter = LinearFilter.singlePoleIIR(0.05, 0.02);
+
+  private Debouncer zoneFilter = new Debouncer(0.15, DebounceType.kBoth);
 
   /** Creates a new Sensors. */
   private Sensors() {
     CommandScheduler.getInstance().registerSubsystem(this);
     
-    startNotifier();
-
     alliance.setDefaultOption("FMS", "FMS");
     alliance.addOption("Blue", "Blue");
     alliance.addOption("Red", "Red");
@@ -64,7 +64,7 @@ public class Sensors extends SubsystemBase {
     //setPower(true);
   }
 
-  private void updateShuffleboard() {
+  public void updateDashboard() {
     SmartDashboard.putNumber("Distance to Goal", getDistance());
     SmartDashboard.putNumber("Yaw", pigeon.get().getDegrees());
     SmartDashboard.putNumber("Pitch", getPitch());
@@ -77,10 +77,6 @@ public class Sensors extends SubsystemBase {
 
   public void setLED(boolean on) {
     //limelight.setLEDMode(on ? LedMode.ON : LedMode.OFF);
-  }
-
-  private void startNotifier() {
-    notifier.startPeriodic(0.2);
   }
 
   public boolean getHasTarget() {
@@ -96,7 +92,7 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getTX() {
-    return limelight.getTX() - 1.25;
+    return limelight.getTX() - 1.5;
   }
 
   public double getTY() {
@@ -116,16 +112,27 @@ public class Sensors extends SubsystemBase {
     return pigeon.get();
   }
 
+  public double getEffectiveDistance() {
+    double distance = getDistance() -(getDistance() * 0.1175 + 0.13 + 0.4) * getTargetVelocityVector().getX();
+    //distance = Math.hypot(distance, -(getDistance() * 0.12 + 0.15 /*0.15 + 0.4*/) * getTargetVelocityVector().getY());
+    return distance;
+  }
+
   public double getFormulaRPM() {
     // double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
-    double distance = getDistance() -(getDistance() * 0.125 + 0.55) * getTargetVelocityVector().getX();
-    return (isRightColor() && getDistance() < 6.5) ? Constants.shooter.ALPHA * 362.0 * distance + 1800.0 : 1500;
+    //double distance = getDistance() -(getDistance() * 0.15 + 0.35) * getTargetVelocityVector().getX();
+    double distance = getEffectiveDistance();
+    //double rpm = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.ALPHA * 372.0 * distance + 1700.0 : 414.961 * distance +1811.23;
+    double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1638.59 : 414.961 * distance +1811.23;
+    return (isRightColor() && getDistance() < 6.5) ? rpm : 2000;
   }
 
   public double getFormulaAngle() {
     // double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
-    double distance = getDistance() -(getDistance() * 0.125 + 0.55) * getTargetVelocityVector().getX();
-    return (isRightColor()) ? Constants.shooter.hood.BETA * 7.18 * distance + 6.29 : 2.0;
+    //double distance = getDistance() -(getDistance() * 0.15 + 0.35) * getTargetVelocityVector().getX();
+  double distance = getEffectiveDistance();
+  double angle = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.hood.BETA * 7.18 * distance + 5.29 : 12.0 * distance - 5.57799;
+    return (isRightColor()) ? angle : 2.0;
   }
 
   public void setLEDMode(LedMode mode) {
@@ -202,8 +209,8 @@ public class Sensors extends SubsystemBase {
   public double getOffsetAngle() {
     // double tX = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getX();
     // double tY = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getY();
-    double tX = getDistance() -(getDistance() * 0.125 + 0.55) * getTargetVelocityVector().getX();
-    double tY = getDistance() -(getDistance() * 0.125 + 0.55) * getTargetVelocityVector().getY();
+    double tX = -(getDistance() * 0.13 + 0.2) * getTargetVelocityVector().getX();
+    double tY = -(getDistance() * 0.13 + 0.2) * getTargetVelocityVector().getY();
     return Math.toDegrees(Math.atan2(tY, getDistance() + tX));
   }
 

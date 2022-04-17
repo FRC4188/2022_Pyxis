@@ -28,8 +28,8 @@ public class TestOTFRadial extends SequentialCommandGroup {
         TrajectoryGenerator.generateTrajectory(
           List.of(
             new Pose2d(0.0, 0.0, new Rotation2d()),
-            new Pose2d(3.0, 0.0, new Rotation2d())
-          ), new TrajectoryConfig(1.0, 3.0)), new Rotation2d())
+            new Pose2d(5.0, 0.0, new Rotation2d())
+          ), new TrajectoryConfig(1.5, 3.0)), new Rotation2d())
     );
   }
 }

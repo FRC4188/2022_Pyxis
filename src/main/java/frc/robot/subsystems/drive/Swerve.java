@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.sensors.Sensors;
+import frc.robot.utils.math.Derivative;
 
 public class Swerve extends SubsystemBase {
 
@@ -37,10 +38,12 @@ public class Swerve extends SubsystemBase {
 
   private PIDController rotationPID = new PIDController(0.1, 0.0, 0.0);
 
-  private PIDController pitchCorrection = new PIDController(-0.1, 0.0, 0.01);
-  private PIDController rollCorrection = new PIDController(-0.075, 0.0, 0.01);
+  private PIDController pitchCorrection = new PIDController(-0.15, 0.0, 0.01);
+  private PIDController rollCorrection = new PIDController(-0.1, 0.0, 0.075);
 
   private Odometry odometry = new Odometry(new Pose2d());
+
+  private Derivative accel = new Derivative(0.0);
 
   /*
   private SwerveDrivePoseEstimator odometry = new SwerveDrivePoseEstimator(sensors.getRotation(), new Pose2d(-1.0, 1.0, new Rotation2d()), kinematics,
@@ -50,15 +53,12 @@ public class Swerve extends SubsystemBase {
   );
   */
 
-  private Notifier dashboard = new Notifier(() -> smartDashboard());
 
   /** Creates a new Swerve. */
   private Swerve() {
     CommandScheduler.getInstance().registerSubsystem(this);
     rotationPID.enableContinuousInput(-180, 180);
     rotationPID.setTolerance(1.0);
-
-    dashboard.startPeriodic(0.25);
   }
 
   @Override
@@ -70,7 +70,7 @@ public class Swerve extends SubsystemBase {
     odometry.update(getChassisSpeeds(), sensors.getRotation());
   }
 
-  private void smartDashboard() {
+  public void smartDashboard() {
     SmartDashboard.putNumber("M1 (LF) Angle", leftFront.getAbsoluteAngle());
     SmartDashboard.putNumber("M2 (RF) Angle", rightFront.getAbsoluteAngle());
     SmartDashboard.putNumber("M3 (LR) Angle", leftRear.getAbsoluteAngle());
@@ -178,7 +178,11 @@ public class Swerve extends SubsystemBase {
     return kinematics;
   }
 
-public double getSpeed() {
-    return Math.hypot(getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
-}
+  public double getSpeed() {
+      return Math.hypot(getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
+  }
+
+  public double getAccel() {
+    return accel.getRate(getSpeed());
+  }
 }

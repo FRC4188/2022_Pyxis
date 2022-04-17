@@ -17,6 +17,7 @@ public class PresetFireQuantity extends CommandBase {
 
   private double angle, rpm = 0.0;
   private int quantity = 0;
+  private int initQuant = 0;
 
   private boolean lastTop = false;
 
@@ -24,14 +25,16 @@ public class PresetFireQuantity extends CommandBase {
   public PresetFireQuantity(double angle, double rpm, int quantity) {
     addRequirements(trigger);
 
-  this.quantity = quantity;
+  initQuant = quantity;
   this.angle = angle;
   this.rpm = rpm;
 }
 
 // Called when the command is initially scheduled.
 @Override
-public void initialize() {}
+public void initialize() {
+  quantity = initQuant;
+}
 
 // Called every time the scheduler runs while the command is scheduled.
 @Override

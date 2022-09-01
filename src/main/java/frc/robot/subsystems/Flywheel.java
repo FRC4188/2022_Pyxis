@@ -31,8 +31,8 @@ public class Flywheel extends SubsystemBase {
   }
 
   private LinearSystem<N1, N1, N1> shooterPlant = LinearSystemId.identifyVelocitySystem(Constants.FLYWHEEL.kV, Constants.FLYWHEEL.kA);
-  private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, VecBuilder.fill(3.0), VecBuilder.fill(0.01), 0.2);
-  private LinearQuadraticRegulator<N1, N1, N1> regulator = new LinearQuadraticRegulator<>(shooterPlant, VecBuilder.fill(8.0), VecBuilder.fill(12.0), 0.020);
+  private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, VecBuilder.fill(Constants.FLYWHEEL.STATE_ERROR), VecBuilder.fill(0.001), 0.02);
+  private LinearQuadraticRegulator<N1, N1, N1> regulator = new LinearQuadraticRegulator<>(shooterPlant, VecBuilder.fill(Constants.FLYWHEEL.QELMS), VecBuilder.fill(12.0), 0.020);
   private LinearSystemLoop<N1, N1, N1> loop = new LinearSystemLoop<>(shooterPlant, regulator, filter, 12.0, 0.020);
 
   private CANSparkMax motor = new CANSparkMax(11, MotorType.kBrushless);
@@ -77,6 +77,18 @@ public class Flywheel extends SubsystemBase {
 
   public double getVelocity() {
     return encoder.getVelocity();
+  }
+
+  public double getInputVoltage() {
+    return loop.getU(0);
+  }
+
+  public double getEstimatedVelocity() {
+    return loop.getXHat(0);
+  }
+
+  public double getNextReference() {
+    return loop.getNextR(0);
   }
 
   public double getTemperature() {

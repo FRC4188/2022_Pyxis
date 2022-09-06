@@ -31,11 +31,11 @@ public class Flywheel extends SubsystemBase {
   }
 
   private LinearSystem<N1, N1, N1> shooterPlant = LinearSystemId.identifyVelocitySystem(Constants.FLYWHEEL.kV, Constants.FLYWHEEL.kA);
-  private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, VecBuilder.fill(3.0), VecBuilder.fill(0.01), 0.2);
+  private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, VecBuilder.fill(0.0001), VecBuilder.fill(60.1), 0.02);
   private LinearQuadraticRegulator<N1, N1, N1> regulator = new LinearQuadraticRegulator<>(shooterPlant, VecBuilder.fill(8.0), VecBuilder.fill(12.0), 0.020);
   private LinearSystemLoop<N1, N1, N1> loop = new LinearSystemLoop<>(shooterPlant, regulator, filter, 12.0, 0.020);
 
-  private CANSparkMax motor = new CANSparkMax(11, MotorType.kBrushless);
+  private CANSparkMax motor = new CANSparkMax(9, MotorType.kBrushless);
   private RelativeEncoder encoder = motor.getEncoder();
   
   private Notifier shuffle = new Notifier(() -> updateShuffleboard());
@@ -48,7 +48,9 @@ public class Flywheel extends SubsystemBase {
     loop.reset(VecBuilder.fill(getVelocity()));
 
     SmartDashboard.putNumber("Set Flywheel Velocity", 0.0);
-
+    SmartDashboard.putNumber("Set Percentage", 0.0);
+    
+    shuffle.startPeriodic(0.1);
   }
 
   public void openNotifier() {
@@ -57,6 +59,10 @@ public class Flywheel extends SubsystemBase {
 
   private void updateShuffleboard() {
     SmartDashboard.putNumber("Flywheel Velocity (RPM)", getVelocity());
+    SmartDashboard.putNumber("Flywheel Estimated Velocity (RPM)", getEstimatedVelocity());
+    SmartDashboard.putNumber("Get Next Reference", getNextReference());
+    SmartDashboard.putNumber("Get Input Voltage", getInputVoltage());
+
   }
 
   public void set(double percentage) {
@@ -81,6 +87,18 @@ public class Flywheel extends SubsystemBase {
 
   public double getTemperature() {
     return motor.getMotorTemperature();
+  }
+
+  public double getInputVoltage() {
+    return loop.getU(0);
+  }
+
+  public double getEstimatedVelocity() {
+    return loop.getXHat(0);
+  }   
+
+  public double getNextReference() {
+    return loop.getNextR(0);
   }
 
   @Override

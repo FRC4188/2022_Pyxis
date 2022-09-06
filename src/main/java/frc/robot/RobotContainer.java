@@ -35,6 +35,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     SmartDashboard.putData("Send Flywheel Velocity", new InstantCommand(() -> flywheel.setVelocity(SmartDashboard.getNumber("Set Flywheel Velocity", 0.0)), flywheel));
+    SmartDashboard.putData("Send Percentage", new InstantCommand(() -> flywheel.set(SmartDashboard.getNumber("Set Percentage", 0.0)), flywheel));
+
   }
 
   /**

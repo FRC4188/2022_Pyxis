@@ -31,8 +31,17 @@ public class Flywheel extends SubsystemBase {
   }
 
   private LinearSystem<N1, N1, N1> shooterPlant = LinearSystemId.identifyVelocitySystem(Constants.FLYWHEEL.kV, Constants.FLYWHEEL.kA);
-  private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, VecBuilder.fill(0.0001), VecBuilder.fill(60.1), 0.02);
-  private LinearQuadraticRegulator<N1, N1, N1> regulator = new LinearQuadraticRegulator<>(shooterPlant, VecBuilder.fill(8.0), VecBuilder.fill(12.0), 0.020);
+  private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, 
+    VecBuilder.fill(3.0), 
+    VecBuilder.fill(0.01), 
+    0.020);
+  private LinearQuadraticRegulator<N1, N1, N1> regulator = new LinearQuadraticRegulator<>(shooterPlant, 
+    //no idea
+    VecBuilder.fill(8.0), 
+    //this stays
+    VecBuilder.fill(12.0),
+    //this stays
+    0.020);
   private LinearSystemLoop<N1, N1, N1> loop = new LinearSystemLoop<>(shooterPlant, regulator, filter, 12.0, 0.020);
 
   private CANSparkMax motor = new CANSparkMax(9, MotorType.kBrushless);
@@ -43,7 +52,7 @@ public class Flywheel extends SubsystemBase {
   /** Creates a new ShooterSystemID. */
   public Flywheel() {
     CommandScheduler.getInstance().registerSubsystem(this);
-    encoder.setVelocityConversionFactor(0.1);
+    encoder.setVelocityConversionFactor(1.0);
 
     loop.reset(VecBuilder.fill(getVelocity()));
 
@@ -101,8 +110,24 @@ public class Flywheel extends SubsystemBase {
     return loop.getNextR(0);
   }
 
+
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
 }
+
+/**
+ * 
+  private LinearSystem<N1, N1, N1> shooterPlant = LinearSystemId.identifyVelocitySystem(Constants.FLYWHEEL.kV, Constants.FLYWHEEL.kA);
+  private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, 
+    VecBuilder.fill(0.0001), 
+    VecBuilder.fill(60.1), 
+    0.02);
+  private LinearQuadraticRegulator<N1, N1, N1> regulator = new LinearQuadraticRegulator<>(shooterPlant, 
+    VecBuilder.fill(8.0), 
+    VecBuilder.fill(12.0),
+    0.020);
+  private LinearSystemLoop<N1, N1, N1> loop = new LinearSystemLoop<>(shooterPlant, regulator, filter, 12.0, 0.020);
+ */

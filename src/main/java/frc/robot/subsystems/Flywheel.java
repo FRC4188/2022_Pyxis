@@ -32,32 +32,38 @@ public class Flywheel extends SubsystemBase {
 
   private LinearSystem<N1, N1, N1> shooterPlant = LinearSystemId.identifyVelocitySystem(Constants.FLYWHEEL.kV, Constants.FLYWHEEL.kA);
   private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, 
-    VecBuilder.fill(3.0), 
-    VecBuilder.fill(0.01), 
+    VecBuilder.fill(9999.0), 
+    VecBuilder.fill(0.001), 
     0.020);
   private LinearQuadraticRegulator<N1, N1, N1> regulator = new LinearQuadraticRegulator<>(shooterPlant, 
-    //no idea
-    VecBuilder.fill(8.0), 
-    //this stays
-    VecBuilder.fill(12.0),
-    //this stays
+    //VecBuilder.fill(80.0), 
+    //VecBuilder.fill(12.0),
+    // make this really really high
+     VecBuilder.fill(48.8), 
+     VecBuilder.fill(7.0),
     0.020);
   private LinearSystemLoop<N1, N1, N1> loop = new LinearSystemLoop<>(shooterPlant, regulator, filter, 12.0, 0.020);
 
   private CANSparkMax motor = new CANSparkMax(9, MotorType.kBrushless);
+  
   private RelativeEncoder encoder = motor.getEncoder();
   
   private Notifier shuffle = new Notifier(() -> updateShuffleboard());
+
+  private double kS = 0.0;
 
   /** Creates a new ShooterSystemID. */
   public Flywheel() {
     CommandScheduler.getInstance().registerSubsystem(this);
     encoder.setVelocityConversionFactor(1.0);
-
     loop.reset(VecBuilder.fill(getVelocity()));
+    motor.setInverted(true);
 
     SmartDashboard.putNumber("Set Flywheel Velocity", 0.0);
     SmartDashboard.putNumber("Set Percentage", 0.0);
+    SmartDashboard.putNumber("Set Voltage", 0.0);
+    SmartDashboard.putNumber("kS", 0.0);
+    //SmartDashboard.putNumber("Set Velocity Conversion", 60.0);
     
     shuffle.startPeriodic(0.1);
   }
@@ -67,10 +73,14 @@ public class Flywheel extends SubsystemBase {
   }
 
   private void updateShuffleboard() {
-    SmartDashboard.putNumber("Flywheel Velocity (RPM)", getVelocity());
-    SmartDashboard.putNumber("Flywheel Estimated Velocity (RPM)", getEstimatedVelocity());
-    SmartDashboard.putNumber("Get Next Reference", getNextReference());
-    SmartDashboard.putNumber("Get Input Voltage", getInputVoltage());
+    SmartDashboard.putNumber("1. Flywheel Velocity (RPM)", getVelocity());
+    // SmartDashboard.putNumber("Flywheel Estimated Velocity (RPM)", getEstimatedVelocity());
+    // SmartDashboard.putNumber("Get Next Reference", getNextReference());
+    // SmartDashboard.putNumber("Get Input Voltage", getInputVoltage());
+
+    SmartDashboard.putNumber("2. LQR Reference", getNextReference());
+    SmartDashboard.putNumber("3. Control input", getInputVoltage());
+    SmartDashboard.putNumber("4. State Estimates", getEstimatedVelocity());
 
   }
 
@@ -82,16 +92,21 @@ public class Flywheel extends SubsystemBase {
     motor.setVoltage(voltage);
   }
 
+  public void setkS(double kS) {
+    this.kS = kS;
+  }
+
   public void setVelocity(double velocity) {
     loop.setNextR(VecBuilder.fill(velocity));
     loop.correct(VecBuilder.fill(getVelocity()));
     loop.predict(0.02);
     
-    setVoltage(loop.getU(0));
+    setVoltage(loop.getU(0) + Math.signum(loop.getU(0)) * Constants.FLYWHEEL.kS);
   }
 
   public double getVelocity() {
-    return encoder.getVelocity();
+    //encoder: 42 counts per revolution 
+    return encoder.getVelocity() ;
   }
 
   public double getTemperature() {
@@ -115,6 +130,8 @@ public class Flywheel extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    //setVelocity((SmartDashboard.getNumber("Set Flywheel Velocity", 0.0)));
+    
   }
 }
 

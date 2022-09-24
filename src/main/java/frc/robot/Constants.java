@@ -14,7 +14,14 @@ package frc.robot;
  */
 public final class Constants {
     public static final class FLYWHEEL {
-        public static final double kV = 0.061083;
-        public static final double kA = 0.0083521;
+        /**
+         * public static final double kV = 0.061083;
+            public static final double kA = 0.0083521;
+         */
+        //public static final double kV = 0.060732;
+        public static final double kA = 0.0015252 / 3600.0;
+        public static final double kV = 0.060732 / 60.0;
+        public static final double kS = 0.1;
+        // public static final double kA = 0.023396;
     }
 }

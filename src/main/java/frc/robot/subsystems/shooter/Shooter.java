@@ -15,8 +15,10 @@ public class Shooter extends SubsystemBase {
     return instance;
   }
 
-  Wheel wheel = new Wheel();
+
+  //Wheel wheel = new Wheel();
   Sensors sensors = Sensors.getInstance();
+  Wheel wheel = Wheel.getInstance();
 
   /** Creates a new Shooter. */
   private Shooter() {

@@ -58,7 +58,8 @@ import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.sensors.Sensors;
-import frc.robot.subsystems.shooter.Shooter;
+//import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Wheel;
 import frc.robot.subsystems.trigger.PreShooter;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.turret.Turret;
@@ -83,8 +84,10 @@ public class RobotContainer {
   private Indexer indexer = Indexer.getInstance();
   private PreShooter trigger = PreShooter.getInstance();
   private Turret turret = Turret.getInstance();
-  private Shooter shooter = Shooter.getInstance();
+  //private Shooter shooter = Shooter.getInstance();
   private Hood hood = Hood.getInstance();
+  private Wheel wheel = Wheel.getInstance();
+
 
   private double lastSetHood = 0.0;
   private double lastSetShooter = 0.0;
@@ -103,7 +106,7 @@ public class RobotContainer {
   public void updateShuffle() {
     swerve.smartDashboard();
     hood.updateDashboard();
-    shooter.updateDashboard();
+    //shooter.updateDashboard();
     Sensors.getInstance().updateDashboard();
   }
 
@@ -130,7 +133,7 @@ public class RobotContainer {
       turret.setAngle(set);
     }, turret)*/
     new TrackTarget());
-    shooter.setDefaultCommand(new ShooterVelocity(() -> Sensors.getInstance().getFormulaRPM()));
+    //shooter.setDefaultCommand(new ShooterVelocity(() -> Sensors.getInstance().getFormulaRPM()));
     hood.setDefaultCommand(new HoodAngle(() -> Sensors.getInstance().getFormulaAngle()));
     trigger.setDefaultCommand(new AutoFire());
     indexer.setDefaultCommand(new LoadBalls());
@@ -160,6 +163,10 @@ public class RobotContainer {
     SmartDashboard.putData("Find Hood Zeros", new FindHoodZeros());
     SmartDashboard.putData("Zero Climber", new FindZeros().andThen(new ActivePosition(0.0)));
     SmartDashboard.putData("Toggle Climber Brakes", new ToggleBrakes());
+    SmartDashboard.putData("Send Flywheel Velocity", new InstantCommand(() -> wheel.setVelocity(SmartDashboard.getNumber("Set Flywheel Velocity", 0.0)), wheel));
+    SmartDashboard.putData("Send Percentage", new InstantCommand(() -> wheel.set(SmartDashboard.getNumber("Set Percentage", 0.0)), wheel));
+    SmartDashboard.putData("Send Voltage", new InstantCommand(() -> wheel.setVoltage(SmartDashboard.getNumber("Set Voltage", 0.0)), wheel));
+    //SmartDashboard.putData("Send kS", new InstantCommand(() -> Wheel.setkS(SmartDashboard.getNumber("kS", 0.0)), wheel));
 
     new Trigger(() -> {
       boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
@@ -179,12 +186,14 @@ public class RobotContainer {
     
     pilot.getYButtonObj()
       .whenPressed(new AutoShoot(true))
-      .whenReleased(new InterruptSubsystem(shooter, trigger, indexer, hood));
+      //add shoot here
+      .whenReleased(new InterruptSubsystem(trigger, indexer, hood));
     
     pilot.getXButtonObj()
       .whenPressed(new ParallelCommandGroup(new PushTrigger(-8.0), new SpinIndexer(-8.0), new SpinIntake(-12.0, true)))
       .whenReleased(new InterruptSubsystem(indexer, trigger, intake));
     
+
     /*
     pilot.getRbButtonObj()
       .whenPressed(new LowerPortShot())

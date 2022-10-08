@@ -61,7 +61,7 @@ public class BallDetector {
 
         Pose2d currentPose = swerve.getPose();
         double x = currentPose.getX() + Math.cos(closestBall[1]) * closestBall[0];
-        double y = currentPose.getX() + Math.cos(closestBall[1]) * closestBall[0];
+        double y = currentPose.getY() + Math.sin(closestBall[1]) * closestBall[0];
         Pose2d nextBall = new Pose2d(currentPose.getX() + x, currentPose.getY() + y, new Rotation2d(closestBall[1]));
         poses.add(currentPose);
         poses.add(nextBall);

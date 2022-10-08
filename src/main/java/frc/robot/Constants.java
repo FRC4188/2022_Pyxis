@@ -247,8 +247,9 @@ public class Constants {
     }
 
     public static final class FLYWHEEL {
-        public static final double kV = 1.0;
-        public static final double kA = 1.0;
+        public static final double kV = 6.02e-05;
+        public static final double kA = 9.475e-06;
+        public static final double kS = 0.77971;
 
     }
 

@@ -33,14 +33,14 @@ public class Wheel extends SubsystemBase{
   }
   private LinearSystem<N1, N1, N1> shooterPlant = LinearSystemId.identifyVelocitySystem(Constants.FLYWHEEL.kV, Constants.FLYWHEEL.kA);
   private KalmanFilter<N1, N1, N1> filter = new KalmanFilter<>(Nat.N1(), Nat.N1(), shooterPlant, 
-    VecBuilder.fill(9999.0), 
-    VecBuilder.fill(0.001), 
+    VecBuilder.fill(3.0), 
+    VecBuilder.fill(0.01), 
     0.020);
   private LinearQuadraticRegulator<N1, N1, N1> regulator = new LinearQuadraticRegulator<>(shooterPlant, 
     //VecBuilder.fill(80.0), 
     //VecBuilder.fill(12.0),
     // make this really really high
-     VecBuilder.fill(48.8), 
+     VecBuilder.fill(46596.2), 
      VecBuilder.fill(7.0),
     0.020);
   private LinearSystemLoop<N1, N1, N1> loop = new LinearSystemLoop<>(shooterPlant, regulator, filter, 12.0, 0.020);
@@ -107,7 +107,7 @@ public class Wheel extends SubsystemBase{
     loop.correct(VecBuilder.fill(getVelocity()));
     loop.predict(0.02);
     
-    setVoltage(loop.getU(0));
+    setVoltage(loop.getU(0) + Math.signum(loop.getU(0)) * Constants.FLYWHEEL.kS);
   }
 
   public double getVelocity() {

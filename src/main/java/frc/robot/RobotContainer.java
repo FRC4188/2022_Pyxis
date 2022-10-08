@@ -7,7 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.commands.InterruptSubsystem;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Pnuematics;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
@@ -20,7 +22,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private Flywheel flywheel = Flywheel.getInstance();
+  private Pnuematics pnuematics = Pnuematics.getInstance();
 
+  private XboxController pilot = new XboxController(0);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
@@ -35,6 +39,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     SmartDashboard.putData("Send Flywheel Velocity", new InstantCommand(() -> flywheel.setVelocity(SmartDashboard.getNumber("Set Flywheel Velocity", 0.0)), flywheel));
+    
+    pilot.getXButton() 
+      .whenPressed(new Deploy())
+      .whenReleased(new InterruptSubsystem(pnuematics));
   }
 
   /**

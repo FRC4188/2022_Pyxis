@@ -130,13 +130,14 @@ public class Sensors extends SubsystemBase {
   public double getFormulaAngle() {
     // double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
     //double distance = getDistance() -(getDistance() * 0.15 + 0.35) * getTargetVelocityVector().getX();
-  double distance = getEffectiveDistance();
-  double angle = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.hood.BETA * 7.18 * distance + 5.29 : 12.0 * distance - 5.57799;
+    double distance = getEffectiveDistance();
+    double angle = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.hood.BETA * 7.18 * distance + 5.29 : 12.0 * distance - 5.57799;
     return (isRightColor()) ? angle : 2.0;
   }
 
   public void setLEDMode(LedMode mode) {
     //limelight.setLEDMode(mode);
+    
   }
 
   public void setCameraMode(CameraMode mode) {
@@ -175,25 +176,10 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getClosestBallAngle() {
-    double cameraFOV = 29.4;
-    double frameWidth = 640;
-    double centerXtoAngle = cameraFOV / (frameWidth / 2);
+    double[] closest = BallDetector.toCoordinates(ballDetector.getClosestBall(alliance.getSelected()));
+    double angle = closest[0];
 
-    double biggestRedAngle = ballDetector.getCenterX((int) ballDetector.getClosestsIndexes()[0][0]) * centerXtoAngle;
-    double biggestBlueAngle = ballDetector.getCenterX((int) ballDetector.getClosestsIndexes()[1][0]) * centerXtoAngle;
-
-    String alliance = this.alliance.getSelected();
-    if (alliance.equals("Red")) {
-      return biggestRedAngle;
-    } else if (alliance.equals("Blue")) {
-      return biggestBlueAngle;
-    } else if (alliance.equals("All")) {
-      double biggestRedSize = ballDetector.getClosestsIndexes()[0][1];
-      double biggestBlueSize = ballDetector.getClosestsIndexes()[1][1];
-      return (biggestRedSize > biggestBlueSize) ?  biggestRedAngle : biggestBlueAngle;
-    } else {
-      return (DriverStation.getAlliance() == DriverStation.Alliance.Red) ? biggestRedAngle : biggestBlueAngle;
-    }
+    return angle;
   }
 
   private Translation2d getTargetVelocityVector() {

@@ -8,8 +8,10 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.commands.InterruptSubsystem;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
 
@@ -21,26 +23,31 @@ public class TrackBalls extends CommandBase {
   Swerve drive = Swerve.getInstance();
   Sensors sensors = Sensors.getInstance();
 
-  DoubleSupplier xVel, yVel;
+  double xInput;
+  double yInput;
 
-  PIDController pid = new PIDController(-0.15, 0.0, 0.0);
+  PIDController pid = new PIDController(-0.05, 0.0, 0.0);
 
   /** Creates a new TrackBalls. */
-  public TrackBalls(DoubleSupplier xVel, DoubleSupplier yVel) {
-    this.xVel = xVel;
-    this.yVel = yVel;
-
+  public TrackBalls(DoubleSupplier xInput, DoubleSupplier yInput) {
     addRequirements(drive);
+
+    this.xInput = xInput.getAsDouble();
+    this.yInput = yInput.getAsDouble();
   }
 
   @Override
   public void initialize() {
-
   }
 
+  @Override
   public void execute() {
     double rotCorrection = pid.calculate(sensors.getClosestBallAngle(), 0.0);
-    drive.setChassisSpeeds(new ChassisSpeeds(xVel.getAsDouble() * 2.0, yVel.getAsDouble() * 2.0, rotCorrection));
+    drive.setChassisSpeeds(new ChassisSpeeds(xInput, yInput, rotCorrection));
+  }
+
+  @Override
+  public void end(boolean interrupted) {
   }
 
   // Returns true when the command should end.

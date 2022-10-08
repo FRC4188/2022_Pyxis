@@ -63,11 +63,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putData("Test Chooser", testChooser);
 
-
-    UsbCamera camera = CameraServer.startAutomaticCapture();
-    camera.setFPS(20);
-    camera.setResolution(320, 240);
-    camera.setExposureAuto();
   }
 
   /**

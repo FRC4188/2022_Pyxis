@@ -156,7 +156,7 @@ public class Constants {
         public static double kV = 0.09001;
         public static double kA = 0.0072442;
 
-        public static final double GEARING = 24.0/32.0;
+        public static final double GEARING = 1;
         public static final double RAMP = 2.5;
 
         public static final double RADIUS = Units.inchesToMeters(4.0);
@@ -180,8 +180,9 @@ public class Constants {
             public static final double CONVERSION = 360.0 / (GEARING);
             public static final double OFFSET = 8.6;
             
-            public static final double MAX = 45.0;
+            public static final double MAX = 42.0;
             public static final double MIN = 0.0;
+
         }
     }
     
@@ -244,5 +245,11 @@ public class Constants {
         public static double kI = 20.0;
         public static double kD = 6.2;
 
+    }
+
+    public static class sensors {
+        public static final double CAMERA_FOV = 29.4;
+        public static final double CAMERA_WIDTH = 320;
+        public static final double DISTANCE_SCALAR = 0.0;
     }
 }

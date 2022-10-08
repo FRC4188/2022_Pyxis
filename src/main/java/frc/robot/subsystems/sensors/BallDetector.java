@@ -5,85 +5,79 @@
 package frc.robot.subsystems.sensors;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants;
+import frc.robot.subsystems.drive.Swerve;
 
-public class BallDetector extends SubsystemBase {
-  private NetworkTable ballDetectorTable;
-  /** Creates a new BallDetector. */
-  public BallDetector(String tableName) {
-    ballDetectorTable = NetworkTableInstance.getDefault().getTable(tableName);
-  }
+/** Add your docs here. */
+public class BallDetector {
+    private NetworkTable table;
+    private Swerve swerve = Swerve.getInstance();
 
-  public double[] getCenterXs() {
-    double[] table = ballDetectorTable.getEntry("center x's").getDoubleArray(new double[0]);
-    if (table.length == 0) table = new double[] {0.0};
-    return table;
-  }
+    public BallDetector(String tableName) {
+        table = NetworkTableInstance.getDefault().getTable(tableName);
+    }
 
-  public double[] getCenterYs() {
-    double[] table = ballDetectorTable.getEntry("center y's").getDoubleArray(new double[0]);
-    if (table.length == 0) table = new double[] {0.0};
-    return table;
-  }
+    /**
+     * format {centerx, centery, size, confidence}
+     * @return closest blue ball info
+     */
+    public double[] getClosestBlue() {
+        return table.getEntry("closest blue").getDoubleArray(new double[4]);
+    }
 
-  public double[] getSizes() {
-    double[] table = ballDetectorTable.getEntry("sizes").getDoubleArray(new double[0]);
-    if (table.length == 0) table = new double[] {0.0};
-    return table;
-  }
+    /**
+     * format {centerx, centery, size, confidence}
+     * @return closest blue ball info
+     */
+    public double[] getClosestRed() {
+        return table.getEntry("closest red").getDoubleArray(new double[4]);
+    }
 
-  public String[] getNames() {
-    String[] table = ballDetectorTable.getEntry("names").getStringArray(new String[0]);
-    if (table.length == 0) table = new String[] {""};
-    return table;
-  }
+    public double[] getClosestBall(String selection) {
+      switch(selection) {
+        case "Blue":
+          return getClosestBlue();
+        case "Red":
+          return getClosestRed();
+        case "All":
+          return (getClosestBlue()[2] > getClosestRed()[2]) ? getClosestBlue() : getClosestRed();
+        default:
+          return (DriverStation.getAlliance() == Alliance.Blue) ? getClosestBlue() : getClosestRed();
+        }
+    }
 
-  public double[] getConfidences() {
-    double[] table = ballDetectorTable.getEntry("confidences").getDoubleArray(new double[0]);
-    if (table.length == 0) table = new double[] {0.0};
-    return table;
-  }
+    public Trajectory generateTrajectory(double[] closestBall) {
+        List<Pose2d> poses = new ArrayList<Pose2d>();
 
-  public double getCenterX(int i) {
-    return getCenterXs()[i];
-  }
+        Pose2d currentPose = swerve.getPose();
+        double x = currentPose.getX() + Math.cos(closestBall[1]) * closestBall[0];
+        double y = currentPose.getX() + Math.cos(closestBall[1]) * closestBall[0];
+        Pose2d nextBall = new Pose2d(currentPose.getX() + x, currentPose.getY() + y, new Rotation2d(closestBall[1]));
+        poses.add(currentPose);
+        poses.add(nextBall);
 
-  public double getCenterY(int i) {
-    return getCenterYs()[i];
-  }
 
-  public double getSize(int i) {
-    return getSizes()[i];
-  }
+        return TrajectoryGenerator.generateTrajectory(poses, Constants.drive.auto.CONFIG);
+    }
 
-  public String getName(int i) {
-    return getNames()[i];
-  }
-
-  public double getConfidence(int i) {
-    return getConfidences()[i];
-  }
-
-  public double[][] getClosestsIndexes() {
-    double[] biggestRed = new double[] {0.0, 0.0};
-    double[] biggestBlue = new double[] {0.0, 0.0};
-
-    double[][] biggests = {biggestRed, biggestBlue};
-
-    for (int i = 0; i < getSizes().length; i++) {
-      if (getName(i).equals("red ball") && getSize(i) > biggestRed[1]) {
-        biggestRed[0] = i;
-        biggestRed[1] = getSize(i);
-      }
-      if (getName(i).equals("blue ball") && getSize(i) > biggestBlue[1]) {
-        biggestBlue[0] = i;
-        biggestBlue[1] = getSize(i);
+    public static double[] toCoordinates(double[] info) {
+      double angle = info[0] * (Constants.sensors.CAMERA_FOV / Constants.sensors.CAMERA_WIDTH);
+      double distance = info[2] * (Constants.sensors.DISTANCE_SCALAR);
+  
+      if (info[3] > 0.7) {
+        return new double[]{angle, distance};
+      } else {
+        return new double[]{0.0, 0.0};
       }
     }
-    return biggests;
-  }
 }

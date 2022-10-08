@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -44,6 +45,10 @@ public class Swerve extends SubsystemBase {
   private Odometry odometry = new Odometry(new Pose2d());
 
   private Derivative accel = new Derivative(0.0);
+
+  private SlewRateLimiter xLimiter = new SlewRateLimiter(2.5);
+  private SlewRateLimiter yLimiter = new SlewRateLimiter(2.5);
+  private SlewRateLimiter rotLimiter = new SlewRateLimiter(2.0);
 
   /*
   private SwerveDrivePoseEstimator odometry = new SwerveDrivePoseEstimator(sensors.getRotation(), new Pose2d(-1.0, 1.0, new Rotation2d()), kinematics,
@@ -89,9 +94,12 @@ public class Swerve extends SubsystemBase {
   }
 
   public void drive(double yInput, double xInput, double rotInput, double angleInput, boolean absoluteAngle, boolean robotOriented) {
-    yInput *= Constants.drive.MAX_VELOCITY;
-    xInput *= -Constants.drive.MAX_VELOCITY;
-    rotInput *= 2.0 * Math.PI;
+    // yInput = yLimiter.calculate(yInput) * Constants.drive.MAX_VELOCITY;
+    // xInput = xLimiter.calculate(xInput) * -Constants.drive.MAX_VELOCITY;
+    // rotInput = rotLimiter.calculate(rotInput) * 2.0 * Math.PI;
+    yInput = yInput* Constants.drive.MAX_VELOCITY;
+    xInput = xInput * -Constants.drive.MAX_VELOCITY;
+    rotInput = rotInput * 2.0 * Math.PI;
 
     if (!absoluteAngle) {
       if (rotInput != 0.0) {
@@ -130,6 +138,10 @@ public class Swerve extends SubsystemBase {
 
   public void setRotSetpoint(double setpoint) {
     rotationPID.setSetpoint(setpoint);
+  }
+
+  public double getRotSetpoint() {
+    return rotationPID.getSetpoint();
   }
 
   public void setChassisSpeeds(ChassisSpeeds speeds) {

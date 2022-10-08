@@ -137,9 +137,6 @@ public class RobotContainer {
     climber.setDefaultCommand(new RunCommand(() -> climber.setActiveVolts(0.0), climber));
     intake.setDefaultCommand(new RunCommand(() -> intake.setVoltage(0.0), intake));
 
-    /*new Trigger(() -> !Sensors.getInstance().getHasTarget())
-      .whenActive(new Hunt(false));*/
-
     new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new ParallelDeadlineGroup(
       new TurretAngleWait(turret.getPosition() - 180.0).withTimeout(0.45),
       new RunCommand(() -> turret.setVolts(-12.0))
@@ -149,6 +146,7 @@ public class RobotContainer {
       new TurretAngleWait(turret.getPosition() + 180.0).withTimeout(0.45),
       new RunCommand(() -> turret.setVolts(12.0))
     ).andThen(new Hunt(false)), false);
+
   }
 
   /**
@@ -215,9 +213,9 @@ public class RobotContainer {
       .whenPressed(new SetToAngle(0.0));
 
     
-    // pilot.getRbButtonObj()
-    //   .whenPressed(new TrackBalls(() -> pilot.getLeftX(Scaling.CUBED), () -> pilot.getLeftY(Scaling.CUBED)))
-    //   .whenReleased(new InterruptSubsystem(swerve));
+    pilot.getRbButtonObj()
+      .whileHeld(new TrackBalls(() -> pilot.getLeftX(), () -> pilot.getLeftY()))
+      .whenReleased(new InterruptSubsystem(swerve));
 
     copilot.getAButtonObj()
       .whenPressed(new SpinIntake(12.0, false))

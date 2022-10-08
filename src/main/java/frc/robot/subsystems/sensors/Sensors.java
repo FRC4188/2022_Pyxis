@@ -60,6 +60,7 @@ public class Sensors extends SubsystemBase {
     alliance.addOption("All", "All");
 
     SmartDashboard.putData("Alliance Color", alliance);
+    
 
     //setPower(true);
   }
@@ -73,6 +74,9 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putNumber("LL TX", getTX());
     SmartDashboard.putNumber("OTF Angle Adjustment", getOffsetAngle());
     SmartDashboard.putNumber("Closest Ball Angle", getClosestBallAngle());
+    SmartDashboard.putNumber("Formula RPM", getFormulaRPM());
+    SmartDashboard.putNumber("Formula Angle", getFormulaAngle());
+
   }
 
   public void setLED(boolean on) {
@@ -123,15 +127,15 @@ public class Sensors extends SubsystemBase {
     //double distance = getDistance() -(getDistance() * 0.15 + 0.35) * getTargetVelocityVector().getX();
     double distance = getEffectiveDistance();
     //double rpm = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.ALPHA * 372.0 * distance + 1700.0 : 414.961 * distance +1811.23;
-    double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1638.59 : 414.961 * distance +1811.23;
+    double rpm = zoneFilter.calculate(distance > 2.2) ? 381.718 * distance + 1924.21 : 414.961 * distance +1811.23;
     return (isRightColor() && getDistance() < 6.5) ? rpm : 2000;
   }
 
   public double getFormulaAngle() {
     // double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
     //double distance = getDistance() -(getDistance() * 0.15 + 0.35) * getTargetVelocityVector().getX();
-    double distance = getEffectiveDistance();
-    double angle = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.hood.BETA * 7.18 * distance + 5.29 : 12.0 * distance - 5.57799;
+  double distance = getEffectiveDistance();
+  double angle = zoneFilter.calculate(distance > 2.2) ?  3.73737 * distance + 9.8277 : 12.0 * distance - 5.57799;
     return (isRightColor()) ? angle : 2.0;
   }
 

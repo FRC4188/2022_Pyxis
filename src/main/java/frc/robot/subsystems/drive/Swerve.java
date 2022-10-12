@@ -113,9 +113,6 @@ public class Swerve extends SubsystemBase {
       }
     }
 
-    System.out.println(tracking);
-
-
     double pitch = Math.abs(sensors.getPitch()) < 1.5 ? 0.0 : sensors.getPitch();
     double roll = Math.abs(sensors.getRoll()) < 1.5 ? 0.0 : sensors.getRoll();
 

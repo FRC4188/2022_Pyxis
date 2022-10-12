@@ -180,7 +180,7 @@ public class Constants {
             public static final double CONVERSION = 360.0 / (GEARING);
             public static final double OFFSET = 8.6;
             
-            public static final double MAX = 42.0;
+            public static final double MAX = 40.0;
             public static final double MIN = 0.0;
 
         }

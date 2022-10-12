@@ -60,6 +60,7 @@ public class Sensors extends SubsystemBase {
     alliance.addOption("All", "All");
 
     SmartDashboard.putData("Alliance Color", alliance);
+    
 
     //setPower(true);
   }
@@ -73,6 +74,9 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putNumber("LL TX", getTX());
     SmartDashboard.putNumber("OTF Angle Adjustment", getOffsetAngle());
     SmartDashboard.putNumber("Closest Ball Angle", getClosestBallAngle());
+    SmartDashboard.putNumber("Formula RPM", getFormulaRPM());
+    SmartDashboard.putNumber("Formula Angle", getFormulaAngle());
+
   }
 
   public void setLED(boolean on) {

@@ -42,6 +42,7 @@ public class Swerve extends SubsystemBase {
   private PIDController pitchCorrection = new PIDController(-0.15, 0.0, 0.01);
   private PIDController rollCorrection = new PIDController(-0.1, 0.0, 0.075);
 
+
   private Odometry odometry = new Odometry(new Pose2d());
 
   private Derivative accel = new Derivative(0.0);
@@ -91,30 +92,29 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Falcon 6 Temp", leftRear.getSpeedTemp());
     SmartDashboard.putNumber("Falcon 7 Temp", rightRear.getAngleTemp());
     SmartDashboard.putNumber("Falcon 8 Temp", rightRear.getSpeedTemp());
+
+
   }
 
-  public void drive(double yInput, double xInput, double rotInput, double angleInput, boolean absoluteAngle, boolean robotOriented) {
+  public void drive(double yInput, double xInput, double rotInput, boolean tracking, boolean robotOriented) {
     // yInput = yLimiter.calculate(yInput) * Constants.drive.MAX_VELOCITY;
     // xInput = xLimiter.calculate(xInput) * -Constants.drive.MAX_VELOCITY;
     // rotInput = rotLimiter.calculate(rotInput) * 2.0 * Math.PI;
     yInput = yInput* Constants.drive.MAX_VELOCITY;
     xInput = xInput * -Constants.drive.MAX_VELOCITY;
     rotInput = rotInput * 2.0 * Math.PI;
-
-    if (!absoluteAngle) {
-      if (rotInput != 0.0) {
-        setRotSetpoint(-sensors.getRotation().getDegrees());
-      } else {
-        if (yInput != 0 || xInput != 0) {
-          double correction = rotationPID.calculate(-sensors.getRotation().getDegrees());// * dropoff;
-          rotInput = rotationPID.atSetpoint() ? 0.0 : correction;
-        }
-      }
+  
+  if (rotInput != 0.0) {
+      setRotSetpoint(-sensors.getRotation().getDegrees());
     } else {
-      setRotSetpoint(angleInput);
-      double correction = rotationPID.calculate(-sensors.getRotation().getDegrees());// * dropoff;
-      rotInput = rotationPID.atSetpoint() ? 0.0 : correction;
+      if (yInput != 0 || xInput != 0) {
+        double correction = rotationPID.calculate(-sensors.getRotation().getDegrees());// * dropoff;
+        rotInput = rotationPID.atSetpoint() ? 0.0 : correction;
+      }
     }
+
+    System.out.println(tracking);
+
 
     double pitch = Math.abs(sensors.getPitch()) < 1.5 ? 0.0 : sensors.getPitch();
     double roll = Math.abs(sensors.getRoll()) < 1.5 ? 0.0 : sensors.getRoll();
@@ -124,8 +124,10 @@ public class Swerve extends SubsystemBase {
     if (!robotOriented)
       result = ChassisSpeeds.fromFieldRelativeSpeeds(yInput, xInput, rotInput, sensors.getRotation());
     else result = new ChassisSpeeds(yInput, xInput, rotInput);
-
-    result = new ChassisSpeeds(result.vxMetersPerSecond - pitchCorrection.calculate(pitch, 0.0), result.vyMetersPerSecond + rollCorrection.calculate(roll, 0.0), result.omegaRadiansPerSecond);
+    
+    result = new ChassisSpeeds(result.vxMetersPerSecond - pitchCorrection.calculate(pitch, 0.0), 
+                              result.vyMetersPerSecond + rollCorrection.calculate(roll, 0.0), 
+                              tracking ? result.omegaRadiansPerSecond + rotationPID.calculate(sensors.getClosestBallAngle(), 0.0) : result.omegaRadiansPerSecond);
     setChassisSpeeds(result);
   }
 

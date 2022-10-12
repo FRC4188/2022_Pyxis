@@ -123,7 +123,8 @@ public class Sensors extends SubsystemBase {
     //double distance = getDistance() -(getDistance() * 0.15 + 0.35) * getTargetVelocityVector().getX();
     double distance = getEffectiveDistance();
     //double rpm = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.ALPHA * 372.0 * distance + 1700.0 : 414.961 * distance +1811.23;
-    double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1638.59 : 414.961 * distance +1811.23;
+    // double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1638.59 : 414.961 * distance +1811.23;
+    double rpm = zoneFilter.calculate(distance > 1.5) ? 280.955 * distance + 1692.95 : 2000;
     return (isRightColor() && getDistance() < 6.5) ? rpm : 2000;
   }
 
@@ -131,7 +132,8 @@ public class Sensors extends SubsystemBase {
     // double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
     //double distance = getDistance() -(getDistance() * 0.15 + 0.35) * getTargetVelocityVector().getX();
     double distance = getEffectiveDistance();
-    double angle = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.hood.BETA * 7.18 * distance + 5.29 : 12.0 * distance - 5.57799;
+ 
+    double angle = zoneFilter.calculate(distance > 1.5) ? 6.40127 * distance - 0.31187 : 2;
     return (isRightColor()) ? angle : 2.0;
   }
 

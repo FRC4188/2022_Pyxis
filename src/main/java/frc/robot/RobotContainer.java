@@ -30,7 +30,6 @@ import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.climber.ToggleBrakes;
 import frc.robot.commands.climber.TogglePassive;
 import frc.robot.commands.drive.CrabSet;
-import frc.robot.commands.drive.TrackBalls;
 import frc.robot.commands.groups.MonkeyBar;
 import frc.robot.commands.groups.PresetShoot;
 import frc.robot.commands.indexer.LoadBalls;
@@ -115,8 +114,7 @@ public class RobotContainer {
       pilot.getLeftY(Scaling.CUBED),
       pilot.getLeftX(Scaling.CUBED),
       pilot.getRightX(Scaling.SQUARED),
-      Math.toDegrees(Math.atan2(pilot.getRightX(Scaling.LINEAR), pilot.getRightY(Scaling.LINEAR))),
-      pilot.getLbButtonObj().get(),
+      pilot.getLbButtonObj().getAsBoolean(),
       pilot.getRbButtonObj().get()),
       swerve)
       //new CrabSet(0.0, 0.0)
@@ -134,7 +132,9 @@ public class RobotContainer {
     hood.setDefaultCommand(new HoodAngle(() -> Sensors.getInstance().getFormulaAngle()));
     trigger.setDefaultCommand(new AutoFire());
     indexer.setDefaultCommand(new LoadBalls());
-    climber.setDefaultCommand(new RunCommand(() -> climber.setActiveVolts(0.0), climber));
+    climber.setDefaultCommand(new RunCommand((
+      
+    ) -> climber.setActiveVolts(0.0), climber));
     intake.setDefaultCommand(new RunCommand(() -> intake.setVoltage(0.0), intake));
 
     new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new ParallelDeadlineGroup(
@@ -211,11 +211,6 @@ public class RobotContainer {
     
     pilot.getDpadLeftButtonObj()
       .whenPressed(new SetToAngle(0.0));
-
-    
-    pilot.getRbButtonObj()
-      .whileHeld(new TrackBalls(() -> pilot.getLeftX(), () -> pilot.getLeftY()))
-      .whenReleased(new InterruptSubsystem(swerve));
 
     copilot.getAButtonObj()
       .whenPressed(new SpinIntake(12.0, false))

@@ -97,10 +97,10 @@ public class Constants {
         public static final Translation2d BackRightLocation = new Translation2d((Constants.robot.A_WIDTH / 2), (Constants.robot.A_LENGTH / 2));
 
         public static final class modules {
-            public static final double M1_ZERO = 173.935546875;
-            public static final double M2_ZERO = 118.916015625;
-            public static final double M3_ZERO = -157.060546875;
-            public static final double M4_ZERO = -178.857421875;
+            public static final double M1_ZERO = 174.0234375;
+            public static final double M2_ZERO = 118.828125;
+            public static final double M3_ZERO = -159.9609375;
+            public static final double M4_ZERO = -178.154296875;
         }
 
         public static final class anglemotor {
@@ -180,7 +180,7 @@ public class Constants {
             public static final double CONVERSION = 360.0 / (GEARING);
             public static final double OFFSET = 8.6;
             
-            public static final double MAX = 40.0;
+            public static final double MAX = 50.0;
             public static final double MIN = 0.0;
 
         }

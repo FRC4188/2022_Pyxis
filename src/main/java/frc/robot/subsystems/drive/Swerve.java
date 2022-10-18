@@ -1,6 +1,9 @@
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.wpilibj.Notifier;
+
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -96,13 +99,15 @@ public class Swerve extends SubsystemBase {
 
   }
 
-  public void drive(double yInput, double xInput, double rotInput, boolean tracking, boolean robotOriented) {
+  public void drive(double yInput, double xInput, double rotInput, BooleanSupplier tracking, boolean robotOriented) {
     // yInput = yLimiter.calculate(yInput) * Constants.drive.MAX_VELOCITY;
     // xInput = xLimiter.calculate(xInput) * -Constants.drive.MAX_VELOCITY;
     // rotInput = rotLimiter.calculate(rotInput) * 2.0 * Math.PI;
     yInput = yInput* Constants.drive.MAX_VELOCITY;
     xInput = xInput * -Constants.drive.MAX_VELOCITY;
     rotInput = rotInput * 2.0 * Math.PI;
+
+    boolean track = tracking.getAsBoolean();
   
   if (rotInput != 0.0) {
       setRotSetpoint(-sensors.getRotation().getDegrees());
@@ -118,13 +123,14 @@ public class Swerve extends SubsystemBase {
 
     ChassisSpeeds result;
 
+
     if (!robotOriented)
       result = ChassisSpeeds.fromFieldRelativeSpeeds(yInput, xInput, rotInput, sensors.getRotation());
     else result = new ChassisSpeeds(yInput, xInput, rotInput);
     
     result = new ChassisSpeeds(result.vxMetersPerSecond - pitchCorrection.calculate(pitch, 0.0), 
                               result.vyMetersPerSecond + rollCorrection.calculate(roll, 0.0), 
-                              tracking ? result.omegaRadiansPerSecond + rotationPID.calculate(sensors.getClosestBallAngle(), 0.0) : result.omegaRadiansPerSecond);
+                              track && rotInput == 0 ? result.omegaRadiansPerSecond - rotationPID.calculate(sensors.getClosestBallAngle(), 0) : result.omegaRadiansPerSecond);
     setChassisSpeeds(result);
   }
 

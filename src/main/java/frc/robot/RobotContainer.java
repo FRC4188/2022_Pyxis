@@ -114,8 +114,8 @@ public class RobotContainer {
       pilot.getLeftY(Scaling.CUBED),
       pilot.getLeftX(Scaling.CUBED),
       pilot.getRightX(Scaling.SQUARED),
-      pilot.getLbButtonObj().getAsBoolean(),
-      pilot.getRbButtonObj().get()),
+      () -> pilot.getRightBumper(),
+      false),
       swerve)
       //new CrabSet(0.0, 0.0)
     );
@@ -132,9 +132,7 @@ public class RobotContainer {
     hood.setDefaultCommand(new HoodAngle(() -> Sensors.getInstance().getFormulaAngle()));
     trigger.setDefaultCommand(new AutoFire());
     indexer.setDefaultCommand(new LoadBalls());
-    climber.setDefaultCommand(new RunCommand((
-      
-    ) -> climber.setActiveVolts(0.0), climber));
+    climber.setDefaultCommand(new RunCommand(() -> climber.setActiveVolts(0.0), climber));
     intake.setDefaultCommand(new RunCommand(() -> intake.setVoltage(0.0), intake));
 
     new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE).whenActive(new ParallelDeadlineGroup(

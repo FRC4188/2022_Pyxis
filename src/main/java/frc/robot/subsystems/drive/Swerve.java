@@ -110,27 +110,25 @@ public class Swerve extends SubsystemBase {
     boolean track = tracking.getAsBoolean();
   
   if (rotInput != 0.0) {
-      setRotSetpoint(-sensors.getRotation().getDegrees());
-    } else {
-      if (yInput != 0 || xInput != 0) {
-        double correction = rotationPID.calculate(-sensors.getRotation().getDegrees());// * dropoff;
-        rotInput = rotationPID.atSetpoint() ? 0.0 : correction;
-      }
-    }
+    setRotSetpoint(track ? -sensors.getRotation().getDegrees() + sensors.getClosestBallAngle() : -sensors.getRotation().getDegrees());
+  } else if (yInput != 0 || xInput != 0) {
+    double correction = rotationPID.calculate(track ? -sensors.getRotation().getDegrees() + sensors.getClosestBallAngle() : -sensors.getRotation().getDegrees());
+    rotInput = rotationPID.atSetpoint() ? 0.0 : correction;
+  }
 
-    double pitch = Math.abs(sensors.getPitch()) < 1.5 ? 0.0 : sensors.getPitch();
-    double roll = Math.abs(sensors.getRoll()) < 1.5 ? 0.0 : sensors.getRoll();
+  double pitch = Math.abs(sensors.getPitch()) < 1.5 ? 0.0 : sensors.getPitch();
+  double roll = Math.abs(sensors.getRoll()) < 1.5 ? 0.0 : sensors.getRoll();
 
-    ChassisSpeeds result;
+  ChassisSpeeds result;
 
 
-    if (!robotOriented)
-      result = ChassisSpeeds.fromFieldRelativeSpeeds(yInput, xInput, rotInput, sensors.getRotation());
-    else result = new ChassisSpeeds(yInput, xInput, rotInput);
+  if (!robotOriented)
+    result = ChassisSpeeds.fromFieldRelativeSpeeds(yInput, xInput, rotInput, sensors.getRotation());
+  else result = new ChassisSpeeds(yInput, xInput, rotInput);
     
     result = new ChassisSpeeds(result.vxMetersPerSecond - pitchCorrection.calculate(pitch, 0.0), 
                               result.vyMetersPerSecond + rollCorrection.calculate(roll, 0.0), 
-                              track && rotInput == 0 ? result.omegaRadiansPerSecond - rotationPID.calculate(sensors.getClosestBallAngle(), 0) : result.omegaRadiansPerSecond);
+                              result.omegaRadiansPerSecond);
     setChassisSpeeds(result);
   }
 

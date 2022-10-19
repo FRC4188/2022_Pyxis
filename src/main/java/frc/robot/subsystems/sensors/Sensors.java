@@ -61,18 +61,14 @@ public class Sensors extends SubsystemBase {
 
     SmartDashboard.putData("Alliance Color", alliance);
     
-
+    SmartDashboard.putNumber("RPM Correction", 0.0);
     //setPower(true);
   }
 
   public void updateDashboard() {
     SmartDashboard.putNumber("Distance to Goal", getDistance());
     SmartDashboard.putNumber("Yaw", pigeon.get().getDegrees());
-    SmartDashboard.putNumber("Pitch", getPitch());
-    SmartDashboard.putNumber("Roll", getRoll());
-    SmartDashboard.putString("Target Vel Vector", getTargetVelocityVector().toString());
     SmartDashboard.putNumber("LL TX", getTX());
-    SmartDashboard.putNumber("OTF Angle Adjustment", getOffsetAngle());
     SmartDashboard.putNumber("Closest Ball Angle", getClosestBallAngle());
     SmartDashboard.putNumber("Formula RPM", getFormulaRPM());
     SmartDashboard.putNumber("Formula Angle", getFormulaAngle());
@@ -129,7 +125,7 @@ public class Sensors extends SubsystemBase {
     //double rpm = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.ALPHA * 372.0 * distance + 1700.0 : 414.961 * distance +1811.23;
     // double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1638.59 : 414.961 * distance +1811.23;
     double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1638.59 : 414.961 * distance + 1811.23;
-    return (isRightColor() && getDistance() < 6.5) ? rpm : 2000;
+    return (isRightColor() && getDistance() < 6.5) ? rpm + SmartDashboard.getNumber("RPM Correction", 0.0) : 2000;
   }
 
   public double getFormulaAngle() {

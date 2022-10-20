@@ -9,7 +9,6 @@ import frc.robot.commands.drive.FollowTrajectory;
 import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
-import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.subsystems.drive.Trajectories;
 public class FiveBallPlus extends SequentialCommandGroup {

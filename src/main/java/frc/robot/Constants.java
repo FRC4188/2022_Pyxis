@@ -180,7 +180,7 @@ public class Constants {
             public static final double CONVERSION = 360.0 / (GEARING);
             public static final double OFFSET = 8.6;
             
-            public static final double MAX = 50.0;
+            public static final double MAX = 32.0;
             public static final double MIN = 0.0;
 
         }
@@ -191,9 +191,9 @@ public class Constants {
     }
 
     public static final class turret {
-            public static final double TkP = 0.55;
+            public static final double TkP = 0.45;
             public static final double TkI = 0.0;
-            public static final double TkD = 0.0125;
+            public static final double TkD = 0.0525;
 
             public static final double PkP = 0.5;
             public static final double PkI = 0.0;

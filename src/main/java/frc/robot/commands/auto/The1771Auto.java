@@ -16,7 +16,6 @@ import frc.robot.commands.groups.PresetShootQuantity;
 import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
-import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.trigger.PushTrigger;
@@ -40,7 +39,6 @@ public class The1771Auto extends SequentialCommandGroup {
           new FollowTrajectory(Trajectories.fiveballplus.first, Rotation2d.fromDegrees(-90.0)),
           new FollowTrajectory(Trajectories.fiveballplus.second, Rotation2d.fromDegrees(180.0))
         ),
-        new FindHoodZeros(),
         new AutoIntake(),
         new SetToAngle(-30.0)
       ),

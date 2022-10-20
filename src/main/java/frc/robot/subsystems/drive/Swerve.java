@@ -1,15 +1,8 @@
 package frc.robot.subsystems.drive;
 
-import edu.wpi.first.wpilibj.Notifier;
-
-import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -37,10 +30,10 @@ public class Swerve extends SubsystemBase {
 
   private Sensors sensors = Sensors.getInstance();
 
-
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(Constants.drive.FrontLeftLocation, Constants.drive.FrontRightLocation, Constants.drive.BackLeftLocation, Constants.drive.BackRightLocation);
 
   private PIDController rotationPID = new PIDController(0.1, 0.0, 0.0);
+  private PIDController trackingPID = new PIDController(-0.1, 0.0, 0.0);
 
   private PIDController pitchCorrection = new PIDController(-0.15, 0.0, 0.01);
   private PIDController rollCorrection = new PIDController(-0.1, 0.0, 0.075);
@@ -68,6 +61,10 @@ public class Swerve extends SubsystemBase {
     CommandScheduler.getInstance().registerSubsystem(this);
     rotationPID.enableContinuousInput(-180, 180);
     rotationPID.setTolerance(1.0);
+
+    SmartDashboard.putNumber("kP", 0.0);
+    SmartDashboard.putNumber("kI", 0.0);
+    SmartDashboard.putNumber("kD", 0.0);
   }
 
   @Override
@@ -99,20 +96,18 @@ public class Swerve extends SubsystemBase {
 
   }
 
-  public void drive(double yInput, double xInput, double rotInput, BooleanSupplier tracking, boolean robotOriented) {
+  public void drive(double yInput, double xInput, double rotInput) {
     // yInput = yLimiter.calculate(yInput) * Constants.drive.MAX_VELOCITY;
     // xInput = xLimiter.calculate(xInput) * -Constants.drive.MAX_VELOCITY;
     // rotInput = rotLimiter.calculate(rotInput) * 2.0 * Math.PI;
-    yInput = yInput* Constants.drive.MAX_VELOCITY;
+    yInput = yInput * Constants.drive.MAX_VELOCITY;
     xInput = xInput * -Constants.drive.MAX_VELOCITY;
     rotInput = rotInput * 2.0 * Math.PI;
-
-    boolean track = tracking.getAsBoolean();
   
   if (rotInput != 0.0) {
-    setRotSetpoint(track ? -sensors.getRotation().getDegrees() + sensors.getClosestBallAngle() : -sensors.getRotation().getDegrees());
+    setRotSetpoint(-sensors.getRotation().getDegrees());
   } else if (yInput != 0 || xInput != 0) {
-    double correction = rotationPID.calculate(track ? -sensors.getRotation().getDegrees() + sensors.getClosestBallAngle() : -sensors.getRotation().getDegrees());
+    double correction = rotationPID.calculate(-sensors.getRotation().getDegrees());
     rotInput = rotationPID.atSetpoint() ? 0.0 : correction;
   }
 
@@ -122,15 +117,13 @@ public class Swerve extends SubsystemBase {
   ChassisSpeeds result;
 
 
-  if (!robotOriented)
-    result = ChassisSpeeds.fromFieldRelativeSpeeds(yInput, xInput, rotInput, sensors.getRotation());
-  else result = new ChassisSpeeds(yInput, xInput, rotInput);
-    
-    result = new ChassisSpeeds(result.vxMetersPerSecond - pitchCorrection.calculate(pitch, 0.0), 
-                              result.vyMetersPerSecond + rollCorrection.calculate(roll, 0.0), 
-                              result.omegaRadiansPerSecond);
-    setChassisSpeeds(result);
-  }
+  result = ChassisSpeeds.fromFieldRelativeSpeeds(yInput, xInput, rotInput, sensors.getRotation());
+  
+  result = new ChassisSpeeds(result.vxMetersPerSecond - pitchCorrection.calculate(pitch, 0.0), 
+                            result.vyMetersPerSecond + rollCorrection.calculate(roll, 0.0), 
+                            result.omegaRadiansPerSecond);
+  setChassisSpeeds(result);
+}
 
   public void zeroPower() {
     leftFront.zeroPower();
@@ -141,6 +134,14 @@ public class Swerve extends SubsystemBase {
 
   public void setRotSetpoint(double setpoint) {
     rotationPID.setSetpoint(setpoint);
+  }
+
+  public void setTrackingPID(double kP, double kI, double kD) {
+    trackingPID.setPID(kP, kI, kD);
+  }
+
+  public PIDController getTrackingPID() {
+    return trackingPID;
   }
 
   public double getRotSetpoint() {

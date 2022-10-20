@@ -33,8 +33,6 @@ public class Hood extends SubsystemBase {
   ArmFeedforward ff = new ArmFeedforward(0.0, Constants.shooter.hood.kCos, 0.0);
   private double position = 0.0;
 
-  DigitalInput limit = new DigitalInput(4);
-
   boolean servoing = true;
 
   private Debouncer readyFilter = new Debouncer(0.05, DebounceType.kBoth);
@@ -47,19 +45,19 @@ public class Hood extends SubsystemBase {
       motor.setBrake(false);
       motor.setRamp(0.0);
 
-      new Trigger(() -> !limit.get()).whenActive(new InstantCommand(() -> resetPosition()));
+      //new Trigger(() -> !limit.get()).whenActive(new InstantCommand(() -> resetPosition()));
   }
 
   @Override
   public void periodic() {
-      if (servoing) setVolts(pid.calculate(getPosition(), position) + ff.calculate(Math.toRadians(position + 9.8), 0.0));
+      if (servoing) setVolts(pid.calculate(getPosition(), position) + ff.calculate(Math.toRadians(position + 16), 0.0));
   }
 
   public void updateDashboard() {
     SmartDashboard.putNumber("Hood Angle", getPosition());
     SmartDashboard.putNumber("Hood Temperature", getTemp());
     SmartDashboard.putNumber("Hood Current", motor.getCurrent());
-    SmartDashboard.putBoolean("Hood is ready", atZero());
+    SmartDashboard.putBoolean("Hood is ready", isReady());
   }
 
   public void setPosition(double position) {
@@ -116,7 +114,4 @@ public class Hood extends SubsystemBase {
     return isReady(Sensors.getInstance().getFormulaAngle());
   }
 
-  public boolean atZero() {
-    return !limit.get();
-  }
 }

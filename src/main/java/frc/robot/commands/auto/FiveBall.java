@@ -16,7 +16,6 @@ import frc.robot.commands.groups.PresetShootQuantity;
 import frc.robot.commands.intake.SpinIntake;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
-import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.trigger.PushTrigger;
@@ -37,7 +36,6 @@ public class FiveBall extends SequentialCommandGroup {
       new ResetRotation(Rotation2d.fromDegrees(-90.0)),
       new ParallelDeadlineGroup(
         new FollowTrajectory(Trajectories.twoball.toFirst.relativeTo(new Pose2d(0, 0, Rotation2d.fromDegrees(90.0))), Rotation2d.fromDegrees(-90.0)),
-        new FindHoodZeros(),
         new AutoIntake()
       ),
       new SequentialCommandGroup(

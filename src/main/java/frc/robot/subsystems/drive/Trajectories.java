@@ -101,12 +101,12 @@ public final class Trajectories {
             List.of(
                 new Pose2d(0.0, -0.91, Rotation2d.fromDegrees(90.0)),
                 new Pose2d(-1.97, -0.1, Rotation2d.fromDegrees(-181.0)),
-                new Pose2d(-2.25, 0.1, Rotation2d.fromDegrees(-180.0))
+                new Pose2d(-1.90, 0.5, Rotation2d.fromDegrees(-180.0))
             ), autoConfig
         );
         public static final Trajectory third = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(-2.25, 0.1, Rotation2d.fromDegrees(-181.0)),
+                new Pose2d(-1.90, 0.5, Rotation2d.fromDegrees(-181.0)),
                 new Pose2d(-6.02, -0.7, new Rotation2d(-2.45))
             ), new TrajectoryConfig(1.5, 1.75)
         );

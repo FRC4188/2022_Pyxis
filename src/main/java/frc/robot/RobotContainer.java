@@ -30,6 +30,7 @@ import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.climber.ToggleBrakes;
 import frc.robot.commands.climber.TogglePassive;
 import frc.robot.commands.drive.CrabSet;
+import frc.robot.commands.drive.TrackBalls;
 import frc.robot.commands.groups.MonkeyBar;
 import frc.robot.commands.groups.PresetShoot;
 import frc.robot.commands.indexer.LoadBalls;
@@ -42,7 +43,6 @@ import frc.robot.commands.groups.BlindShoot;
 import frc.robot.commands.groups.LowerPortShot;
 import frc.robot.commands.sensors.ResetPose;
 import frc.robot.commands.sensors.ResetRotation;
-import frc.robot.commands.shooter.FindHoodZeros;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.trigger.AutoFire;
@@ -113,9 +113,7 @@ public class RobotContainer {
     swerve.setDefaultCommand(new RunCommand(() -> swerve.drive(
       pilot.getLeftY(Scaling.CUBED),
       pilot.getLeftX(Scaling.CUBED),
-      pilot.getRightX(Scaling.SQUARED),
-      () -> pilot.getRightBumper(),
-      false),
+      pilot.getRightX(Scaling.SQUARED)),
       swerve)
       //new CrabSet(0.0, 0.0)
     );
@@ -153,9 +151,12 @@ public class RobotContainer {
   private void configureButtonBindings() {
     SmartDashboard.putData("Reset Position", new ResetPose());
     SmartDashboard.putData("Reset Rotation", new ResetRotation());
-    SmartDashboard.putData("Find Hood Zeros", new FindHoodZeros());
     SmartDashboard.putData("Zero Climber", new FindZeros().andThen(new ActivePosition(0.0)));
     SmartDashboard.putData("Toggle Climber Brakes", new ToggleBrakes());
+    SmartDashboard.putData("Set Ball Track PID", new InstantCommand(() -> swerve.setTrackingPID(
+      SmartDashboard.getNumber("kP", 0.0), 
+      SmartDashboard.getNumber("kI", 0.0), 
+      SmartDashboard.getNumber("kD", 0.0))));
 
     new Trigger(() -> {
       boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
@@ -180,16 +181,14 @@ public class RobotContainer {
     pilot.getXButtonObj()
       .whenPressed(new ParallelCommandGroup(new PushTrigger(-8.0), new SpinIndexer(-8.0), new SpinIntake(-12.0, true)))
       .whenReleased(new InterruptSubsystem(indexer, trigger, intake));
-    
-    /*
+
     pilot.getRbButtonObj()
-      .whenPressed(new LowerPortShot())
-      .whenReleased(new InterruptSubsystem(turret, shooter, trigger, indexer));
-    
+      .whenPressed(new TrackBalls(() -> pilot.getLeftY(Scaling.CUBED), () -> pilot.getLeftX(Scaling.CUBED)))
+      .whenReleased(new InterruptSubsystem(swerve));
+
     pilot.getLbButtonObj()
       .whenPressed(new BlindShoot(10.5, 2500.0))
       .whenReleased(new InterruptSubsystem(shooter, hood, turret, trigger));
-      */
 
     pilot.getDpadUpButtonObj()
       .whenPressed(new ActivePosition(Constants.climber.MAX_HEIGHT + 0.03));

@@ -7,6 +7,7 @@ package frc.robot.commands.climber;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.shooter.Shooter;
 
 public class ActivePosition extends CommandBase {
 

@@ -182,9 +182,9 @@ public class RobotContainer {
       .whenPressed(new ParallelCommandGroup(new PushTrigger(-8.0), new SpinIndexer(-8.0), new SpinIntake(-12.0, true)))
       .whenReleased(new InterruptSubsystem(indexer, trigger, intake));
 
-    pilot.getRbButtonObj()
-      .whenPressed(new TrackBalls(() -> pilot.getLeftY(Scaling.CUBED), () -> pilot.getLeftX(Scaling.CUBED)))
-      .whenReleased(new InterruptSubsystem(swerve));
+    // pilot.getRbButtonObj()
+    //   .whenPressed(new TrackBalls(() -> pilot.getLeftY(Scaling.CUBED), () -> pilot.getLeftX(Scaling.CUBED)))
+    //   .whenReleased(new InterruptSubsystem(swerve));
 
     pilot.getLbButtonObj()
       .whenPressed(new BlindShoot(10.5, 2500.0))
@@ -194,7 +194,7 @@ public class RobotContainer {
       .whenPressed(new ActivePosition(Constants.climber.MAX_HEIGHT + 0.03));
 
     pilot.getDpadDownButtonObj()
-    .whenPressed(new ActivePosition(0.0));
+    .whenPressed(new ActivePosition(0.0)).whenActive(new RunCommand(() -> shooter.setVelocity(0), shooter));
     
     pilot.getStartButtonObj()
       .whenPressed(new MonkeyBar());

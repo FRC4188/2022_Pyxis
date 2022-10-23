@@ -198,7 +198,7 @@ public final class Trajectories {
         public static final Trajectory fourth = TrajectoryGenerator.generateTrajectory(
             List.of(
                 new Pose2d(0.0, 1.76, new Rotation2d(-1.6)),
-                new Pose2d(-2.42, 0.89, new Rotation2d(2.88))
+                new Pose2d(-3.42, 1.0, new Rotation2d(2.88))
             ), new TrajectoryConfig(2.0, 2.0).addConstraint(new CentripetalAccelerationConstraint(2.0))
         );
     }

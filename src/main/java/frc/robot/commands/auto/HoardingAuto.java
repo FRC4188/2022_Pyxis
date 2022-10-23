@@ -53,7 +53,8 @@ public class HoardingAuto extends SequentialCommandGroup {
         new PushTrigger(0.0)
       ),
 
-      new PresetShootQuantity(23.0, 2700.0, 2, true),
+      // new PresetShootQuantity(23.0, 2700.0, 2, true),
+      new AutoShootQuantity(2, true),
       
       new ParallelDeadlineGroup(
         new SequentialCommandGroup(

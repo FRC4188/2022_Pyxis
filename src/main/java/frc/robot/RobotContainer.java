@@ -157,7 +157,10 @@ public class RobotContainer {
       SmartDashboard.getNumber("kP", 0.0), 
       SmartDashboard.getNumber("kI", 0.0), 
       SmartDashboard.getNumber("kD", 0.0))));
-
+    SmartDashboard.putData("Prioritize Drivetrain", new ParallelCommandGroup(
+      new RunCommand(() -> indexer.set(0.0), indexer),
+      new RunCommand(() -> shooter.setVolts(0.0), shooter)));
+      
     new Trigger(() -> {
       boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
       lastSetShooter = SmartDashboard.getNumber("Shooter Set Velocity", 0.0);

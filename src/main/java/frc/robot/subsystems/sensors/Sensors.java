@@ -124,7 +124,7 @@ public class Sensors extends SubsystemBase {
     double distance = getEffectiveDistance();
     //double rpm = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.ALPHA * 372.0 * distance + 1700.0 : 414.961 * distance +1811.23;
     // double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1638.59 : 414.961 * distance +1811.23;
-    double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1438.59 : 414.961 * distance + 1811.23;
+    double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1338.59 : 414.961 * distance + 1811.23;
     return (isRightColor() && getDistance() < 6.5) ? rpm * SmartDashboard.getNumber("RPM Correction", 1.0) : 2000;
   }
 

@@ -72,6 +72,7 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putNumber("Closest Ball Angle", getClosestBallAngle());
     SmartDashboard.putNumber("Formula RPM", getFormulaRPM());
     SmartDashboard.putNumber("Formula Angle", getFormulaAngle());
+    SmartDashboard.putString("Vision Pose", getVisionPose().toString());
 
   }
 
@@ -99,7 +100,7 @@ public class Sensors extends SubsystemBase {
     return limelight.getTY();
   }
 
-  public double getDistance() {
+  public double getLLDistance() {
     return dFilter.calculate((Constants.field.GOAL_HEIGHT - Constants.turret.LIMELIGHT_HEIGHT)
         / Math.tan(Math.toRadians(getTY() + Constants.turret.MOUNTING_ANGLE)));
   }
@@ -112,6 +113,10 @@ public class Sensors extends SubsystemBase {
     return pigeon.get();
   }
 
+  public double getDistance() {
+    return getVisionPose().getTranslation().getNorm();
+  }
+
   public double getEffectiveDistance() {
     double distance = getDistance() -(getDistance() * 0.1175 + 0.13 + 0.4) * getTargetVelocityVector().getX();
     //distance = Math.hypot(distance, -(getDistance() * 0.12 + 0.15 /*0.15 + 0.4*/) * getTargetVelocityVector().getY());
@@ -121,7 +126,7 @@ public class Sensors extends SubsystemBase {
   public double getFormulaRPM() {
     // double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
     //double distance = getDistance() -(getDistance() * 0.15 + 0.35) * getTargetVelocityVector().getX();
-    double distance = getEffectiveDistance();
+    double distance = getEffectiveDistance() - 1.0;
     //double rpm = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.ALPHA * 372.0 * distance + 1700.0 : 414.961 * distance +1811.23;
     // double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1638.59 : 414.961 * distance +1811.23;
     double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1338.59 : 414.961 * distance + 1811.23;
@@ -197,8 +202,8 @@ public class Sensors extends SubsystemBase {
   public double getOffsetAngle() {
     // double tX = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getX();
     // double tY = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getY();
-    double tX = -(getDistance() * 0.13 + 0.2) * getTargetVelocityVector().getX();
-    double tY = -(getDistance() * 0.13 + 0.2) * getTargetVelocityVector().getY();
+    double tX = -(getDistance() * 0.13 + 0.2) * getTargetVelocityVector().getX() * 0.9;
+    double tY = -(getDistance() * 0.13 + 0.2) * getTargetVelocityVector().getY() *0.9;
     return Math.toDegrees(Math.atan2(tY, getDistance() + tX));
   }
 
@@ -212,9 +217,9 @@ public class Sensors extends SubsystemBase {
     double tAngle = Math.toRadians(-Turret.getInstance().getPosition() - 180.0);
     double lAngle = Math.toRadians(getTX());
 
-    double targetToZero = tAngle + pAngle + lAngle;
+    double targetToZero = tAngle + pAngle - lAngle;
 
-    double dist = getDistance() + Units.feetToMeters(2.0);
+    double dist = getLLDistance() + Units.feetToMeters(2.0);
     double x = -Math.cos(targetToZero) * dist;
     double y = -Math.sin(targetToZero) * dist;
 

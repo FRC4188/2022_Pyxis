@@ -171,10 +171,10 @@ public class Constants {
         public static final class hood {
             public static final double BETA = 1.175;
 
-            public static final double kP = 1.0;
+            public static final double kP = 0.75;
             public static final double kI = 0.0;
-            public static final double kD = 0.025;
-            public static final double kCos = 0.53;
+            public static final double kD = 0.0;
+            public static final double kCos = 0.56;
 
             public static final double GEARING = 5.0 * 5.0 * 7.0 * (40.0/16.0);
             public static final double CONVERSION = 360.0 / (GEARING);
@@ -191,9 +191,9 @@ public class Constants {
     }
 
     public static final class turret {
-            public static final double TkP = 0.35;
+            public static final double TkP = 0.225;
             public static final double TkI = 0.0;
-            public static final double TkD = 0.0525;
+            public static final double TkD = 0.035;
 
             public static final double PkP = 0.5;
             public static final double PkI = 0.0;
@@ -208,6 +208,9 @@ public class Constants {
             public static final double ENCODER_TO_DEGREES = 360.0 / GEAR_RATIO;
 
             public static final double ANGLE_TOLERANCE = 2.0;
+
+            public static final double kS = 0.69;
+            public static final double kV = 2.5;
             
         public static final double LIMELIGHT_HEIGHT = Units.inchesToMeters(43.6);
         public static final double MOUNTING_ANGLE = 27.5;

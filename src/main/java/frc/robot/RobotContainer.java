@@ -30,7 +30,6 @@ import frc.robot.commands.climber.FindZeros;
 import frc.robot.commands.climber.ToggleBrakes;
 import frc.robot.commands.climber.TogglePassive;
 import frc.robot.commands.drive.CrabSet;
-import frc.robot.commands.drive.TrackBalls;
 import frc.robot.commands.groups.MonkeyBar;
 import frc.robot.commands.groups.PresetShoot;
 import frc.robot.commands.indexer.LoadBalls;
@@ -113,18 +112,19 @@ public class RobotContainer {
     swerve.setDefaultCommand(new RunCommand(() -> swerve.drive(
       pilot.getLeftY(Scaling.CUBED),
       pilot.getLeftX(Scaling.CUBED),
-      pilot.getRightX(Scaling.SQUARED)),
+      pilot.getRightX(Scaling.SQUARED),
+      () -> pilot.getRightBumper()),
       swerve)
       //new CrabSet(0.0, 0.0)
     );
     turret.setDefaultCommand(
-      /*
-      new RunCommand(() -> {
-      double current = turret.getPosition();
-      double required = -(Sensors.getInstance().getTargetAngle() + 180.0);
-      double set = current + (required - (current + 180.0) % 360.0 - 180.0);
-      turret.setAngle(set);
-    }, turret)*/
+    //   /*
+    //   new RunCommand(() -> {
+    //   double current = turret.getPosition();
+    //   double required = -(Sensors.getInstance().getTargetAngle() + 180.0);
+    //   double set = current + (required - (current + 180.0) % 360.0 - 180.0);
+    //   turret.setAngle(set);
+    // }, turret)*/
     new TrackTarget());
     shooter.setDefaultCommand(new ShooterVelocity(() -> Sensors.getInstance().getFormulaRPM()));
     hood.setDefaultCommand(new HoodAngle(() -> Sensors.getInstance().getFormulaAngle()));
@@ -153,13 +153,14 @@ public class RobotContainer {
     SmartDashboard.putData("Reset Rotation", new ResetRotation());
     SmartDashboard.putData("Zero Climber", new FindZeros().andThen(new ActivePosition(0.0)));
     SmartDashboard.putData("Toggle Climber Brakes", new ToggleBrakes());
-    SmartDashboard.putData("Set Ball Track PID", new InstantCommand(() -> swerve.setTrackingPID(
-      SmartDashboard.getNumber("kP", 0.0), 
-      SmartDashboard.getNumber("kI", 0.0), 
-      SmartDashboard.getNumber("kD", 0.0))));
+    SmartDashboard.putData("Set Ball Track PID", new InstantCommand(() -> turret.setTPID(
+      SmartDashboard.getNumber("T kP", 0.0), 
+      SmartDashboard.getNumber("T kI", 0.0), 
+      SmartDashboard.getNumber("T kD", 0.0))));
     SmartDashboard.putData("Prioritize Drivetrain", new ParallelCommandGroup(
       new RunCommand(() -> indexer.set(0.0), indexer),
       new RunCommand(() -> shooter.setVolts(0.0), shooter)));
+
       
     new Trigger(() -> {
       boolean changed = SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
@@ -173,6 +174,7 @@ public class RobotContainer {
       return changed;
     }).whenActive(new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));
 
+
     pilot.getBButtonObj()
       .whileHeld(new SpinIntake(8.5))
       .whenReleased(new InterruptSubsystem(intake));
@@ -184,10 +186,6 @@ public class RobotContainer {
     pilot.getXButtonObj()
       .whenPressed(new ParallelCommandGroup(new PushTrigger(-8.0), new SpinIndexer(-8.0), new SpinIntake(-12.0, true)))
       .whenReleased(new InterruptSubsystem(indexer, trigger, intake));
-
-    // pilot.getRbButtonObj()
-    //   .whenPressed(new TrackBalls(() -> pilot.getLeftY(Scaling.CUBED), () -> pilot.getLeftX(Scaling.CUBED)))
-    //   .whenReleased(new InterruptSubsystem(swerve));
 
     pilot.getLbButtonObj()
       .whenPressed(new BlindShoot(10.5, 2500.0))
@@ -203,7 +201,7 @@ public class RobotContainer {
       .whenPressed(new MonkeyBar());
 
     pilot.getBackButtonObj()
-      .whenPressed(new ResetPose(new Pose2d(-1.0, 1.0, new Rotation2d())));
+      .whenPressed(new ResetPose(new Pose2d(0.0, -1.0, new Rotation2d(-Math.PI/2.0))));
 
     pilot.getDpadRightButtonObj()
       .whenPressed(new SetToAngle(-180.0));

@@ -6,6 +6,8 @@ package frc.robot.subsystems.turret;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,7 +36,11 @@ public class Turret extends SubsystemBase {
   private PIDController targetPID = new PIDController(Constants.turret.TkP, Constants.turret.TkI, Constants.turret.TkD);
   private PIDController positionPID = new PIDController(Constants.turret.PkP, Constants.turret.PkI, Constants.turret.PkD/*, new Constraints(Constants.turret.MAX_VEL, Constants.turret.MAX_ACCEL)*/);
 
-  //Notifier notifier = new Notifier(() -> updateShuffleboard());
+  private SimpleMotorFeedforward ff = new SimpleMotorFeedforward(Constants.turret.kS, Constants.turret.kV);
+
+  private Swerve swerve = Swerve.getInstance();
+
+  Notifier notifier = new Notifier(() -> updateShuffleboard());
 
   /** Creates a new Turret. */
   public Turret() {
@@ -43,6 +49,10 @@ public class Turret extends SubsystemBase {
     initialize();
 
     startNotifier();
+
+    SmartDashboard.putNumber("T kP", 0.0);
+    SmartDashboard.putNumber("T kI", 0.0);
+    SmartDashboard.putNumber("T kD", 0.0);
   }
 
   private void initialize() {
@@ -56,12 +66,20 @@ public class Turret extends SubsystemBase {
   }
 
   private void startNotifier() {
-    //notifier.startPeriodic(0.2);
+    notifier.startPeriodic(0.2);
   }
 
   private void updateShuffleboard() {
     SmartDashboard.putNumber("Turret Motor Temp", getTemperature());
     SmartDashboard.putNumber("Turret Position", getPosition());
+    double goodAngle = -(Units.radiansToDegrees(Math.atan2(-Swerve.getInstance().getPose().getY(), -Swerve.getInstance().getPose().getX())) + Sensors.getInstance().getRotation().getDegrees() - 180);
+    // if (getPosition() - goodAngle > 90) {
+    //   goodAngle = (goodAngle + 360) % 360 - 180;
+    // }/* else if (getPosition() - goodAngle < -90) {
+    //   goodAngle = (goodAngle - 360) % 360 - 180;
+    // }*/
+    goodAngle = goodAngle % 360.0;
+    SmartDashboard.putNumber("Turret Set", goodAngle);
   }
 
   public void set(double percent) {
@@ -78,14 +96,41 @@ public class Turret extends SubsystemBase {
   }
 
   public void setAngle(double angle) {
+    positionPID.disableContinuousInput();
     setVolts(positionPID.calculate(getPosition(), angle));
   }
 
+  public void targetAngle(double angle) {
+    positionPID.enableContinuousInput(0.0, 360.0);
+
+    double rotSpeed = -swerve.getChassisSpeeds().omegaRadiansPerSecond;
+    double velAngle = -Math.atan2(swerve.getChassisSpeeds().vyMetersPerSecond, swerve.getChassisSpeeds().vxMetersPerSecond);
+    double totalAngle = velAngle + Units.degreesToRadians(getPosition()) + Math.PI / 2 + Units.degreesToRadians(Sensors.getInstance().getTX());
+    double x = Math.sin(totalAngle) * Sensors.getInstance().getDistance();
+
+    setVolts(positionPID.calculate(getPosition(), angle) + ff.calculate(rotSpeed + (x * swerve.getSpeed() / Math.pow(Sensors.getInstance().getDistance(), 2))));
+  }
+
   public void trackTarget() {
-    if (Sensors.getInstance().getHasTarget()) setVolts(targetPID.calculate(0.0, Sensors.getInstance().getTX()
-      + (Math.abs(Sensors.getInstance().getOffsetAngle()) < 30.0 ? Sensors.getInstance().getOffsetAngle() : 0.0)
-      + -Swerve.getInstance().getChassisSpeeds().omegaRadiansPerSecond * 4.0));
-    else set(0.0);
+    // if (Sensors.getInstance().getHasTarget()) setVolts(targetPID.calculate(0.0, Sensors.getInstance().getTX()
+    //   + (Math.abs(Sensors.getInstance().getOffsetAngle()) < 30.0 ? Sensors.getInstance().getOffsetAngle() : 0.0)
+    //   + -Swerve.getInstance().getChassisSpeeds().omegaRadiansPerSecond * 4.0));
+    // else set(0.0);
+    if (Sensors.getInstance().getHasTarget()) {
+      double rotSpeed = -swerve.getChassisSpeeds().omegaRadiansPerSecond;
+      double velAngle = -Math.atan2(swerve.getChassisSpeeds().vyMetersPerSecond, swerve.getChassisSpeeds().vxMetersPerSecond);
+      double angle = velAngle + Units.degreesToRadians(getPosition()) + Math.PI / 2 + Units.degreesToRadians(Sensors.getInstance().getTX());
+      double x = Math.sin(angle) * Sensors.getInstance().getDistance();
+      setVolts(
+        targetPID.calculate(0.0, Sensors.getInstance().getTX() + 
+        (Math.abs(Sensors.getInstance().getOffsetAngle()) < 30.0 ? Sensors.getInstance().getOffsetAngle() : 0.0)) + 
+        ff.calculate(rotSpeed + (x * swerve.getSpeed() / Math.pow(Sensors.getInstance().getDistance(), 2)))
+      );
+    } else set(0.0);
+  }
+
+  public void setTPID(double kP, double kI, double kD) {
+    targetPID.setPID(kP, kI, kD);
   }
 
   public double getPosition() {

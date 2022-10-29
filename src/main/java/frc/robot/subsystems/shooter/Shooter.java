@@ -53,7 +53,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isReady(double rpm) {
-    return Math.tan(Math.toRadians(Math.abs(sensors.getTX() + sensors.getOffsetAngle()))) * sensors.getEffectiveDistance() < 0.25 && Math.abs(getVelocity()-rpm) < 250.0 && sensors.getHasTarget() && ((sensors.getDistance() < 4.0 && Swerve.getInstance().getSpeed() < 1.5) || (sensors.getDistance() < 6.0 && Swerve.getInstance().getSpeed() < 0.01)) && Swerve.getInstance().getAccel() < 2.0;
+    return  Math.abs(getVelocity()-rpm) < 250.0;
   }
 
   public boolean isReady() {

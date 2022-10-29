@@ -1,11 +1,19 @@
 package frc.robot.subsystems.drive;
 
+import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,27 +41,30 @@ public class Swerve extends SubsystemBase {
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(Constants.drive.FrontLeftLocation, Constants.drive.FrontRightLocation, Constants.drive.BackLeftLocation, Constants.drive.BackRightLocation);
 
   private PIDController rotationPID = new PIDController(0.1, 0.0, 0.0);
-  private PIDController trackingPID = new PIDController(-0.1, 0.0, 0.0);
+  private PIDController trackingPID = new PIDController(1, 0.0, 0.3);
 
   private PIDController pitchCorrection = new PIDController(-0.15, 0.0, 0.01);
   private PIDController rollCorrection = new PIDController(-0.1, 0.0, 0.075);
 
 
-  private Odometry odometry = new Odometry(new Pose2d());
+  //private Odometry odometry = new Odometry(new Pose2d());
 
   private Derivative accel = new Derivative(0.0);
+  private Derivative d = new Derivative(0.0);
 
   private SlewRateLimiter xLimiter = new SlewRateLimiter(2.5);
   private SlewRateLimiter yLimiter = new SlewRateLimiter(2.5);
   private SlewRateLimiter rotLimiter = new SlewRateLimiter(2.0);
 
-  /*
-  private SwerveDrivePoseEstimator odometry = new SwerveDrivePoseEstimator(sensors.getRotation(), new Pose2d(-1.0, 1.0, new Rotation2d()), kinematics,
-    VecBuilder.fill(1.0 , 1.0, 0.5),
-    VecBuilder.fill(0.001),
-    VecBuilder.fill(0.35, 0.35, 0.001)
+  private SwerveDrivePoseEstimator odometry = new SwerveDrivePoseEstimator(
+    sensors.getRotation(), 
+    new Pose2d(1.0, 0.0, new Rotation2d()), 
+    kinematics,
+    VecBuilder.fill(0.15, 0.15, Units.degreesToRadians(15.0)),
+    VecBuilder.fill(Units.degreesToRadians(0.05)),
+    VecBuilder.fill(0.05, 0.05, 0.05),
+    0.02
   );
-  */
 
 
   /** Creates a new Swerve. */
@@ -69,11 +80,11 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /*
+    
     odometry.update(sensors.getRotation(), getModuleStates());
-    if (sensors.getHasTarget()) odometry.addVisionMeasurement(sensors.getVisionPose(), 0.02);
-    */
-    odometry.update(getChassisSpeeds(), sensors.getRotation());
+    if (sensors.getHasTarget()/* && d.getRate(sensors.getTX()) < 5*/) odometry.addVisionMeasurement(sensors.getVisionPose(), Timer.getFPGATimestamp()-0.02);
+    
+    //odometry.update(sensors.getRotation(), getModuleStates());
   }
 
   public void smartDashboard() {
@@ -82,7 +93,7 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("M3 (LR) Angle", leftRear.getAbsoluteAngle());
     SmartDashboard.putNumber("M4 (RR) Angle", rightRear.getAbsoluteAngle());
     SmartDashboard.putString("Chassis Speeds", getChassisSpeeds().toString());
-    SmartDashboard.putString("Odometry", odometry.getPose().toString());
+    SmartDashboard.putString("Odometry", odometry.getEstimatedPosition().toString());
 
     SmartDashboard.putNumber("Falcon 1 Temp", leftFront.getAngleTemp());
     SmartDashboard.putNumber("Falcon 2 Temp", leftFront.getSpeedTemp());
@@ -96,7 +107,7 @@ public class Swerve extends SubsystemBase {
 
   }
 
-  public void drive(double yInput, double xInput, double rotInput) {
+  public void drive(double yInput, double xInput, double rotInput, BooleanSupplier tracking) {
     // yInput = yLimiter.calculate(yInput) * Constants.drive.MAX_VELOCITY;
     // xInput = xLimiter.calculate(xInput) * -Constants.drive.MAX_VELOCITY;
     // rotInput = rotLimiter.calculate(rotInput) * 2.0 * Math.PI;
@@ -109,6 +120,10 @@ public class Swerve extends SubsystemBase {
   } else if (yInput != 0 || xInput != 0) {
     double correction = rotationPID.calculate(-sensors.getRotation().getDegrees());
     rotInput = rotationPID.atSetpoint() ? 0.0 : correction;
+  }
+
+  if (tracking.getAsBoolean()) {
+    rotInput = trackingPID.calculate(-sensors.getClosestBallAngle(), 0.0) / (2 * Math.PI);
   }
 
   double pitch = Math.abs(sensors.getPitch()) < 1.5 ? 0.0 : sensors.getPitch();
@@ -183,11 +198,11 @@ public class Swerve extends SubsystemBase {
   }
 
   public void setPose(Pose2d pose) {
-    odometry.setPose(pose);
+    odometry.resetPosition(pose, pose.getRotation());
   }
 
   public Pose2d getPose() {
-    return odometry.getPose();
+    return odometry.getEstimatedPosition();
   }
 
   public SwerveDriveKinematics getKinematics() {

@@ -29,7 +29,7 @@ public class AutoFire extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.isReady() && hood.isReady() && Swerve.getInstance().getSpeed() < 1.5) trigger.setVoltage(12.0);
+    if (shooter.isReady() && hood.isReady()) trigger.setVoltage(12.0);
     else if (!Sensors.getInstance().isRightColor()) trigger.setVoltage(12.0);
     else trigger.set(0.0);
   }

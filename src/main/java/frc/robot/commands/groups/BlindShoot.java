@@ -5,15 +5,12 @@
 package frc.robot.commands.groups;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.indexer.LoadBalls;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
 import frc.robot.commands.trigger.PushTrigger;
 import frc.robot.commands.turret.SetToAngle;
-import frc.robot.commands.turret.TrackTarget;
 import frc.robot.commands.turret.TurretAngleWait;
-import frc.robot.subsystems.intake.Intake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -22,11 +19,10 @@ public class BlindShoot extends ParallelCommandGroup {
   /** Creates a new BlindShoot. */
   public BlindShoot(double angle, double velocity) {
     addCommands(
-      new TurretAngleWait(-180.0).andThen(new PushTrigger(12.0)),
-      new ShooterVelocity(() -> velocity),
-      new SetToAngle(-180.0),
-      new HoodAngle(() -> angle),
-      new LoadBalls()
-    );
+        new TurretAngleWait(-180.0).andThen(new PushTrigger(12.0)),
+        new ShooterVelocity(() -> velocity),
+        new SetToAngle(-180.0),
+        new HoodAngle(() -> angle),
+        new LoadBalls());
   }
 }

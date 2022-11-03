@@ -1,15 +1,14 @@
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Sensors;
 
 public class Shooter extends SubsystemBase {
 
   private static Shooter instance = null;
+
   public static synchronized Shooter getInstance() {
     if (instance == null) instance = new Shooter();
     return instance;
@@ -31,8 +30,10 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Leader Temp", wheel.getLeaderTemp());
     SmartDashboard.putNumber("Follower Temp", wheel.getFollowerTemp());
     SmartDashboard.putBoolean("Shooter is ready", isReady());
-    SmartDashboard.putBoolean("Limelight Component", Math.abs(sensors.getTX() + sensors.getOffsetAngle()) < 2.5);
-    SmartDashboard.putBoolean("RPM Component", Math.abs(getVelocity()-sensors.getFormulaRPM()) < 250.0);
+    SmartDashboard.putBoolean(
+        "Limelight Component", Math.abs(sensors.getTX() + sensors.getOffsetAngle()) < 2.5);
+    SmartDashboard.putBoolean(
+        "RPM Component", Math.abs(getVelocity() - sensors.getFormulaRPM()) < 250.0);
   }
 
   public void setVolts(double volts) {
@@ -53,10 +54,10 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isReady(double rpm) {
-    return  Math.abs(getVelocity()-rpm) < 250.0;
+    return Math.abs(getVelocity() - rpm) < 250.0;
   }
 
   public boolean isReady() {
-      return isReady(sensors.getFormulaRPM());
+    return isReady(sensors.getFormulaRPM());
   }
 }

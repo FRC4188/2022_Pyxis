@@ -1,34 +1,23 @@
 package frc.robot.subsystems.sensors;
 
-import java.util.Arrays;
-
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.estimator.UnscentedKalmanFilter;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
-import frc.robot.subsystems.drive.Odometry;
 import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.sensors.Limelight.CameraMode;
 import frc.robot.subsystems.sensors.Limelight.LedMode;
-import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.turret.Turret;
-
 
 public class Sensors extends SubsystemBase {
 
@@ -53,16 +42,16 @@ public class Sensors extends SubsystemBase {
   /** Creates a new Sensors. */
   private Sensors() {
     CommandScheduler.getInstance().registerSubsystem(this);
-    
+
     alliance.setDefaultOption("FMS", "FMS");
     alliance.addOption("Blue", "Blue");
     alliance.addOption("Red", "Red");
     alliance.addOption("All", "All");
 
     SmartDashboard.putData("Alliance Color", alliance);
-    
+
     SmartDashboard.putNumber("RPM Correction", 1.0);
-    //setPower(true);
+    // setPower(true);
   }
 
   public void updateDashboard() {
@@ -73,11 +62,10 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putNumber("Formula RPM", getFormulaRPM());
     SmartDashboard.putNumber("Formula Angle", getFormulaAngle());
     SmartDashboard.putString("Vision Pose", getVisionPose().toString());
-
   }
 
   public void setLED(boolean on) {
-    //limelight.setLEDMode(on ? LedMode.ON : LedMode.OFF);
+    // limelight.setLEDMode(on ? LedMode.ON : LedMode.OFF);
   }
 
   public boolean getHasTarget() {
@@ -101,8 +89,9 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getLLDistance() {
-    return dFilter.calculate((Constants.field.GOAL_HEIGHT - Constants.turret.LIMELIGHT_HEIGHT)
-        / Math.tan(Math.toRadians(getTY() + Constants.turret.MOUNTING_ANGLE)));
+    return dFilter.calculate(
+        (Constants.field.GOAL_HEIGHT - Constants.turret.LIMELIGHT_HEIGHT)
+            / Math.tan(Math.toRadians(getTY() + Constants.turret.MOUNTING_ANGLE)));
   }
 
   public void setPigeonAngle(double angle) {
@@ -118,33 +107,47 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getEffectiveDistance() {
-    double distance = getDistance() -(getDistance() * 0.1175 + 0.13 + 0.4) * getTargetVelocityVector().getX();
-    //distance = Math.hypot(distance, -(getDistance() * 0.12 + 0.15 /*0.15 + 0.4*/) * getTargetVelocityVector().getY());
+    double distance =
+        getDistance() - (getDistance() * 0.1175 + 0.13 + 0.4) * getTargetVelocityVector().getX();
+    // distance = Math.hypot(distance, -(getDistance() * 0.12 + 0.15 /*0.15 + 0.4*/) *
+    // getTargetVelocityVector().getY());
     return distance;
   }
 
   public double getFormulaRPM() {
     // double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
-    //double distance = getDistance() -(getDistance() * 0.15 + 0.35) * getTargetVelocityVector().getX();
+    // double distance = getDistance() -(getDistance() * 0.15 + 0.35) *
+    // getTargetVelocityVector().getX();
     double distance = getEffectiveDistance() - 1.0;
-    //double rpm = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.ALPHA * 372.0 * distance + 1700.0 : 414.961 * distance +1811.23;
-    // double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1638.59 : 414.961 * distance +1811.23;
-    double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1338.59 : 414.961 * distance + 1811.23;
-    return (isRightColor() && getDistance() < 6.5) ? rpm * SmartDashboard.getNumber("RPM Correction", 1.0) : 2000;
+    // double rpm = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.ALPHA * 372.0 *
+    // distance + 1700.0 : 414.961 * distance +1811.23;
+    // double rpm = zoneFilter.calculate(distance > 2.2) ? 359.764 * distance + 1638.59 : 414.961 *
+    // distance +1811.23;
+    double rpm =
+        zoneFilter.calculate(distance > 2.2)
+            ? 359.764 * distance + 1338.59
+            : 414.961 * distance + 1811.23;
+    return (isRightColor() && getDistance() < 6.5)
+        ? rpm * SmartDashboard.getNumber("RPM Correction", 1.0)
+        : 2000;
   }
 
   public double getFormulaAngle() {
     // double distance = getDistance() + -0.9 * getTargetVelocityVector().getX();
-    //double distance = getDistance() -(getDistance() * 0.15 + 0.35) * getTargetVelocityVector().getX();
+    // double distance = getDistance() -(getDistance() * 0.15 + 0.35) *
+    // getTargetVelocityVector().getX();
     double distance = getEffectiveDistance();
- 
-    double angle = zoneFilter.calculate(distance > 2.2) ? Constants.shooter.hood.BETA * 7.18 * distance + 5.29 : 12.0 * distance - 5.57799;
+
+    double angle =
+        zoneFilter.calculate(distance > 2.2)
+            ? Constants.shooter.hood.BETA * 7.18 * distance + 5.29
+            : 12.0 * distance - 5.57799;
     return (isRightColor()) ? angle - 5.175 : 2.0;
   }
 
   public void setLEDMode(LedMode mode) {
-    //limelight.setLEDMode(mode);
-    
+    // limelight.setLEDMode(mode);
+
   }
 
   public void setCameraMode(CameraMode mode) {
@@ -173,17 +176,18 @@ public class Sensors extends SubsystemBase {
 
   public boolean isRightColor() {
     String alliance = this.alliance.getSelected();
-    if (alliance.equals("Red"))
-      return colorSensor.getColor() != 1;
-    else if (alliance.equals("Blue"))
-      return colorSensor.getColor() != -1;
-    else if (alliance.equals("All"))
-      return true;
-    else return (DriverStation.getAlliance() == DriverStation.Alliance.Red ? colorSensor.getColor() != 1 : colorSensor.getColor() != -1);
+    if (alliance.equals("Red")) return colorSensor.getColor() != 1;
+    else if (alliance.equals("Blue")) return colorSensor.getColor() != -1;
+    else if (alliance.equals("All")) return true;
+    else
+      return (DriverStation.getAlliance() == DriverStation.Alliance.Red
+          ? colorSensor.getColor() != 1
+          : colorSensor.getColor() != -1);
   }
 
   public double getClosestBallAngle() {
-    double[] closest = BallDetector.toCoordinates(ballDetector.getClosestBall(alliance.getSelected()));
+    double[] closest =
+        BallDetector.toCoordinates(ballDetector.getClosestBall(alliance.getSelected()));
     double angle = closest[0];
 
     return angle;
@@ -194,16 +198,17 @@ public class Sensors extends SubsystemBase {
     double tAngle = Turret.getInstance().getPosition() + 180.0;
     double lAngle = getTX();
 
-    double cAngle = lAngle-tAngle;
+    double cAngle = lAngle - tAngle;
 
-    return new Translation2d(cSpeeds.vxMetersPerSecond, -cSpeeds.vyMetersPerSecond).rotateBy(Rotation2d.fromDegrees(cAngle));
+    return new Translation2d(cSpeeds.vxMetersPerSecond, -cSpeeds.vyMetersPerSecond)
+        .rotateBy(Rotation2d.fromDegrees(cAngle));
   }
 
   public double getOffsetAngle() {
     // double tX = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getX();
     // double tY = Math.sqrt(getDistance()) * -0.3 * getTargetVelocityVector().getY();
     double tX = -(getDistance() * 0.13 + 0.2) * getTargetVelocityVector().getX() * 0.9;
-    double tY = -(getDistance() * 0.13 + 0.2) * getTargetVelocityVector().getY() *0.9;
+    double tY = -(getDistance() * 0.13 + 0.2) * getTargetVelocityVector().getY() * 0.9;
     return Math.toDegrees(Math.atan2(tY, getDistance() + tX));
   }
 

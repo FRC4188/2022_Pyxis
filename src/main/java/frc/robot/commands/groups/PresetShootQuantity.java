@@ -17,18 +17,19 @@ import frc.robot.subsystems.intake.Intake;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PresetShootQuantity extends ParallelDeadlineGroup {
-  /** Creates a new PresetShootQuantity.*/
+  /** Creates a new PresetShootQuantity. */
   public PresetShootQuantity(double angle, double velocity, int quantity, boolean intaking) {
     super(new PresetFireQuantity(angle, velocity, quantity));
     addCommands(
-      new ShooterVelocity(() -> velocity),
-      new TrackTarget(),
-      new HoodAngle(() -> angle),
-      new LoadBalls(),
-      new RunCommand(() -> {
-          Intake.getInstance().raise(!intaking);
-          if (intaking) Intake.getInstance().setVoltage(12.0);
-        }, Intake.getInstance())
-    );
+        new ShooterVelocity(() -> velocity),
+        new TrackTarget(),
+        new HoodAngle(() -> angle),
+        new LoadBalls(),
+        new RunCommand(
+            () -> {
+              Intake.getInstance().raise(!intaking);
+              if (intaking) Intake.getInstance().setVoltage(12.0);
+            },
+            Intake.getInstance()));
   }
 }

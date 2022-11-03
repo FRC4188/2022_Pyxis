@@ -15,14 +15,15 @@ public class AutoShootQuantity extends ParallelDeadlineGroup {
   public AutoShootQuantity(int quantity, boolean intaking) {
     super(new AutoFireQuantity(quantity));
     addCommands(
-      new ShooterVelocity(() -> Sensors.getInstance().getFormulaRPM()),
-      new TrackTarget(),
-      new HoodAngle(() -> Sensors.getInstance().getFormulaAngle()),
-      new LoadBalls(),
-      new RunCommand(() -> {
-          Intake.getInstance().raise(!intaking);
-          if (intaking) Intake.getInstance().setVoltage(12.0);
-        }, Intake.getInstance())
-    );
+        new ShooterVelocity(() -> Sensors.getInstance().getFormulaRPM()),
+        new TrackTarget(),
+        new HoodAngle(() -> Sensors.getInstance().getFormulaAngle()),
+        new LoadBalls(),
+        new RunCommand(
+            () -> {
+              Intake.getInstance().raise(!intaking);
+              if (intaking) Intake.getInstance().setVoltage(12.0);
+            },
+            Intake.getInstance()));
   }
 }

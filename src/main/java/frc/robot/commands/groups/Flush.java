@@ -16,9 +16,6 @@ public class Flush extends ParallelCommandGroup {
   public Flush() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-      new PushTrigger(12.0),
-      new SpinIndexer(12.0)
-    );
+    addCommands(new PushTrigger(12.0), new SpinIndexer(12.0));
   }
 }

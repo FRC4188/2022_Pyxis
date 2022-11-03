@@ -34,6 +34,7 @@ public class SetToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(turret.getPosition() - angle) < Constants.turret.ANGLE_TOLERANCE && Math.abs(turret.getVelocity()) < 5.0;
+    return Math.abs(turret.getPosition() - angle) < Constants.turret.ANGLE_TOLERANCE
+        && Math.abs(turret.getVelocity()) < 5.0;
   }
 }

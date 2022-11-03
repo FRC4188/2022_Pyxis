@@ -18,17 +18,10 @@ public class BallTrackTest extends SequentialCommandGroup {
   /** Creates a new BallTrackTest. */
   public BallTrackTest() {
     addCommands(
-      new ParallelCommandGroup(
-        new SpinIntake(12.0, true),
-        new SpinIndexer(8.0),
-        new PushTrigger(12.0)
-      ),
-      new WaitCommand(2.0),
-      new ParallelCommandGroup(
-        new SpinIntake(12.0, true),
-        new SpinIndexer(8.0),
-        new PushTrigger(12.0)
-      )
-    );
+        new ParallelCommandGroup(
+            new SpinIntake(12.0, true), new SpinIndexer(8.0), new PushTrigger(12.0)),
+        new WaitCommand(2.0),
+        new ParallelCommandGroup(
+            new SpinIntake(12.0, true), new SpinIndexer(8.0), new PushTrigger(12.0)));
   }
 }

@@ -19,16 +19,9 @@ public class ShooterTest extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ParallelDeadlineGroup(
-        new SetToAngle(-90.0),
-        new ShooterVelocity(() -> 3000.0),
-        new HoodAngle(() -> 30.0)
-      ),
-      new ParallelDeadlineGroup(
-        new SetToAngle(0.0),
-        new ShooterVelocity(() -> 0.0),
-        new HoodAngle(() -> 0.0)
-      )
-    );
+        new ParallelDeadlineGroup(
+            new SetToAngle(-90.0), new ShooterVelocity(() -> 3000.0), new HoodAngle(() -> 30.0)),
+        new ParallelDeadlineGroup(
+            new SetToAngle(0.0), new ShooterVelocity(() -> 0.0), new HoodAngle(() -> 0.0)));
   }
 }

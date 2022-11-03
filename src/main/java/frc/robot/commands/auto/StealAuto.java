@@ -28,18 +28,18 @@ public class StealAuto extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ResetPose(new Pose2d(6.728, 5.891, new Rotation2d(-0.911, 1.901))),
-      new AutoShootQuantity(1, false),
-      new ParallelDeadlineGroup(
-        new FollowTrajectory(Trajectories.steal.first, new Rotation2d(-0.416, 0.787)),
-        new AutoIntake()),
-      new ParallelDeadlineGroup(
-        new FollowTrajectory(Trajectories.steal.second, new Rotation2d(0.0, 1.669)),
-        new SpinIntake(0.0)
-      ),
-      new ParallelCommandGroup(new PushTrigger(-8.0), new SpinIndexer(-8.0), new SpinIntake(-12.0, true)).withTimeout(2.5),
-      new AutoIntake().withTimeout(3.0),
-      new AutoShoot(false)
-    );
+        new ResetPose(new Pose2d(6.728, 5.891, new Rotation2d(-0.911, 1.901))),
+        new AutoShootQuantity(1, false),
+        new ParallelDeadlineGroup(
+            new FollowTrajectory(Trajectories.steal.first, new Rotation2d(-0.416, 0.787)),
+            new AutoIntake()),
+        new ParallelDeadlineGroup(
+            new FollowTrajectory(Trajectories.steal.second, new Rotation2d(0.0, 1.669)),
+            new SpinIntake(0.0)),
+        new ParallelCommandGroup(
+                new PushTrigger(-8.0), new SpinIndexer(-8.0), new SpinIntake(-12.0, true))
+            .withTimeout(2.5),
+        new AutoIntake().withTimeout(3.0),
+        new AutoShoot(false));
   }
 }

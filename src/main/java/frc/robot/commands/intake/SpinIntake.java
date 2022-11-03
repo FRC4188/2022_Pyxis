@@ -34,7 +34,6 @@ public class SpinIntake extends CommandBase {
   @Override
   public void execute() {
     intake.setVoltage(power);
-
   }
 
   // Called once the command ends or is interrupted.

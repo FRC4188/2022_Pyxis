@@ -5,7 +5,6 @@
 package frc.robot.commands.trigger;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.drive.Swerve;
 import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.sensors.Sensors;
 import frc.robot.subsystems.shooter.Shooter;

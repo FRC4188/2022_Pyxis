@@ -1,9 +1,8 @@
 package frc.robot.commands.climber;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.climber.Climber;
+import java.util.function.DoubleSupplier;
 
 public class ActiveVolts extends CommandBase {
 

@@ -34,7 +34,7 @@ public class AutoFireQuantity extends CommandBase {
     if (shooter.isReady() && hood.isReady()) trigger.set(12.0);
     else trigger.set(0.0);
 
-    if (!trigger.getTop() && lastTop) quantity --;
+    if (!trigger.getTop() && lastTop) quantity--;
 
     lastTop = trigger.getTop();
   }

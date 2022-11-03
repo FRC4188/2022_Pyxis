@@ -4,11 +4,11 @@
 
 package frc.robot.commands.drive;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.Swerve;
@@ -33,7 +33,9 @@ public class FollowTrajectory extends CommandBase {
     ProfiledPIDController thetaController = Constants.drive.thetaPID.thetaPID;
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    controller = new HolonomicDriveController(Constants.drive.xPID.xPID, Constants.drive.yPID.yPID, thetaController);
+    controller =
+        new HolonomicDriveController(
+            Constants.drive.xPID.xPID, Constants.drive.yPID.yPID, thetaController);
   }
 
   // Called when the command is initially scheduled.
@@ -47,7 +49,8 @@ public class FollowTrajectory extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    swerve.setChassisSpeeds(controller.calculate(swerve.getPose(), trajectory.sample(timer.get()), rotation));
+    swerve.setChassisSpeeds(
+        controller.calculate(swerve.getPose(), trajectory.sample(timer.get()), rotation));
   }
 
   // Called once the command ends or is interrupted.

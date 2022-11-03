@@ -5,7 +5,6 @@
 package frc.robot.commands.groups;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.indexer.LoadBalls;
 import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.shooter.ShooterVelocity;
@@ -20,11 +19,10 @@ public class LowerPortShot extends ParallelCommandGroup {
   /** Creates a new LowerPortShot. */
   public LowerPortShot() {
     addCommands(
-      new SetToAngle(-180.0),
-      new ShooterVelocity(() -> 1200.0),
-      new HoodAngle(() -> 45.0),
-      new TurretAngleWait(-180.0).andThen(new PushTrigger(12.0)),
-      new LoadBalls()
-    );
+        new SetToAngle(-180.0),
+        new ShooterVelocity(() -> 1200.0),
+        new HoodAngle(() -> 45.0),
+        new TurretAngleWait(-180.0).andThen(new PushTrigger(12.0)),
+        new LoadBalls());
   }
 }

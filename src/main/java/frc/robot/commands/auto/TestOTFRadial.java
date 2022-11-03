@@ -4,8 +4,6 @@
 
 package frc.robot.commands.auto;
 
-import java.util.List;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
@@ -13,6 +11,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.drive.FollowTrajectory;
 import frc.robot.commands.sensors.ResetPose;
+import java.util.List;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -23,13 +22,12 @@ public class TestOTFRadial extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ResetPose(),
-      new FollowTrajectory(
-        TrajectoryGenerator.generateTrajectory(
-          List.of(
-            new Pose2d(0.0, 0.0, new Rotation2d()),
-            new Pose2d(5.0, 0.0, new Rotation2d())
-          ), new TrajectoryConfig(1.5, 3.0)), new Rotation2d())
-    );
+        new ResetPose(),
+        new FollowTrajectory(
+            TrajectoryGenerator.generateTrajectory(
+                List.of(
+                    new Pose2d(0.0, 0.0, new Rotation2d()), new Pose2d(5.0, 0.0, new Rotation2d())),
+                new TrajectoryConfig(1.5, 3.0)),
+            new Rotation2d()));
   }
 }

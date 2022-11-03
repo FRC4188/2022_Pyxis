@@ -7,7 +7,6 @@ package frc.robot.commands.climber;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.shooter.Shooter;
 
 public class ActivePosition extends CommandBase {
 
@@ -41,7 +40,7 @@ public class ActivePosition extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(climber.getActivePositionA() - pos) < Constants.climber.ACTIVE_TOLERANCE &&
-           Math.abs(climber.getActivePositionB() - pos) < Constants.climber.ACTIVE_TOLERANCE;
+    return Math.abs(climber.getActivePositionA() - pos) < Constants.climber.ACTIVE_TOLERANCE
+        && Math.abs(climber.getActivePositionB() - pos) < Constants.climber.ACTIVE_TOLERANCE;
   }
 }

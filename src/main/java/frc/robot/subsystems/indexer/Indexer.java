@@ -12,11 +12,12 @@ import frc.robot.utils.motors.CSPMotor;
 public class Indexer extends SubsystemBase {
   private static Indexer instance;
 
-  public static synchronized Indexer getInstance () {
+  public static synchronized Indexer getInstance() {
     if (instance == null) instance = new Indexer();
     return instance;
   }
- private CSPMotor indexer = Constants.devices.indexerMotor;
+
+  private CSPMotor indexer = Constants.devices.indexerMotor;
 
   /** Creates a new Indexer. */
   private Indexer() {
@@ -25,11 +26,9 @@ public class Indexer extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-  
-  }
-  
-  public void set(double power){
+  public void periodic() {}
+
+  public void set(double power) {
     indexer.set(power);
   }
 

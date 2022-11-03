@@ -27,12 +27,13 @@ public class CrabSet extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void execute() {
-    swerve.setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle)),
-      new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle)),
-      new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle)),
-      new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle))
-    });
+    swerve.setModuleStates(
+        new SwerveModuleState[] {
+          new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle)),
+          new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle)),
+          new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle)),
+          new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle))
+        });
   }
 
   @Override
@@ -40,12 +41,13 @@ public class CrabSet extends CommandBase {
     velocity = 0.0;
     angle = 0.0;
 
-    swerve.setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle)),
-      new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle)),
-      new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle)),
-      new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle))
-    });
+    swerve.setModuleStates(
+        new SwerveModuleState[] {
+          new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle)),
+          new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle)),
+          new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle)),
+          new SwerveModuleState(velocity, Rotation2d.fromDegrees(angle))
+        });
   }
 
   @Override

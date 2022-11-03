@@ -14,8 +14,10 @@ public class Wheel {
 
   private CSPMotor leader = Constants.devices.shooterLeader;
   private CSPMotor follower = Constants.devices.shooterFollower;
-  private SimpleMotorFeedforward ff = new SimpleMotorFeedforward(Constants.shooter.kS, Constants.shooter.kV, Constants.shooter.kA);
-  private PIDController pid = new PIDController(Constants.shooter.kP, Constants.shooter.kI, Constants.shooter.kD);
+  private SimpleMotorFeedforward ff =
+      new SimpleMotorFeedforward(Constants.shooter.kS, Constants.shooter.kV, Constants.shooter.kA);
+  private PIDController pid =
+      new PIDController(Constants.shooter.kP, Constants.shooter.kI, Constants.shooter.kD);
   private double velocity = 0.0;
 
   protected Wheel() {
@@ -54,11 +56,13 @@ public class Wheel {
   public double getLeaderTemp() {
     return leader.getTemperature();
   }
+
   public double getFollowerTemp() {
     return follower.getTemperature();
   }
 
   public void periodic() {
-    setVoltage(pid.calculate(getVelocity() / 60.0, velocity / 60.0) + ff.calculate(velocity / 60.0));
+    setVoltage(
+        pid.calculate(getVelocity() / 60.0, velocity / 60.0) + ff.calculate(velocity / 60.0));
   }
 }

@@ -4,16 +4,15 @@
 
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.utils.DoubleSolenoid;
 
 public class Climber extends SubsystemBase {
 
   private static Climber instance = null;
+
   public static synchronized Climber getInstance() {
     if (instance == null) instance = new Climber();
     return instance;
@@ -24,13 +23,13 @@ public class Climber extends SubsystemBase {
 
   private DoubleSolenoid brake = new DoubleSolenoid(4, 5);
 
-  //private Notifier dashboardLoop = new Notifier(() -> updateDashboard());
+  // private Notifier dashboardLoop = new Notifier(() -> updateDashboard());
 
   /** Creates a new Climber. */
   private Climber() {
     CommandScheduler.getInstance().registerSubsystem(this);
 
-    //dashboardLoop.startPeriodic(0.1);
+    // dashboardLoop.startPeriodic(0.1);
 
     SmartDashboard.putNumber("Climber Set Voltage", 0.0);
     setBrake(true);

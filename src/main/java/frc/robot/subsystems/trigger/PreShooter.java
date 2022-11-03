@@ -1,7 +1,6 @@
 package frc.robot.subsystems.trigger;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,14 +10,16 @@ import frc.robot.utils.motors.CSPMotor;
 public class PreShooter extends SubsystemBase {
 
   private static PreShooter instance = null;
+
   public static synchronized PreShooter getInstance() {
     if (instance == null) instance = new PreShooter();
     return instance;
   }
 
-  //private Notifier dashboard = new Notifier(() -> updateDashboard());
+  // private Notifier dashboard = new Notifier(() -> updateDashboard());
 
-  private CSPMotor motor = Constants.devices.preshooterMotor;;
+  private CSPMotor motor = Constants.devices.preshooterMotor;
+  ;
   private DigitalInput top = Constants.devices.top;
   private DigitalInput bot = Constants.devices.bot;
 
@@ -26,7 +27,7 @@ public class PreShooter extends SubsystemBase {
   private PreShooter() {
     motor.reset();
     motor.setRamp(0.25);
-    //dashboard.startPeriodic(0.35);
+    // dashboard.startPeriodic(0.35);
   }
 
   private void updateDashboard() {

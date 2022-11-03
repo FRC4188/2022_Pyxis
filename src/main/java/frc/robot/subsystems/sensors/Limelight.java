@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import frc.robot.Constants;
 
-
 public class Limelight {
   private NetworkTable limeTable = null;
 
@@ -52,7 +51,7 @@ public class Limelight {
 
   public Limelight(String tableName) {
     limeTable = NetworkTableInstance.getDefault().getTable(tableName);
-    //setLEDMode(LedMode.ON);
+    // setLEDMode(LedMode.ON);
   }
 
   public void setPipeline(int pipeline) {
@@ -89,12 +88,12 @@ public class Limelight {
 
   public double getVertical() {
     double r = getHypot();
-    return Math.cos(getAngle()) * (r + (0.164*r + 0.102) + Constants.turret.MOUNTING_ANGLE);
+    return Math.cos(getAngle()) * (r + (0.164 * r + 0.102) + Constants.turret.MOUNTING_ANGLE);
   }
 
   public double getHorizontal() {
     double r = getHypot();
-    return -Math.sin(getAngle()) * (r + (0.164*r + 0.102) + Constants.turret.MOUNTING_ANGLE);
+    return -Math.sin(getAngle()) * (r + (0.164 * r + 0.102) + Constants.turret.MOUNTING_ANGLE);
   }
 
   public int getTargetCount() {

@@ -14,9 +14,6 @@ import frc.robot.commands.intake.SpinIntake;
 public class AutoIntake extends ParallelCommandGroup {
   /** Creates a new AutoIntake. */
   public AutoIntake() {
-    addCommands(
-      new SpinIntake(12.0),
-      new LoadBalls()
-    );
+    addCommands(new SpinIntake(12.0), new LoadBalls());
   }
 }

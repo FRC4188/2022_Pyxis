@@ -4,10 +4,9 @@
 
 package frc.robot.commands.shooter;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.hood.Hood;
+import java.util.function.DoubleSupplier;
 
 public class HoodAngle extends CommandBase {
 

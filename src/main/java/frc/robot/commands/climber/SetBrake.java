@@ -13,6 +13,7 @@ import frc.robot.subsystems.climber.Climber;
 public class SetBrake extends InstantCommand {
 
   boolean state;
+
   public SetBrake(boolean state) {
     this.state = state;
   }

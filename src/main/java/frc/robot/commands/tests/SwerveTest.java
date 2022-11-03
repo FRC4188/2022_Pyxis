@@ -18,9 +18,8 @@ public class SwerveTest extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new CrabSet(2.0, 90.0).withTimeout(2.0),
-      new CrabSet(3.0, -90.0).withTimeout(2.0),
-      new InterruptSubsystem(Swerve.getInstance())
-    );
+        new CrabSet(2.0, 90.0).withTimeout(2.0),
+        new CrabSet(3.0, -90.0).withTimeout(2.0),
+        new InterruptSubsystem(Swerve.getInstance()));
   }
 }

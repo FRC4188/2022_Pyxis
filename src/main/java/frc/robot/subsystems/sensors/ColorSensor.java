@@ -3,13 +3,12 @@ package frc.robot.subsystems.sensors;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
-
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ColorSensor extends SubsystemBase{
+public class ColorSensor extends SubsystemBase {
   private ColorSensorV3 colorSensor;
   private ColorMatch matchColor;
 
@@ -18,7 +17,6 @@ public class ColorSensor extends SubsystemBase{
 
   private Color detectedColor;
   private ColorMatchResult match;
-
 
   public ColorSensor(I2C.Port i2cPort) {
     colorSensor = new ColorSensorV3(i2cPort);
@@ -30,9 +28,7 @@ public class ColorSensor extends SubsystemBase{
     refresh();
   }
 
-  /**
-   * Blue is 1, Red is -1, and neither is 0.
-   */
+  /** Blue is 1, Red is -1, and neither is 0. */
   public int getColor() {
     if (match.color == red && match.confidence > 0.9) return -1;
     else if (match.color == blue && match.confidence > 0.9) return 1;

@@ -7,10 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.CvSink;
-import edu.wpi.first.cscore.CvSource;
-import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.RobotController;
@@ -22,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.climber.ActivePosition;
 import frc.robot.commands.climber.FindZeros;
-import frc.robot.commands.shooter.HoodAngle;
 import frc.robot.commands.tests.BallTrackTest;
 import frc.robot.commands.tests.PneumaticsTest;
 import frc.robot.commands.tests.ShooterTest;
@@ -41,7 +36,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer = new RobotContainer();
 
-  private final SendableChooser<SequentialCommandGroup> testChooser = new SendableChooser<SequentialCommandGroup>();
+  private final SendableChooser<SequentialCommandGroup> testChooser =
+      new SendableChooser<SequentialCommandGroup>();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -61,15 +57,14 @@ public class Robot extends TimedRobot {
     testChooser.addOption("Shooter Test", new ShooterTest());
 
     SmartDashboard.putData("Test Chooser", testChooser);
-
   }
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like
    * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
+   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
+   * SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
@@ -78,17 +73,15 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    //tempManager.run();
+    // tempManager.run();
 
     /*ledPanel.set(LEDPanel.SYSTEM.GENERAL, 0, RobotController.getBatteryVoltage() > 12.0 ? LEDPanel.BEHAVIOR.OFF :
-                                             RobotController.getBatteryVoltage() > 10.0 ? LEDPanel.BEHAVIOR.BLINK :
-                                                                                          LEDPanel.BEHAVIOR.ON);*/
+    RobotController.getBatteryVoltage() > 10.0 ? LEDPanel.BEHAVIOR.BLINK :
+                                                 LEDPanel.BEHAVIOR.ON);*/
 
   }
 
-  /**
-   * This function is called once each time the robot enters Disabled mode.
-   */
+  /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
     Climber.getInstance().setBrake(true);
@@ -96,12 +89,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {
-  }
+  public void disabledPeriodic() {}
 
-  /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
-   */
+  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
@@ -111,15 +101,12 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
 
-    //Sensors.getInstance().setLED(true);
+    // Sensors.getInstance().setLED(true);
   }
 
-  /**
-   * This function is called periodically during autonomous.
-   */
+  /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
@@ -133,20 +120,18 @@ public class Robot extends TimedRobot {
 
     new FindZeros().andThen(new ActivePosition(0.0)).schedule();
 
+    if (RobotController.getBatteryVoltage() < 12.3)
+      DriverStation.reportWarning("Battery voltage too low; please change battery.", false);
+    // m_robotContainer.resetRobot();
 
-    if (RobotController.getBatteryVoltage() < 12.3) DriverStation.reportWarning("Battery voltage too low; please change battery.", false);
-    //m_robotContainer.resetRobot();
-
-    //Sensors.getInstance().setLED(true);
+    // Sensors.getInstance().setLED(true);
   }
 
-  /**
-   * This function is called periodically during operator control.
-   */
+  /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    //tempManager.run();
-    //bop.run();
+    // tempManager.run();
+    // bop.run();
   }
 
   @Override
@@ -156,10 +141,7 @@ public class Robot extends TimedRobot {
     testChooser.getSelected().schedule();
   }
 
-  /**
-   * This function is called periodically during test mode.
-   */
+  /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {
-  }
+  public void testPeriodic() {}
 }

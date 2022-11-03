@@ -25,41 +25,41 @@ public class PresetFireQuantity extends CommandBase {
   public PresetFireQuantity(double angle, double rpm, int quantity) {
     addRequirements(trigger);
 
-  initQuant = quantity;
-  this.angle = angle;
-  this.rpm = rpm;
-}
-
-// Called when the command is initially scheduled.
-@Override
-public void initialize() {
-  quantity = initQuant;
-}
-
-// Called every time the scheduler runs while the command is scheduled.
-@Override
-public void execute() {
-  if (shooter.isReady(rpm) && hood.isReady(angle)) trigger.set(12.0);
-  else trigger.set(0.0);
-
-  if (!trigger.getTop() && lastTop) {
-    quantity --;
-    System.out.print("Ball Shot");
+    initQuant = quantity;
+    this.angle = angle;
+    this.rpm = rpm;
   }
 
-  lastTop = trigger.getTop();
-}
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    quantity = initQuant;
+  }
 
-// Called once the command ends or is interrupted.
-@Override
-public void end(boolean interrupted) {
-  trigger.set(0.0);
-  System.out.print("Command finished");
-}
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    if (shooter.isReady(rpm) && hood.isReady(angle)) trigger.set(12.0);
+    else trigger.set(0.0);
 
-// Returns true when the command should end.
-@Override
-public boolean isFinished() {
-  return quantity == 0;
-}
+    if (!trigger.getTop() && lastTop) {
+      quantity--;
+      System.out.print("Ball Shot");
+    }
+
+    lastTop = trigger.getTop();
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    trigger.set(0.0);
+    System.out.print("Command finished");
+  }
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return quantity == 0;
+  }
 }

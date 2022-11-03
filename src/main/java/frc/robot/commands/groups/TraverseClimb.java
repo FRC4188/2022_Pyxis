@@ -15,10 +15,6 @@ public class TraverseClimb extends SequentialCommandGroup {
   public TraverseClimb() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-      new ActivePosition(0.0),
-      new MonkeyBar(),
-      new MonkeyBar()
-    );
+    addCommands(new ActivePosition(0.0), new MonkeyBar(), new MonkeyBar());
   }
 }

@@ -107,19 +107,19 @@ public class RobotContainer {
             swerve)
         // new CrabSet(0.0, 0.0)
         );
-    turret.setDefaultCommand(
-        //   /*
-        //   new RunCommand(() -> {
-        //   double current = turret.getPosition();
-        //   double required = -(Sensors.getInstance().getTargetAngle() + 180.0);
-        //   double set = current + (required - (current + 180.0) % 360.0 - 180.0);
-        //   turret.setAngle(set);
-        // }, turret)*/
-        new TrackTarget());
-    shooter.setDefaultCommand(new ShooterVelocity(() -> Sensors.getInstance().getFormulaRPM()));
-    hood.setDefaultCommand(new HoodAngle(() -> Sensors.getInstance().getFormulaAngle()));
-    trigger.setDefaultCommand(new AutoFire());
-    indexer.setDefaultCommand(new LoadBalls());
+    // turret.setDefaultCommand(
+    //     //   /*
+    //     //   new RunCommand(() -> {
+    //     //   double current = turret.getPosition();
+    //     //   double required = -(Sensors.getInstance().getTargetAngle() + 180.0);
+    //     //   double set = current + (required - (current + 180.0) % 360.0 - 180.0);
+    //     //   turret.setAngle(set);
+    //     // }, turret)*/
+    //     new TrackTarget());
+    // shooter.setDefaultCommand(new ShooterVelocity(() -> Sensors.getInstance().getFormulaRPM()));
+    // hood.setDefaultCommand(new HoodAngle(() -> Sensors.getInstance().getFormulaAngle()));
+    // trigger.setDefaultCommand(new AutoFire());
+    // indexer.setDefaultCommand(new LoadBalls());
     climber.setDefaultCommand(new RunCommand(() -> climber.setActiveVolts(0.0), climber));
     intake.setDefaultCommand(new RunCommand(() -> intake.setVoltage(0.0), intake));
 

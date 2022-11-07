@@ -13,7 +13,7 @@ import java.util.List;
 public final class Trajectories {
   private static final TrajectoryConfig autoConfig = Constants.drive.auto.CONFIG;
   private static final Transform2d transform =
-      new Transform2d(new Pose2d(), Swerve.getInstance().getInitPose());
+      new Transform2d(new Pose2d(), new Pose2d());
 
   public static class simple {
     public static final Trajectory straight =

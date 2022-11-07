@@ -23,6 +23,8 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putNumber("Shooter Set Velocity", 0.0);
     SmartDashboard.putNumber("Hood Set Angle", 0.0);
+    SmartDashboard.putNumber("Set Voltage", 0.0);
+
   }
 
   public void updateDashboard() {

@@ -142,6 +142,7 @@ public class RobotContainer {
 
   /** Method which assigns commands to different button actions. */
   private void configureButtonBindings() {
+    SmartDashboard.putData("Send Voltage", new InstantCommand(() -> shooter.setVolts(SmartDashboard.getNumber("Set Voltage", 0.0)), shooter));
     SmartDashboard.putData("Reset Position", new ResetPose());
     SmartDashboard.putData("Reset Rotation", new ResetRotation());
     SmartDashboard.putData("Zero Climber", new FindZeros().andThen(new ActivePosition(0.0)));

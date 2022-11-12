@@ -56,10 +56,10 @@ public class Hood extends SubsystemBase {
   }
 
   public void updateDashboard() {
-    SmartDashboard.putNumber("Hood Angle", getPosition());
-    SmartDashboard.putNumber("Hood Temperature", getTemp());
-    SmartDashboard.putNumber("Hood Current", motor.getCurrent());
-    SmartDashboard.putBoolean("Hood is ready", isReady());
+    // SmartDashboard.putNumber("Hood Angle", getPosition());
+    // SmartDashboard.putNumber("Hood Temperature", getTemp());
+    // SmartDashboard.putNumber("Hood Current", motor.getCurrent());
+    // SmartDashboard.putBoolean("Hood is ready", isReady());
   }
 
   public void setPosition(double position) {

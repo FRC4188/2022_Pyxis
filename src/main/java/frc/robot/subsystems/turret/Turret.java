@@ -71,21 +71,21 @@ public class Turret extends SubsystemBase {
   }
 
   private void updateShuffleboard() {
-    SmartDashboard.putNumber("Turret Motor Temp", getTemperature());
-    SmartDashboard.putNumber("Turret Position", getPosition());
-    double goodAngle =
-        -(Units.radiansToDegrees(
-                Math.atan2(
-                    -Swerve.getInstance().getPose().getY(), -Swerve.getInstance().getPose().getX()))
-            + Sensors.getInstance().getRotation().getDegrees()
-            - 180);
-    // if (getPosition() - goodAngle > 90) {
-    //   goodAngle = (goodAngle + 360) % 360 - 180;
-    // }/* else if (getPosition() - goodAngle < -90) {
-    //   goodAngle = (goodAngle - 360) % 360 - 180;
-    // }*/
-    goodAngle = goodAngle % 360.0;
-    SmartDashboard.putNumber("Turret Set", goodAngle);
+    // SmartDashboard.putNumber("Turret Motor Temp", getTemperature());
+    // SmartDashboard.putNumber("Turret Position", getPosition());
+    // double goodAngle =
+    //     -(Units.radiansToDegrees(
+    //             Math.atan2(
+    //                 -Swerve.getInstance().getPose().getY(), -Swerve.getInstance().getPose().getX()))
+    //         + Sensors.getInstance().getRotation().getDegrees()
+    //         - 180);
+    // // if (getPosition() - goodAngle > 90) {
+    // //   goodAngle = (goodAngle + 360) % 360 - 180;
+    // // }/* else if (getPosition() - goodAngle < -90) {
+    // //   goodAngle = (goodAngle - 360) % 360 - 180;
+    // // }*/
+    // goodAngle = goodAngle % 360.0;
+    // SmartDashboard.putNumber("Turret Set", goodAngle);
   }
 
   public void set(double percent) {

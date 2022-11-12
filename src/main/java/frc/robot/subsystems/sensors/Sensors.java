@@ -55,13 +55,13 @@ public class Sensors extends SubsystemBase {
   }
 
   public void updateDashboard() {
-    SmartDashboard.putNumber("Distance to Goal", getDistance());
-    SmartDashboard.putNumber("Yaw", pigeon.get().getDegrees());
-    SmartDashboard.putNumber("LL TX", getTX());
-    SmartDashboard.putNumber("Closest Ball Angle", getClosestBallAngle());
-    SmartDashboard.putNumber("Formula RPM", getFormulaRPM());
-    SmartDashboard.putNumber("Formula Angle", getFormulaAngle());
-    SmartDashboard.putString("Vision Pose", getVisionPose().toString());
+    // SmartDashboard.putNumber("Distance to Goal", getDistance());
+    // SmartDashboard.putNumber("Yaw", pigeon.get().getDegrees());
+    // SmartDashboard.putNumber("LL TX", getTX());
+    // SmartDashboard.putNumber("Closest Ball Angle", getClosestBallAngle());
+    // SmartDashboard.putNumber("Formula RPM", getFormulaRPM());
+    // SmartDashboard.putNumber("Formula Angle", getFormulaAngle());
+    // SmartDashboard.putString("Vision Pose", getVisionPose().toString());
   }
 
   public void setLED(boolean on) {

@@ -29,13 +29,15 @@ public class Shooter extends SubsystemBase {
 
   public void updateDashboard() {
     SmartDashboard.putNumber("Shooter Velocity", getVelocity());
-    SmartDashboard.putNumber("Leader Temp", wheel.getLeaderTemp());
-    SmartDashboard.putNumber("Follower Temp", wheel.getFollowerTemp());
-    SmartDashboard.putBoolean("Shooter is ready", isReady());
-    SmartDashboard.putBoolean(
-        "Limelight Component", Math.abs(sensors.getTX() + sensors.getOffsetAngle()) < 2.5);
-    SmartDashboard.putBoolean(
-        "RPM Component", Math.abs(getVelocity() - sensors.getFormulaRPM()) < 250.0);
+    SmartDashboard.putNumber("Shooter Voltage", getVoltage());
+    
+    // SmartDashboard.putNumber("Leader Temp", wheel.getLeaderTemp());
+    // SmartDashboard.putNumber("Follower Temp", wheel.getFollowerTemp());
+    // SmartDashboard.putBoolean("Shooter is ready", isReady());
+    // SmartDashboard.putBoolean(
+    //     "Limelight Component", Math.abs(sensors.getTX() + sensors.getOffsetAngle()) < 2.5);
+    // SmartDashboard.putBoolean(
+    //     "RPM Component", Math.abs(getVelocity() - sensors.getFormulaRPM()) < 250.0);
   }
 
   public void setVolts(double volts) {
@@ -48,6 +50,10 @@ public class Shooter extends SubsystemBase {
 
   public double getVelocity() {
     return wheel.getVelocity();
+  }
+
+  public double getVoltage() {
+    return wheel.getVoltage();
   }
 
   @Override

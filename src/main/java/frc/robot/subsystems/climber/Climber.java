@@ -41,11 +41,11 @@ public class Climber extends SubsystemBase {
   }
 
   private void updateDashboard() {
-    SmartDashboard.putNumber("Active Climber A Position", active.getPositionA());
-    SmartDashboard.putNumber("Active Climber B Position", active.getPositionB());
-    SmartDashboard.putBoolean("Passive Climber Set State", passive.getSet());
-    SmartDashboard.putNumber("Temperature Motor A", active.getMotorATemp());
-    SmartDashboard.putNumber("Temperature Motor B", active.getMotorBTemp());
+    // SmartDashboard.putNumber("Active Climber A Position", active.getPositionA());
+    // SmartDashboard.putNumber("Active Climber B Position", active.getPositionB());
+    // SmartDashboard.putBoolean("Passive Climber Set State", passive.getSet());
+    // SmartDashboard.putNumber("Temperature Motor A", active.getMotorATemp());
+    // SmartDashboard.putNumber("Temperature Motor B", active.getMotorBTemp());
   }
 
   public double getActivePositionA() {

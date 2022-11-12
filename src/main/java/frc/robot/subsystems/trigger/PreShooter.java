@@ -31,9 +31,9 @@ public class PreShooter extends SubsystemBase {
   }
 
   private void updateDashboard() {
-    SmartDashboard.putBoolean("Top Beam Breaker", getTop());
-    SmartDashboard.putBoolean("Bottom Beam Breaker", getBottom());
-    SmartDashboard.putNumber("Trigger Motor Temperature", getTemp());
+    // SmartDashboard.putBoolean("Top Beam Breaker", getTop());
+    // SmartDashboard.putBoolean("Bottom Beam Breaker", getBottom());
+    // SmartDashboard.putNumber("Trigger Motor Temperature", getTemp());
   }
 
   public double getTemp() {

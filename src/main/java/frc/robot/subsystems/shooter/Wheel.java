@@ -38,7 +38,7 @@ public class Wheel {
   }
 
   public void setVoltage(double voltage) {
-    set(voltage / RobotController.getBatteryVoltage());
+    set(voltage / RobotController.getInputVoltage());
   }
 
   public void setVelocity(double velocity) {
@@ -46,7 +46,11 @@ public class Wheel {
   }
 
   public double getVelocity() {
-    return (leader.getVelocity() * 60.0) / Constants.shooter.GEARING;
+    return (leader.getVelocity() * 60) / Constants.shooter.GEARING;
+  }
+
+  public double getVoltage() {
+    return leader.getVoltage();
   }
 
   public double getPosition() {
@@ -63,6 +67,6 @@ public class Wheel {
 
   public void periodic() {
     setVoltage(
-        pid.calculate(getVelocity() / 60.0, velocity / 60.0) + ff.calculate(velocity / 60.0));
+        pid.calculate(getVelocity(), velocity) + ff.calculate(velocity));
   }
 }

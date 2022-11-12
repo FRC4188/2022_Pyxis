@@ -96,21 +96,21 @@ public class Swerve extends SubsystemBase {
   }
 
   public void smartDashboard() {
-    SmartDashboard.putNumber("M1 (LF) Angle", leftFront.getAbsoluteAngle());
-    SmartDashboard.putNumber("M2 (RF) Angle", rightFront.getAbsoluteAngle());
-    SmartDashboard.putNumber("M3 (LR) Angle", leftRear.getAbsoluteAngle());
-    SmartDashboard.putNumber("M4 (RR) Angle", rightRear.getAbsoluteAngle());
-    SmartDashboard.putString("Chassis Speeds", getChassisSpeeds().toString());
-    SmartDashboard.putString("Odometry", odometry.getEstimatedPosition().toString());
+    // SmartDashboard.putNumber("M1 (LF) Angle", leftFront.getAbsoluteAngle());
+    // SmartDashboard.putNumber("M2 (RF) Angle", rightFront.getAbsoluteAngle());
+    // SmartDashboard.putNumber("M3 (LR) Angle", leftRear.getAbsoluteAngle());
+    // SmartDashboard.putNumber("M4 (RR) Angle", rightRear.getAbsoluteAngle());
+    // SmartDashboard.putString("Chassis Speeds", getChassisSpeeds().toString());
+    // SmartDashboard.putString("Odometry", odometry.getEstimatedPosition().toString());
 
-    SmartDashboard.putNumber("Falcon 1 Temp", leftFront.getAngleTemp());
-    SmartDashboard.putNumber("Falcon 2 Temp", leftFront.getSpeedTemp());
-    SmartDashboard.putNumber("Falcon 3 Temp", rightFront.getAngleTemp());
-    SmartDashboard.putNumber("Falcon 4 Temp", rightFront.getSpeedTemp());
-    SmartDashboard.putNumber("Falcon 5 Temp", leftRear.getAngleTemp());
-    SmartDashboard.putNumber("Falcon 6 Temp", leftRear.getSpeedTemp());
-    SmartDashboard.putNumber("Falcon 7 Temp", rightRear.getAngleTemp());
-    SmartDashboard.putNumber("Falcon 8 Temp", rightRear.getSpeedTemp());
+    // SmartDashboard.putNumber("Falcon 1 Temp", leftFront.getAngleTemp());
+    // SmartDashboard.putNumber("Falcon 2 Temp", leftFront.getSpeedTemp());
+    // SmartDashboard.putNumber("Falcon 3 Temp", rightFront.getAngleTemp());
+    // SmartDashboard.putNumber("Falcon 4 Temp", rightFront.getSpeedTemp());
+    // SmartDashboard.putNumber("Falcon 5 Temp", leftRear.getAngleTemp());
+    // SmartDashboard.putNumber("Falcon 6 Temp", leftRear.getSpeedTemp());
+    // SmartDashboard.putNumber("Falcon 7 Temp", rightRear.getAngleTemp());
+    // SmartDashboard.putNumber("Falcon 8 Temp", rightRear.getSpeedTemp());
   }
 
   public void drive(double yInput, double xInput, double rotInput, BooleanSupplier tracking) {

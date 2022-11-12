@@ -167,8 +167,8 @@ public class Constants {
     public static final double ALPHA = 0.98;
 
     public static double kS = 0.7391;
-    public static double kV = 0.09001;
-    public static double kA = 0.0072442;
+    public static double kV = 0.002704;
+    public static double kA = 0.0;
 
     public static final double GEARING = 1;
     public static final double RAMP = 2.5;
@@ -176,9 +176,9 @@ public class Constants {
     public static final double RADIUS = Units.inchesToMeters(4.0);
     public static final double CIRCUMFRENCE = RADIUS * 2.0 * Math.PI;
 
-    public static final double kP = 0.2;
+    public static final double kP = 0.002;
     public static final double kI = 0.0;
-    public static final double kD = 5e-4;
+    public static final double kD = 0.0;
     public static final double MAX_ACCEL = 1000.0;
     public static final double MAX_JERK = 5000.0;
 

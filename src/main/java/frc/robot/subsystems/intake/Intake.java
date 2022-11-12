@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
   public void periodic() {}
 
   public void updateSuffleboard() {
-    SmartDashboard.putNumber("Intake Temperature", getTemperature());
+    // SmartDashboard.putNumber("Intake Temperature", getTemperature());
   }
 
   public void set(double percentage) {

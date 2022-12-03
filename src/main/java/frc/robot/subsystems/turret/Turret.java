@@ -112,7 +112,7 @@ public class Turret extends SubsystemBase {
     double rotSpeed = -swerve.getChassisSpeeds().omegaRadiansPerSecond;
     double velAngle =
         -Math.atan2(
-            swerve.getChassisSpeeds().vyMetersPerSecond,
+            -swerve.getChassisSpeeds().vyMetersPerSecond,
             swerve.getChassisSpeeds().vxMetersPerSecond);
     double totalAngle =
         velAngle
@@ -122,8 +122,8 @@ public class Turret extends SubsystemBase {
     double x = Math.sin(totalAngle) * Sensors.getInstance().getDistance();
 
     setVolts(
-        positionPID.calculate(getPosition(), angle)
-            + ff.calculate(
+        /*positionPID.calculate(getPosition(), angle)
+            + */ff.calculate(
                 rotSpeed
                     + (x * swerve.getSpeed() / Math.pow(Sensors.getInstance().getDistance(), 2))));
   }

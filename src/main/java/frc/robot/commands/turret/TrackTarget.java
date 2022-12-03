@@ -33,7 +33,7 @@ public class TrackTarget extends CommandBase {
     //   goodAngle = (goodAngle - 360) % 360 + 180;
     // }
     goodAngle = goodAngle % 360.0;
-    turret.setAngle(goodAngle + Sensors.getInstance().getOffsetAngle());
+    turret.targetAngle(goodAngle + Sensors.getInstance().getOffsetAngle());
   }
 
   // Called once the command ends or is interrupted.

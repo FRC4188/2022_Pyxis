@@ -10,7 +10,7 @@ import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstrain
 import frc.robot.Constants;
 import java.util.List;
 
-public final class Trajectories {
+ public final class Trajectories {
   private static final TrajectoryConfig autoConfig = Constants.drive.auto.CONFIG;
   private static final Transform2d transform =
       new Transform2d(new Pose2d(), new Pose2d());

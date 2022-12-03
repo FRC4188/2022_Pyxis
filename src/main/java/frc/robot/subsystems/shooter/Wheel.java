@@ -15,9 +15,9 @@ public class Wheel {
   private CSPMotor leader = Constants.devices.shooterLeader;
   private CSPMotor follower = Constants.devices.shooterFollower;
   private SimpleMotorFeedforward ff =
-      new SimpleMotorFeedforward(Constants.shooter.kS, Constants.shooter.kV, Constants.shooter.kA);
+      new SimpleMotorFeedforward(Constants.shooter.kS, Constants.shooter.kV);
   private PIDController pid =
-      new PIDController(Constants.shooter.kP, Constants.shooter.kI, Constants.shooter.kD);
+      new PIDController(Constants.shooter.kP, 0, 0);
   private double velocity = 0.0;
 
   protected Wheel() {
@@ -62,7 +62,21 @@ public class Wheel {
   }
 
   public void periodic() {
+
+    double measured = getVelocity();
+    // double roboDelay = 0.05;
+    // double volts = leader.getVoltage();
+    // double I = 0.01125;
+    // double R = (Constants.shooter.kV *0.410833*6380-12*0.410833)/(6380*Math.PI/30);
+    // double Fs = Constants.shooter.kS*0.410833;
+
+    // double asym = (volts*0.410833*6380-Fs*6380)/(0.410833*360/Math.PI+R*6380);
+    // double C = 2*Math.PI*measured/60-asym;
+    // double prediction = C*Math.pow(Math.exp(1),(-(360/Math.PI)*0.410833*roboDelay/(I*6380)-R*roboDelay/I))+asym;
+
+    // prediction = 60*prediction/(2*Math.PI);
+
     setVoltage(
-        pid.calculate(getVelocity() / 60.0, velocity / 60.0) + ff.calculate(velocity / 60.0));
+        pid.calculate(measured, velocity ) + ff.calculate(velocity));
   }
 }

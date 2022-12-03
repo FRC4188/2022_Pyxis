@@ -117,15 +117,15 @@ public class Turret extends SubsystemBase {
     double totalAngle =
         velAngle
             + Units.degreesToRadians(getPosition())
-            + Math.PI / 2
-            + Units.degreesToRadians(Sensors.getInstance().getTX());
+            + Math.PI
+            + swerve.getPose().getRotation().getRadians();
     double x = Math.sin(totalAngle) * Sensors.getInstance().getDistance();
 
     setVolts(
-        /*positionPID.calculate(getPosition(), angle)
-            + */ff.calculate(
+        positionPID.calculate(getPosition(), angle)
+            + ff.calculate(
                 rotSpeed
-                    + (x * swerve.getSpeed() / Math.pow(Sensors.getInstance().getDistance(), 2))));
+                    + ((x * swerve.getSpeed() / Math.pow(Sensors.getInstance().getDistance(), 2)))));
   }
 
   public void trackTarget() {

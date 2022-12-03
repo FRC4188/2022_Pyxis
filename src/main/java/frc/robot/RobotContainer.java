@@ -124,20 +124,12 @@ public class RobotContainer {
     intake.setDefaultCommand(new RunCommand(() -> intake.setVoltage(0.0), intake));
 
     new Trigger(() -> turret.getPosition() >= Constants.turret.MAX_ANGLE)
-        .whenActive(
-            new ParallelDeadlineGroup(
-                    new TurretAngleWait(turret.getPosition() - 180.0).withTimeout(0.45),
-                    new RunCommand(() -> turret.setVolts(-12.0)))
-                .andThen(new Hunt(true)),
+        .whenActive(new SetToAngle(Constants.turret.MAX_ANGLE-360.0),
             false);
 
     new Trigger(() -> turret.getPosition() <= Constants.turret.MIN_ANGLE)
-        .whenActive(
-            new ParallelDeadlineGroup(
-                    new TurretAngleWait(turret.getPosition() + 180.0).withTimeout(0.45),
-                    new RunCommand(() -> turret.setVolts(12.0)))
-                .andThen(new Hunt(false)),
-            false);
+    .whenActive(new SetToAngle(Constants.turret.MIN_ANGLE+360.0),
+    false);
   }
 
   /** Method which assigns commands to different button actions. */
@@ -161,23 +153,23 @@ public class RobotContainer {
             new RunCommand(() -> indexer.set(0.0), indexer),
             new RunCommand(() -> shooter.setVolts(0.0), shooter)));
 
-    new Trigger(
-            () -> {
-              boolean changed =
-                  SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
-              lastSetShooter = SmartDashboard.getNumber("Shooter Set Velocity", 0.0);
-              return changed;
-            })
-        .whenActive(
-            new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0)));
+    // new Trigger(
+    //         () -> {
+    //           boolean changed =
+    //               SmartDashboard.getNumber("Shooter Set Velocity", 0.0) != lastSetShooter;
+    //           lastSetShooter = SmartDashboard.getNumber("Shooter Set Velocity", 0.0);
+    //           return changed;
+    //         })
+    //     .whenActive(
+    //         new ShooterVelocity(() -> SmartDashboard.getNumber("Shooter Set Velocity", 0.0)));
 
-    new Trigger(
-            () -> {
-              boolean changed = SmartDashboard.getNumber("Hood Set Angle", 0.0) != lastSetHood;
-              lastSetHood = SmartDashboard.getNumber("Hood Set Angle", 0.0);
-              return changed;
-            })
-        .whenActive(new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));
+    // new Trigger(
+    //         () -> {
+    //           boolean changed = SmartDashboard.getNumber("Hood Set Angle", 0.0) != lastSetHood;
+    //           lastSetHood = SmartDashboard.getNumber("Hood Set Angle", 0.0);
+    //           return changed;
+    //         })
+    //     .whenActive(new HoodAngle(() -> SmartDashboard.getNumber("Hood Set Angle", 0.0)));
 
     pilot
         .getBButtonObj()
@@ -212,7 +204,7 @@ public class RobotContainer {
 
     pilot
         .getBackButtonObj()
-        .whenPressed(new ResetPose(new Pose2d(0.0, -1.0, new Rotation2d(-Math.PI / 2.0))));
+        .whenPressed(new ResetPose(new Pose2d(1.0, 0.0, new Rotation2d())));
 
     pilot.getDpadRightButtonObj().whenPressed(new SetToAngle(-180.0));
 

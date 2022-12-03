@@ -167,8 +167,8 @@ public class Constants {
     public static final double ALPHA = 0.98;
 
     public static double kS = 0.7391;
-    public static double kV = 0.09001;
-    public static double kA = 0.0072442;
+    public static double kV = 0.001775;
+    //public static double kA = 0.0072442;
 
     public static final double GEARING = 1;
     public static final double RAMP = 2.5;
@@ -176,9 +176,9 @@ public class Constants {
     public static final double RADIUS = Units.inchesToMeters(4.0);
     public static final double CIRCUMFRENCE = RADIUS * 2.0 * Math.PI;
 
-    public static final double kP = 0.2;
+    public static final double kP = 0.005;
     public static final double kI = 0.0;
-    public static final double kD = 5e-4;
+    public static final double kD = 0.0;
     public static final double MAX_ACCEL = 1000.0;
     public static final double MAX_JERK = 5000.0;
 
@@ -222,8 +222,8 @@ public class Constants {
 
     public static final double ANGLE_TOLERANCE = 2.0;
 
-    public static final double kS = 0.69;
-    public static final double kV = 2.5;
+    public static final double kS = 0.67;
+    public static final double kV = 2.25;
 
     public static final double LIMELIGHT_HEIGHT = Units.inchesToMeters(43.6);
     public static final double MOUNTING_ANGLE = 27.5;

@@ -69,7 +69,7 @@ public class Sensors extends SubsystemBase {
   }
 
   public boolean getHasTarget() {
-    return limelight.getTargetCount() > 0;
+    return false;
   }
 
   public double getPitch() {
